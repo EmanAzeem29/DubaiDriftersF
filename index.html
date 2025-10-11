@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Dubaidrifters.com</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        body.rtl {
+            direction: rtl;
+            text-align: right;
+        }
+        body.rtl .material-icons {
+            transform: scaleX(-1);
+        }
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeDown { animation: fadeDown 0.6s ease-out; }
+        .animate-fadeUp { animation: fadeUp 0.6s ease-out 0.2s; }
+        .tour-card {
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        .tour-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            background: linear-gradient(45deg, rgba(0, 204, 255, 0.5), rgba(255, 0, 204, 0.5));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+            filter: blur(15px);
+        }
+       .tour-card:hover::before {
+            opacity: 1;
+        }
+       .tour-card:hover img {
+            transform: scale(1.1);
+        }
+        .glitter {
+            position: relative;
+            overflow: hidden;
+        }
+        .glitter::after {
+            content: "";
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(
+                60deg,
+                transparent,
+                rgba(255, 255, 255, 0.4),
+                transparent
+            );
+            transform: rotate(25deg);
+            animation: shine 6s infinite linear;
+            z-index: 1;
+        }
+        @keyframes shine {
+            0% { transform: translateX(-200%) rotate(25deg); }
+            50% { transform: translateX(200%) rotate(25deg); }
+            100% { transform: translateX(-200%) rotate(25deg); }
+        }
+        /* Mobile menu styles */
+        .mobile-menu {
+            transition: all 0.3s ease;
+            max-height: 0;
+            overflow: hidden;
+        }
+        .mobile-menu.open {
+            max-height: 500px;
+        }
+         .image-placeholder {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            min-height: 192px;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+      .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+         .toast.show {
+            transform: translateX(0);
+        }
+        .toast.success {
+            background-color: #10B981;
+        }
+.toast.error {
+            background-color: #EF4444;
+        }
+
+    .toast.info {
+            background-color: #3B82F6;
+        }
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-[#FDF6EC] font-sans">
+  <header class="bg-gradient-to-r from-black via-[#1a1a1a] to-[#0d0d0d] shadow-lg sticky top-0 z-50 transition-all duration-300 ease-in-out">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center py-2 animate-fadeDown">
+      <!-- Logo-->
+      <div class="flex items-center space-x-4">
+        <img src="logo.jpg" alt="Logo" 
+             class="h-16 w-16 rounded-full object-cover border-4 border-[#C89B52] shadow-lg hover:scale-110 transition-transform duration-300"
+             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9IiNDODlCNTIiLz4KPHN2Zz4K'"/>
+        <span class="text-2xl font-bold tracking-wide text-[#C89B52]">Dubai Drifters</span>
+      </div>
+      <!-- Right Side Options -->
+      <div class="hidden md:flex items-center space-x-6 text-sm text-white font-medium">
+        <!-- Currency Dropdown -->
+        <div class="relative group" aria-haspopup="true">
+          <button id="currencyBtn" class="flex items-center hover:text-[#C89B52] transition duration-300" aria-expanded="false" aria-controls="currencyDropdown">
+            <span id="currencyText">USD</span>
+            <span class="material-icons text-sm">expand_more</span>
+          </button>
+          <ul id="currencyDropdown" class="absolute right-0 mt-2 w-28 bg-[#1a1a1a] border border-[#C89B52] shadow-md rounded hidden text-white" role="menu" aria-hidden="true">
+            <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="USD">USD</li>
+            <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="AED">AED</li>
+            <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="EUR">EUR</li>
+            <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="PKR">PKR</li>
+          </ul>
+        </div>
+
+        <!-- Language Dropdown -->
+        <div class="relative group" aria-haspopup="true">
+          <button id="languageBtn" class="flex items-center hover:text-[#C89B52] transition duration-300" aria-expanded="false" aria-controls="languageDropdown">
+            <img id="flagIcon" alt="USA Flag" class="h-4 w-6 mr-2 rounded-sm shadow" src="https://flagcdn.com/w20/us.png"/>
+            <span id="langText">English</span>
+            <span class="material-icons text-sm">expand_more</span>
+          </button>
+          <ul id="languageDropdown" class="absolute right-0 mt-2 w-32 bg-[#1a1a1a] border border-[#C89B52] shadow-md rounded hidden text-white" role="menu" aria-hidden="true">
+            <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-lang="English" data-flag="us">English</li>
+            <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-lang="Arabic" data-flag="ae">العربية</li>
+          </ul>
+        </div>
+        <a class="flex items-center hover:text-[#C89B52] transition duration-300 hover:scale-105" href="signin.html">
+          <span class="material-icons text-lg mr-1">person</span>
+          <span id="authStatus">Sign In</span>
+        </a>
+      </div>
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden">
+        <button id="mobileMenuBtn" class="text-white hover:text-[#C89B52] transition duration-300" aria-label="Toggle menu">
+          <span class="material-icons">menu</span>
+        </button>
+      </div>
+    </div>
+    <hr class="opacity-20 border-[#C89B52]"/>
+    <!-- Desktop Nav Links -->
+    <nav class="hidden md:flex justify-center items-center py-3 space-x-8 text-sm font-semibold text-white animate-fadeUp">
+      <a class="hover:text-[#C89B52] transition duration-300 hover:scale-105" href="tours.html" id="navTours">TOURS</a>
+      <a class="hover:text-[#C89B52] transition duration-300 hover:scale-105" href="about.html" id="navAbout">About Us</a>
+      <a class="hover:text-[#C89B52] transition duration-300 hover:scale-105" href="contact.html" id="navContact">Contact Us</a>
+      <a class="hover:text-[#C89B52] transition duration-300 hover:scale-105" href="blog.html" id="navBlog">Blog</a>
+    </nav>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu md:hidden bg-[#1a1a1a] rounded-b-lg shadow-lg" aria-hidden="true">
+      <div class="py-4 px-4 space-y-4">
+        <a class="block text-white hover:text-[#C89B52] transition duration-300" href="tours.html" id="mobileNavTours">TOURS</a>
+        <a class="block text-white hover:text-[#C89B52] transition duration-300" href="about.html" id="mobileNavAbout">About Us</a>
+        <a class="block text-white hover:text-[#C89B52] transition duration-300" href="contact.html" id="mobileNavContact">Contact Us</a>
+        <a class="block text-white hover:text-[#C89B52] transition duration-300" href="blog.html" id="mobileNavBlog">Blog</a>
+        <a class="block text-white hover:text-[#C89B52] transition duration-300" href="signin.html" id="mobileAuthStatus">Sign In</a>
+      </div>
+    </div>
+  </div>
+</header>
+    <main>
+        <!-- Hero Section -->
+        <section class="relative h-[600px] bg-cover bg-center" style="background-image: url('img1.jpg');">
+            <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+            <div class="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-4">
+                <h1 id="heroTitle" class="text-4xl md:text-6xl font-bold mb-4">Explore the Best of Dubai</h1>
+                <p id="heroSubtitle" class="text-lg md:text-xl mb-8">Your ultimate guide to an unforgettable experience.</p>
+                <div class="w-full max-w-4xl bg-white rounded-lg p-4 shadow-lg">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="flex items-center w-full md:w-2/3 border-r border-gray-200 p-2">
+                            <span class="material-icons text-gray-500 mr-2">search</span>
+                            <input id="searchInput" class="w-full focus:outline-none text-gray-700" placeholder="Search by destination, activity, or attraction" type="text"/>
+                        </div>
+                        <div class="flex items-center w-full md:w-1/3 p-2 mt-2 md:mt-0">
+                            <span class="material-icons text-gray-500 mr-2">calendar_today</span>
+                            <input id="datePicker" class="w-full focus:outline-none text-gray-700" placeholder="Select Date" type="text"/>
+                        </div>
+                        <button id="searchBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg w-full md:w-auto mt-4 md:mt-0 md:ml-4 transition-colors">
+                            SEARCH
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+       <!-- Tours Section -->
+        <section class="py-12 bg-white glitter">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-8">✨ Top-Rated Tours & Must-See Attractions ✨</h2>
+                <div id="toursContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                    <!-- Tour Cards will be dynamically loaded here -->
+                </div>
+                <div class="text-center mt-8">
+                    <a class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md hover:shadow-2xl" href="tours.html">VIEW ALL</a>
+                </div>
+            </div>
+        </section>
+        <!-- Features Section -->
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 id="featuresTitle" class="text-3xl font-bold text-center mb-8">Why Choose Dubaidrifters.com?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                    <!-- Card 1 -->
+                    <div class="flex flex-col items-center">
+                        <div class="bg-blue-100 rounded-full p-4 mb-4">
+                            <span class="material-icons text-3xl text-blue-600">verified_user</span>
+                        </div>
+                        <h3 id="feature1Title" class="font-semibold text-lg mb-2">Best Price Guarantee</h3>
+                        <p id="feature1Desc" class="text-gray-600 text-sm">We offer competitive prices on all our tours and services.</p>
+                        <button class="like-btn mt-3 px-3 py-1 bg-blue-600 text-white rounded-full flex items-center space-x-2">
+                            <span class="material-icons text-sm">thumb_up</span>
+                            <span class="count">0</span>
+                        </button>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="flex flex-col items-center">
+                        <div class="bg-blue-100 rounded-full p-4 mb-4">
+                            <span class="material-icons text-3xl text-blue-600">support_agent</span>
+                        </div>
+                        <h3 id="feature2Title" class="font-semibold text-lg mb-2">24/7 Customer Support</h3>
+                        <p id="feature2Desc" class="text-gray-600 text-sm">Our team is available round the clock to assist you.</p>
+                        <button class="like-btn mt-3 px-3 py-1 bg-blue-600 text-white rounded-full flex items-center space-x-2">
+                            <span class="material-icons text-sm">thumb_up</span>
+                            <span class="count">0</span>
+                        </button>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="flex flex-col items-center">
+                        <div class="bg-blue-100 rounded-full p-4 mb-4">
+                            <span class="material-icons text-3xl text-blue-600">card_giftcard</span>
+                        </div>
+                        <h3 id="feature3Title" class="font-semibold text-lg mb-2">Customized Packages</h3>
+                        <p id="feature3Desc" class="text-gray-600 text-sm">We can tailor-make packages to suit your preferences.</p>
+                        <button class="like-btn mt-3 px-3 py-1 bg-blue-600 text-white rounded-full flex items-center space-x-2">
+                            <span class="material-icons text-sm">thumb_up</span>
+                            <span class="count">0</span>
+                        </button>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="flex flex-col items-center">
+                        <div class="bg-blue-100 rounded-full p-4 mb-4">
+                            <span class="material-icons text-3xl text-blue-600">thumb_up</span>
+                        </div>
+                        <h3 id="feature4Title" class="font-semibold text-lg mb-2">Easy Booking</h3>
+                        <p id="feature4Desc" class="text-gray-600 text-sm">A hassle-free booking experience with flexible options.</p>
+                        <button class="like-btn mt-3 px-3 py-1 bg-blue-600 text-white rounded-full flex items-center space-x-2">
+                            <span class="material-icons text-sm">thumb_up</span>
+                            <span class="count">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto px-4 py-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h4 id="footerAboutTitle" class="font-bold text-lg mb-4">About Dubaidrifters.com</h4>
+                    <p id="footerAboutDesc" class="text-sm text-gray-400">Your trusted partner for exploring the wonders of Dubai. We provide a wide range of tours, activities, and travel services to make your trip memorable.</p>
+                </div>
+                <div>
+                    <h4 id="footerSupportTitle" class="font-bold text-lg mb-4">Support</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a class="text-gray-400 hover:text-white" href="contact.html" id="footerContact">Contact Us</a></li>
+                        <li><a class="text-gray-400 hover:text-white" href="termsandconditions.html" id="footerTerms">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 id="footerFollowTitle" class="font-bold text-lg mb-4">Follow Us</h4>
+                    <div class="flex space-x-2">
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+       <!-- WhatsApp -->
+    <a class="text-gray-400 hover:text-white" href="https://wa.me/+971524408513" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Instagram -->
+    <a class="text-gray-400 hover:text-white" href="https://www.instagram.com/dubaidrifterss?utm_source=qr&igsh=MTk0d2JoYmllZWdnbA==" target="_blank">
+      <i class="fab fa-instagram"></i>
+    </a>
+    
+    <!-- TikTok -->
+    <a class="text-gray-400 hover:text-white" href="https://www.tiktok.com/@dubaidrifterssgmail.com?_t=ZN-908Na7dtnvP&_r=1" target="_blank">
+      <i class="fab fa-tiktok"></i>
+    </a>
+                    </div>
+                    <h4 id="footerPaymentTitle" class="font-bold text-lg mt-6 mb-4">Payment Methods</h4>
+                    <div class="flex space-x-2">
+                    <a href="https://www.easypaisa.com.pk" 
+                         target="_blank" 
+                         rel="noopener noreferrer"
+                         class="text-xs bg-gray-700 px-2 py-1 rounded hover:bg-gray-600 transition">
+                         EasyPaisa
+                </a>   
+                    </div>
+                </div>
+                <div>
+                    <h4 id="footerNewsletterTitle" class="font-bold text-lg mb-4">Newsletter</h4>
+                    <p id="footerNewsletterDesc" class="text-sm text-gray-400 mb-4">Subscribe to our newsletter for exclusive offers and updates.</p>
+                    <form id="newsletterForm" class="flex">
+                        <input id="newsletterEmail" class="w-full rounded-l-md p-2 text-gray-800 focus:outline-none" placeholder="Your email" type="email" required/>
+                        <button id="newsletterBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r-md transition-colors flex items-center" type="submit">
+                            <span id="newsletterBtnText">Subscribe</span>
+                            <div id="newsletterSpinner" class="loading-spinner hidden"></div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-500">
+                <p>© 2025 Dubaidrifters.com. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // API Configuration 
+       const API_BASE_URL = "http://localhost:5000/api";
+
+        
+        // Global state
+        let currentCurrency = localStorage.getItem('preferredCurrency') || 'USD';
+        let currentLanguage = localStorage.getItem('preferredLanguage') || 'English';
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+
+        // Currency conversion rates 
+        const exchangeRates = {
+            usd: { usd: 1, aed: 3.67, eur: 0.92, gbp: 0.79, pkr: 278.5 },
+            aed: { usd: 0.27, aed: 1, eur: 0.25, gbp: 0.22, pkr: 75.8 },
+            eur: { usd: 1.09, aed: 4.0, eur: 1, gbp: 0.86, pkr: 302.5 },
+            gbp: { usd: 1.27, aed: 4.66, eur: 1.16, gbp: 1, pkr: 352.5 },
+            pkr: { usd: 0.0036, aed: 0.013, eur: 0.0033, gbp: 0.0028, pkr: 1 }
+        };
+
+        // Language translations
+        const translations = {
+            en: {
+                // Header
+                navTours: "TOURS",
+                navAbout: "About Us",
+                navContact: "Contact Us",
+                navBlog: "Blog",
+                authStatus: "Sign In",
+                // Hero section
+                heroTitle: "Explore the Best of Dubai",
+                heroSubtitle: "Your ultimate guide to an unforgettable experience.",
+                searchPlaceholder: "Search by destination, activity, or attraction",
+                datePlaceholder: "Select Date",
+                searchBtn: "SEARCH",
+                // Tours section
+                toursTitle: "✨ Top-Rated Tours & Must-See Attractions ✨",
+                viewAllBtn: "VIEW ALL",
+                // Features section
+                featuresTitle: "Why Choose Dubaidrifters.com?",
+                feature1Title: "Best Price Guarantee",
+                feature1Desc: "We offer competitive prices on all our tours and services.",
+                feature2Title: "24/7 Customer Support",
+                feature2Desc: "Our team is available round the clock to assist you.",
+                feature3Title: "Customized Packages",
+                feature3Desc: "We can tailor-make packages to suit your preferences.",
+                feature4Title: "Easy Booking",
+                feature4Desc: "A hassle-free booking experience with flexible options.",
+                // Footer
+                footerAboutTitle: "About Dubaidrifters.com",
+                footerAboutDesc: "Your trusted partner for exploring the wonders of Dubai. We provide a wide range of tours, activities, and travel services to make your trip memorable.",
+                footerSupportTitle: "Support",
+                footerContact: "Contact Us",
+                footerFaq: "FAQs",
+                footerTerms: "Terms & Conditions",
+                footerPrivacy: "Privacy Policy",
+                footerFollowTitle: "Follow Us",
+                footerPaymentTitle: "Payment Methods",
+                footerNewsletterTitle: "Newsletter",
+                footerNewsletterDesc: "Subscribe to our newsletter for exclusive offers and updates.",
+                newsletterBtnText: "Subscribe",
+                // Toast messages
+                toastPreferencesUpdated: "Preferences updated to",
+                toastNewsletterSuccess: "Successfully subscribed to our newsletter!",
+                toastNewsletterError: "Failed to subscribe. Please try again.",
+                toastSearchError: "Please enter a search term",
+                toastEmailError: "Please enter a valid email address.",
+                toastToursError: "Failed to load tours. Please try again later."
+            },
+            ar: {
+                // Header
+                navTours: "الجولات",
+                navAbout: "من نحن",
+                navContact: "اتصل بنا",
+                navBlog: "المدونة",
+                authStatus: "تسجيل الدخول",
+                
+                // Hero section
+                heroTitle: "استكشف أفضل ما في دبي",
+                heroSubtitle: "دليلك النهائي لتجربة لا تنسى.",
+                searchPlaceholder: "ابحث حسب الوجهة أو النشاط أو المعلم",
+                datePlaceholder: "اختر التاريخ",
+                searchBtn: "بحث",
+                
+                // Tours section
+                toursTitle: "✨ أفضل الجولات والمعالم التي يجب زيارتها ✨",
+                viewAllBtn: "عرض الكل",
+                
+                // Features section
+                featuresTitle: "لماذا تختار Dubaidrifters.com؟",
+                feature1Title: "ضمان أفضل سعر",
+                feature1Desc: "نحن نقدم أسعارًا تنافسية على جميع جولاتنا وخدماتنا.",
+                feature2Title: "دعم العملاء على مدار الساعة",
+                feature2Desc: "فريقنا متاح على مدار الساعة لمساعدتك.",
+                feature3Title: "باقات مخصصة",
+                feature3Desc: "يمكننا تخصيص الباقات لتناسب تفضيلاتك.",
+                feature4Title: "حجز سهل",
+                feature4Desc: "تجربة حجز خالية من المتاعب مع خيارات مرنة.",
+                
+                // Footer
+                footerAboutTitle: "حول Dubaidrifters.com",
+                footerAboutDesc: "شريكك الموثوق لاستكشاف عجائب دبي. نحن نقدم مجموعة واسعة من الجولات والأنشطة وخدمات السفر لجعل رحلتك لا تنسى.",
+                footerSupportTitle: "الدعم",
+                footerContact: "اتصل بنا",
+                footerFaq: "الأسئلة الشائعة",
+                footerTerms: "الشروط والأحكام",
+                footerPrivacy: "سياسة الخصوصية",
+                footerFollowTitle: "تابعنا",
+                footerPaymentTitle: "طرق الدفع",
+                footerNewsletterTitle: "النشرة الإخبارية",
+                footerNewsletterDesc: "اشترك في نشرتنا الإخبارية للحصول على عروض حصرية وتحديثات.",
+                newsletterBtnText: "اشتراك",
+                
+                // Toast messages
+                toastPreferencesUpdated: "تم تحديث التفضيلات إلى",
+                toastNewsletterSuccess: "تم الاشتراك في النشرة الإخبارية بنجاح!",
+                toastNewsletterError: "فشل الاشتراك. يرجى المحاولة مرة أخرى.",
+                toastSearchError: "يرجى إدخال مصطلح البحث",
+                toastEmailError: "يرجى إدخال عنوان بريد إلكتروني صحيح.",
+                toastToursError: "فشل تحميل الجولات. يرجى المحاولة مرة أخرى لاحقًا."
+            }
+        };
+        // Utility Functions
+        const showToast = (message, type = 'info', duration = 5000) => {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    <span class="material-icons mr-2">${type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info'}</span>
+                    ${message}
+                </div>
+            `; 
+            document.getElementById('toastContainer').appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, duration);
+        };
+        const convertCurrency = (price, fromCurrency, toCurrency) => {
+            const fromRate = exchangeRates[fromCurrency.toLowerCase()];
+            if (!fromRate) return price;          
+            const rate = fromRate[toCurrency.toLowerCase()];
+            return rate ? price * rate : price;
+        };
+        const formatPrice = (price, currency = currentCurrency) => {
+            const symbols = {
+                'USD': '$',
+                'AED': 'AED ',
+                'EUR': '€',
+                'GBP': '£',
+                'PKR': 'Rs '
+            };
+            if (typeof price === 'object') {
+                return `${symbols[currency]}${price[currency.toLowerCase()]?.toFixed(2) || price.usd.toFixed(2)}`;
+            }
+            // Otherwise, a
+            const convertedPrice = convertCurrency(price, 'USD', currency);
+            return `${symbols[currency]}${convertedPrice.toFixed(2)}`;
+        };
+        // API Functions
+        const api = {
+            async get(url) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}${url}`);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return await response.json();
+                } catch (error) {
+                    console.error('API GET Error:', error);
+                    throw error;
+                }
+            },
+            async post(url, data) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}${url}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return await response.json();
+                } catch (error) {
+                    console.error('API POST Error:', error);
+                    throw error;
+                }
+            }
+        };
+        // Language Functions
+        const updateLanguage = (language) => {
+            currentLanguage = language;
+            localStorage.setItem('preferredLanguage', language);
+            
+            // Update UI text
+            const langCode = language === 'Arabic' ? 'ar' : 'en';
+            const translation = translations[langCode];
+            
+            // Update all translatable elements
+            Object.keys(translation).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = translation[key];
+                }
+            });            
+            // Update flag
+            const flagIcon = document.getElementById('flagIcon');
+            const selectedLang = document.querySelector(`[data-lang="${language}"]`);
+            if (flagIcon && selectedLang) {
+                flagIcon.src = `https://flagcdn.com/w20/${selectedLang.dataset.flag}.png`;
+            }
+           // Update RTL/LTR
+            if (language === 'Arabic') {
+                document.body.classList.add('rtl');
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.documentElement.setAttribute('lang', 'ar');
+            } else {
+                document.body.classList.remove('rtl');
+                document.documentElement.setAttribute('dir', 'ltr');
+                document.documentElement.setAttribute('lang', 'en');
+            }            
+            document.getElementById('langText').textContent = language;
+        };
+        // Tour Functions
+        const loadTours = async () => {
+            try {
+                // Try to fetch tours from backend
+                const data = await api.get('/tours?limit=10&sort=rating');
+                
+                // Check if data structure matches expected format
+                if (data && data.success && data.data && data.data.tours) {
+                    displayTours(data.data.tours);
+                } else if (data && Array.isArray(data)) {
+                    // If the API returns a simple array
+                    displayTours(data.slice(0, 10));
+                } else {
+                    // Fallback to static tours if API structure is different
+                    console.warn('Unexpected API response format, using fallback tours');
+                    displayFallbackTours();
+                }
+            } catch (error) {
+                console.error('Error loading tours from API:', error);
+                // Fallback to static tours if API is unavailable
+                displayFallbackTours();
+            }
+        };
+        const displayTours = (tours) => {
+            const container = document.getElementById('toursContainer');
+            
+            if (!tours || tours.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-8">
+                        <span class="material-icons text-4xl text-gray-400 mb-2">beach_access</span>
+                        <p class="text-gray-600">No tours available at the moment.</p>
+                    </div>
+                `;
+                return;
+            }
+            container.innerHTML = tours.map(tour => `
+                <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card cursor-pointer" onclick="viewTour('${tour._id || tour.id}')">
+                    <img alt="${tour.name}" class="w-full h-48 object-cover transition-transform duration-500" 
+                         src="${tour.images && tour.images[0] ? tour.images[0] : 
+                               tour.image ? tour.image : 
+                               'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDMyMCAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iMTkyIiBmaWxsPSIjRjBGMEYwIi8+CjxwYXRoIGQ9Ik0xNjAgOTZMMTI4IDY0SDE5MkwxNjAgOTZaIiBmaWxsPSIjQzg5QjUyIi8+CjxjaXJjbGUgY3g9IjE2MCIgY3k9IjExMiIgcj0iOCIgZmlsbD0iI0M4OUI1MiIvPgo8L3N2Zz4K'}" 
+                         onerror="this.classList.add('image-placeholder')"/>
+                    <div class="p-4 relative z-10 bg-white">
+                        <h3 class="font-bold text-lg mb-2">${tour.name}</h3>
+                        <p class="text-gray-600 text-sm">${tour.shortDescription || tour.description || 'Explore this amazing destination'}</p>
+                        <p class="text-gray-600 text-sm mt-2">From <span class="font-bold text-black">${formatPrice(tour.price)}</span></p>
+                        ${tour.rating && tour.rating.average > 0 ? `
+                            <div class="flex items-center mt-2">
+                                <span class="material-icons text-yellow-500 text-sm">star</span>
+                                <span class="text-sm text-gray-600 ml-1">${tour.rating.average.toFixed(1)} (${tour.rating.count})</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        };
+        // Fallback tours if API is not available
+        const displayFallbackTours = () => {
+            const fallbackTours = [
+                { id: 1, name: "Alqasar Hotel", price: 35, image: "Alqasarhotel.jpg" },
+                { id: 2, name: "Atlantis", price: 75, image: "Atlantis.jpg" },
+                { id: 3, name: "Burj Khalifa", price: 55, image: "BurjKhalifa.jpg" },
+                { id: 4, name: "Burj Al Arab", price: 45, image: "BurjAlarab.jpg" },
+                { id: 5, name: "Jummeria Beach", price: 60, image: "jummeirahBeach.jpg" },
+                { id: 6, name: "Jummeira Mosque", price: 25, image: "JummeirahMosque.jpg" },
+                { id: 7, name: "Lamer Beach", price: 20, image: "LamerBeach.jpg" },
+                { id: 8, name: "Marina Walk", price: 40, image: "MarinaWalk.jpg" },
+                { id: 9, name: "Palm Jummeirah", price: 65, image: "palm jumeirah1.jpg" },
+                { id: 10, name: "Red Dunes Desert", price: 30, image: "RedDunesDesert.jpg" }
+            ];
+            
+            displayTours(fallbackTours);
+        };
+        const viewTour = (tourId) => {
+            window.location.href = `tour-details.html?id=${tourId}`;
+        };
+        // Newsletter Subscription
+        const handleNewsletterSubscription = async (email) => {
+            const btn = document.getElementById('newsletterBtn');
+            const btnText = document.getElementById('newsletterBtnText');
+            const spinner = document.getElementById('newsletterSpinner');     
+            btn.disabled = true;
+            btnText.textContent = currentLanguage === 'Arabic' ? 'جاري الاشتراك...' : 'Subscribing...';
+            spinner.classList.remove('hidden');
+            
+            try {
+                await api.post('/newsletter/subscribe', { email });
+                showToast(
+                    currentLanguage === 'Arabic' ? translations.ar.toastNewsletterSuccess : translations.en.toastNewsletterSuccess, 
+                    'success'
+                );
+                document.getElementById('newsletterEmail').value = '';
+            } catch (error) {
+                showToast(
+                    currentLanguage === 'Arabic' ? translations.ar.toastNewsletterError : translations.en.toastNewsletterError, 
+                    'error'
+                );
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = currentLanguage === 'Arabic' ? translations.ar.newsletterBtnText : translations.en.newsletterBtnText;
+                spinner.classList.add('hidden');
+            }
+        };
+        // User Preferences
+        const updateUserPreferences = async (currency, language) => {
+            currentCurrency = currency;
+            currentLanguage = language;           
+            localStorage.setItem('preferredCurrency', currency);
+            localStorage.setItem('preferredLanguage', language);           
+            // Update UI
+            document.getElementById('currencyText').textContent = currency;          
+            // Update language
+            updateLanguage(language);           
+            // Reload tours to update prices
+            await loadTours();           
+            // Save to backend if user is logged in
+            if (currentUser) {
+                try {
+                    await api.post('/users/preferences', {
+                        userId: currentUser.id,
+                        currency,
+                        language
+                    });
+                } catch (error) {
+                    console.error('Failed to save preferences:', error);
+                }
+            }           
+            showToast(
+                `${currentLanguage === 'Arabic' ? translations.ar.toastPreferencesUpdated : translations.en.toastPreferencesUpdated} ${currency}/${language}`, 
+                'success', 
+                2000
+            );
+        };
+        // Search Functionality
+        const handleSearch = () => {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            const date = document.getElementById('datePicker').value;           
+            if (searchTerm) {
+                // Redirect to tours page with search parameters
+                const params = new URLSearchParams();
+                params.append('search', searchTerm);
+                if (date) params.append('date', date);
+                
+                window.location.href = `tours.html?${params.toString()}`;
+            } else {
+                showToast(
+                    currentLanguage === 'Arabic' ? translations.ar.toastSearchError : translations.en.toastSearchError, 
+                    'error'
+                );
+            }
+        };
+        // Initialize Application
+        document.addEventListener("DOMContentLoaded", () => {
+            // Initialize user preferences
+            document.getElementById('currencyText').textContent = currentCurrency;
+            
+            // Update auth status if user is logged in
+            if (currentUser) {
+                document.getElementById('authStatus').textContent = currentUser.name;
+                document.getElementById('mobileAuthStatus').textContent = currentUser.name;
+            }
+            // Load tours
+            loadTours();
+            // Initialize language
+            updateLanguage(currentLanguage);
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+            const mobileMenu = document.getElementById("mobileMenu");           
+            if(mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    mobileMenu.classList.toggle("open");
+                    const icon = mobileMenuBtn.querySelector(".material-icons");
+                    if(mobileMenu.classList.contains("open")) {
+                        icon.textContent = "close";
+                        mobileMenu.setAttribute('aria-hidden', 'false');
+                    } else {
+                        icon.textContent = "menu";
+                        mobileMenu.setAttribute('aria-hidden', 'true');
+                    }
+                });               
+                document.addEventListener("click", (e) => {
+                    if(!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                        mobileMenu.classList.remove("open");
+                        const icon = mobileMenuBtn.querySelector(".material-icons");
+                        if (icon) icon.textContent = "menu";
+                        mobileMenu.setAttribute('aria-hidden', 'true');
+                    }
+                });
+            }
+            // Date picker
+            const datePicker = document.getElementById("datePicker");
+            if(datePicker) {
+                flatpickr(datePicker, {
+                    minDate: "today",
+                    dateFormat: "Y-m-d"
+                });
+            }
+            // Search functionality
+            const searchBtn = document.getElementById("searchBtn");
+            const searchInput = document.getElementById("searchInput");
+                if(searchBtn && searchInput) {
+                searchBtn.addEventListener("click", handleSearch);
+                searchInput.addEventListener("keypress", (e) => {
+                    if(e.key === "Enter") {
+                        e.preventDefault();
+                        handleSearch();
+                    }
+                });
+            }
+            // Newsletter subscription
+            const newsletterForm = document.getElementById("newsletterForm");
+            const newsletterEmail = document.getElementById("newsletterEmail");           
+            if(newsletterForm && newsletterEmail) {
+                newsletterForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    if(newsletterEmail.value && newsletterEmail.value.includes("@")) {
+                        handleNewsletterSubscription(newsletterEmail.value);
+                    } else {
+                        showToast(
+                            currentLanguage === 'Arabic' ? translations.ar.toastEmailError : translations.en.toastEmailError, 
+                            "error"
+                        );
+                    }
+                });
+            }
+            // Currency dropdown
+            const currencyBtn = document.getElementById("currencyBtn");
+            const currencyMenu = document.getElementById("currencyDropdown");
+            const languageBtn = document.getElementById("languageBtn");
+            const languageMenu = document.getElementById("languageDropdown");
+
+            if(currencyBtn && currencyMenu) {
+                currencyBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    currencyMenu.classList.toggle("hidden");
+                    currencyMenu.setAttribute('aria-hidden', currencyMenu.classList.contains('hidden') ? 'true' : 'false');
+                    if(languageMenu && !languageMenu.classList.contains('hidden')) languageMenu.classList.add("hidden");
+                });
+                
+                currencyMenu.querySelectorAll("li").forEach(item => {
+                    item.addEventListener("click", () => {
+                        updateUserPreferences(item.dataset.currency, currentLanguage);
+                        currencyMenu.classList.add("hidden");
+                        currencyMenu.setAttribute('aria-hidden', 'true');
+                    });
+                });
+            }
+            // Language dropdown
+            if(languageBtn && languageMenu) {
+                languageBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    languageMenu.classList.toggle("hidden");
+                    languageMenu.setAttribute('aria-hidden', languageMenu.classList.contains('hidden') ? 'true' : 'false');
+                    if(currencyMenu && !currencyMenu.classList.contains('hidden')) currencyMenu.classList.add("hidden");
+                });               
+                languageMenu.querySelectorAll("li").forEach(item => {
+                    item.addEventListener("click", () => {
+                        updateUserPreferences(currentCurrency, item.dataset.lang);
+                        languageMenu.classList.add("hidden");
+                        languageMenu.setAttribute('aria-hidden', 'true');
+                    });
+                });
+            }
+            // Close dropdowns when clicking elsewhere
+            document.addEventListener("click", () => {
+                if(currencyMenu) {
+                    currencyMenu.classList.add("hidden");
+                    currencyMenu.setAttribute('aria-hidden', 'true');
+                }
+                if(languageMenu) {
+                    languageMenu.classList.add("hidden");
+                    languageMenu.setAttribute('aria-hidden', 'true');
+                }
+            });
+        // Like buttons
+            document.querySelectorAll(".like-btn").forEach(button => {
+                button.addEventListener("click", () => {
+                    const countSpan = button.querySelector(".count");
+                    let currentCount = parseInt(countSpan.textContent) || 0;
+                    countSpan.textContent = currentCount + 1;
+                    
+                    button.style.transform = "scale(0.95)";
+                    setTimeout(() => {
+                        button.style.transform = "scale(1)";
+                    }, 150);
+                });
+            });
+            // Check backend health on load
+            api.get('/health')
+                .then(data => console.log('Backend health:', data))
+                .catch(err => console.warn('Backend not reachable:', err.message));
+        });
+    </script>
+</body>
+</html>

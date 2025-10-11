@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - Dubai Drifters</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { 
+        font-family: 'Poppins', sans-serif; 
+    }
+    
+    /* RTL Support */
+    body.rtl {
+        direction: rtl;
+        text-align: right;
+    }
+    
+    body.rtl .material-icons {
+        transform: scaleX(-1);
+    }
+    
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-fadeDown { animation: fadeDown 0.6s ease-out; }
+    .animate-fadeUp { animation: fadeUp 0.6s ease-out 0.2s; }
+    
+    /* Mobile menu styles */
+    .mobile-menu {
+        transition: all 0.3s ease;
+        max-height: 0;
+        overflow: hidden;
+    }
+    
+    .mobile-menu.open {
+        max-height: 500px;
+    }
+    
+    /* Loading placeholder for images */
+    .image-placeholder {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+        height: 288px; /* Match image height */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 1rem;
+    }
+    
+    @keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    /* Toast notifications */
+    .toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        color: white;
+        z-index: 1000;
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+    }
+
+    .toast.show {
+        transform: translateX(0);
+    }
+
+    .toast.success {
+        background-color: #10B981;
+    }
+
+    .toast.error {
+        background-color: #EF4444;
+    }
+
+    .toast.info {
+        background-color: #3B82F6;
+    }
+
+    /* Loading spinner */
+    .loading-spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #3498db;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="bg-white text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-black via-[#1a1a1a] to-[#0d0d0d] shadow-lg sticky top-0 z-50 transition-all duration-300 ease-in-out">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-center py-2 animate-fadeDown">
+        <!-- Logo + Name -->
+        <a href="index.html" class="flex items-center space-x-4">
+          <img src="logo.jpg" alt="Logo" 
+               class="h-16 w-16 rounded-full object-cover border-4 border-[#C89B52] shadow-lg hover:scale-110 transition-transform duration-300"
+               onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9IiNDODlCNTIiLz4KPHN2Zz4K'"/>
+          <span class="text-2xl font-bold tracking-wide text-[#C89B52]">Dubai Drifters</span>
+        </a>
+        
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center space-x-6 text-sm text-white font-medium">
+
+          <a class="hover:text-[#C89B52] transition-colors duration-300 hover:scale-105" href="contact.html" id="navContact">Contact Us</a>
+          <a class="hover:text-[#C89B52] transition-colors duration-300 hover:scale-105" href="blog.html" id="navBlog">Blog</a>
+
+          <!-- Currency Dropdown -->
+          <div class="relative group" aria-haspopup="true">
+            <button id="currencyBtn" class="flex items-center hover:text-[#C89B52] transition duration-300" aria-expanded="false" aria-controls="currencyDropdown">
+              <span id="currencyText">PKR</span>
+              <span class="material-icons text-sm">expand_more</span>
+            </button>
+            <ul id="currencyDropdown" class="absolute right-0 mt-2 w-28 bg-[#1a1a1a] border border-[#C89B52] shadow-md rounded hidden text-white" role="menu" aria-hidden="true">
+              <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="AED">AED</li>
+              <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="PKR">PKR</li>
+            </ul>
+          </div>
+
+          <!-- Language Dropdown -->
+          <div class="relative group" aria-haspopup="true">
+            <button id="languageBtn" class="flex items-center hover:text-[#C89B52] transition duration-300" aria-expanded="false" aria-controls="languageDropdown">
+              <img id="flagIcon" alt="USA Flag" class="h-4 w-6 mr-2 rounded-sm shadow" src="https://flagcdn.com/w20/us.png"/>
+              <span id="langText">English</span>
+              <span class="material-icons text-sm">expand_more</span>
+            </button>
+            <ul id="languageDropdown" class="absolute right-0 mt-2 w-32 bg-[#1a1a1a] border border-[#C89B52] shadow-md rounded hidden text-white" role="menu" aria-hidden="true">
+              <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-lang="English" data-flag="us">English</li>
+              <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-lang="Arabic" data-flag="ae">العربية</li>
+            </ul>
+          </div>
+
+          <a class="flex items-center hover:text-[#C89B52] transition duration-300 hover:scale-105" href="signin.html">
+            <span class="material-icons text-lg mr-1">person</span>
+            <span id="authStatus">Sign In</span>
+          </a>
+        </div>
+        
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden">
+          <button id="mobileMenuBtn" class="text-white hover:text-[#C89B52] transition duration-300">
+            <span class="material-icons">menu</span>
+          </button>
+        </div>
+      </div>
+
+      <hr class="opacity-20 border-[#C89B52]"/>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex justify-center items-center py-3 space-x-8 text-sm font-semibold text-white animate-fadeUp">
+        <a class="hover:text-[#C89B52] transition duration-300 hover:scale-105" href="index.html" id="navHome">Home</a>
+        <a class="hover:text-[#C89B52] transition duration-300 hover:scale-105" href="tours.html" id="navTours">Tours</a>
+        
+        <a class="text-[#C89B52] underline" href="about.html" id="navAboutUs">About Us</a>
+      </nav>
+      
+      <!-- Mobile Menu -->
+      <div id="mobileMenu" class="mobile-menu md:hidden bg-[#1a1a1a] rounded-b-lg shadow-lg" aria-hidden="true">
+        <div class="py-4 px-4 space-y-4">
+          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="index.html" id="mobileNavHome">Home</a>
+          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="tours.html" id="mobileNavTours">Tours</a>
+          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="visa.html" id="mobileNavVisa">Visa</a>
+          <a class="block text-[#C89B52] font-semibold" href="about.html" id="mobileNavAbout">About Us</a>
+          <hr class="border-[#C89B52] opacity-30">
+          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="contact.html" id="mobileNavContact">Contact Us</a>
+          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="blog.html" id="mobileNavBlog">Blog</a>
+          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="signin.html" id="mobileAuthStatus">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative bg-cover bg-center bg-fixed h-72" style="background-image: url('img4.jpg');">
+    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <h1 id="heroTitle" class="text-white text-4xl md:text-5xl font-bold">About Us</h1>
+    </div>
+  </section>
+
+  <!-- About Content -->
+  <section class="py-16 container mx-auto px-6">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <!-- Text -->
+      <div>
+        <h2 id="aboutTitle" class="text-3xl font-bold text-[#C89B52] mb-6">Who We Are</h2>
+        <p id="aboutPara1" class="mb-4 text-lg leading-relaxed">
+          At <span class="font-semibold">Dubai Drifters</span>, we believe every journey should be an unforgettable adventure. 
+          With years of expertise in tourism, we specialize in creating experiences that capture the beauty, culture, and thrill of Dubai. 
+        </p>
+        <p id="aboutPara2" class="mb-4 text-lg leading-relaxed">
+          From breathtaking desert safaris and iconic city tours to luxury dhow cruises and world-famous attractions, 
+          we ensure every traveler discovers the best of Dubai with comfort, safety, and excitement. 
+        </p>
+        <p id="aboutPara3" class="text-lg leading-relaxed">
+          Our mission is simple: to turn your travel dreams into reality by delivering top-rated tours, 
+          personalized services, and memories that last a lifetime. 
+        </p>
+      </div>
+      <!-- Image -->
+      <div>
+        <img src="img2.jpg" alt="Dubai Tour" class="rounded-2xl shadow-lg w-full" onerror="this.parentElement.innerHTML = '<div class=\'image-placeholder\'><span class=\'text-gray-500\'>Image not available</span></div>'">
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission & Vision -->
+  <section class="bg-gray-50 py-16">
+    <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 text-center md:text-left">
+      <div>
+        <h3 id="missionTitle" class="text-2xl font-bold text-[#C89B52] mb-4">Our Mission</h3>
+        <p id="missionText" class="text-lg leading-relaxed">
+          To deliver world-class travel experiences that blend adventure, culture, and luxury, 
+          ensuring every guest leaves with a smile and unforgettable memories.
+        </p>
+      </div>
+      <div>
+        <h3 id="visionTitle" class="text-2xl font-bold text-[#C89B52] mb-4">Our Vision</h3>
+        <p id="visionText" class="text-lg leading-relaxed">
+          To become the leading tour operator in Dubai, known globally for exceptional quality, 
+          trusted services, and innovative travel solutions.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values Section -->
+  <section class="py-16 container mx-auto px-6">
+    <h2 id="valuesTitle" class="text-3xl font-bold text-[#C89B52] mb-12 text-center">Our Values</h2>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="text-center p-6 rounded-lg bg-gray-50 hover:shadow-md transition-shadow">
+        <div class="bg-[#C89B52] rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+          <span class="material-icons text-white text-3xl">star</span>
+        </div>
+        <h3 id="value1Title" class="text-xl font-semibold mb-3">Excellence</h3>
+        <p id="value1Text" class="text-gray-600">We strive for excellence in every tour, ensuring premium quality and unforgettable experiences.</p>
+      </div>
+      <div class="text-center p-6 rounded-lg bg-gray-50 hover:shadow-md transition-shadow">
+        <div class="bg-[#C89B52] rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+          <span class="material-icons text-white text-3xl">group</span>
+        </div>
+        <h3 id="value2Title" class="text-xl font-semibold mb-3">Customer Focus</h3>
+        <p id="value2Text" class="text-gray-600">Our customers are at the heart of everything we do, with personalized service and attention.</p>
+      </div>
+      <div class="text-center p-6 rounded-lg bg-gray-50 hover:shadow-md transition-shadow">
+        <div class="bg-[#C89B52] rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+          <span class="material-icons text-white text-3xl">public</span>
+        </div>
+        <h3 id="value3Title" class="text-xl font-semibold mb-3">Cultural Respect</h3>
+        <p id="value3Text" class="text-gray-600">We honor and showcase Dubai's rich culture and heritage in all our experiences.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="py-16 bg-[#C89B52] text-white text-center">
+    <h2 id="ctaTitle" class="text-3xl font-bold mb-4">Let's Plan Your Next Adventure!</h2>
+    <p id="ctaText" class="mb-6 text-lg">Book your Dubai experience with us and create memories you'll cherish forever.</p>
+    <a href="tours.html" 
+       class="bg-white text-[#C89B52] font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition"
+       id="ctaButton">
+      Explore Tours
+    </a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white">
+    <div class="container mx-auto px-4 py-10">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h4 id="footerAboutTitle" class="font-bold text-lg mb-4">About Dubaidrifters.com</h4>
+          <p id="footerAboutDesc" class="text-sm text-gray-400">Your trusted partner for exploring the wonders of Dubai. We provide a wide range of tours, activities, and travel services to make your trip memorable.</p>
+        </div>
+        <div>
+          <h4 id="footerSupportTitle" class="font-bold text-lg mb-4">Support</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a class="text-gray-400 hover:text-white" href="contact.html" id="footerContact">Contact Us</a></li>
+            <li><a class="text-gray-400 hover:text-white" href="#" id="footerFaq">FAQs</a></li>
+            <li><a class="text-gray-400 hover:text-white" href="termsandconditions.html" id="footerTerms">Terms & Conditions</a></li>
+            <li><a class="text-gray-400 hover:text-white" href="#" id="footerPrivacy">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 id="footerFollowTitle" class="font-bold text-lg mb-4">Follow Us</h4>
+          <div class="flex space-x-2">
+            <!-- Facebook -->
+            <a class="text-gray-400 hover:text-white" href="https://www.facebook.com/YourPageName" target="_blank">
+              <i class="fab fa-facebook"></i>
+            </a>
+
+            <!-- WhatsApp -->
+            <a class="text-gray-400 hover:text-white" href="https://wa.me/923001234567" target="_blank">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+
+            <!-- Instagram -->
+            <a class="text-gray-400 hover:text-white" href="https://www.instagram.com/YourUsername" target="_blank">
+              <i class="fab fa-instagram"></i>
+            </a>
+          </div>
+          <h4 id="footerPaymentTitle" class="font-bold text-lg mt-6 mb-4">Payment Methods</h4>
+          <div class="flex space-x-2">
+            <a href="https://www.easypaisa.com.pk" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="text-xs bg-gray-700 px-2 py-1 rounded hover:bg-gray-600 transition">
+               EasyPaisa
+            </a>
+          </div>
+        </div>
+        <div>
+          <h4 id="footerNewsletterTitle" class="font-bold text-lg mb-4">Newsletter</h4>
+          <p id="footerNewsletterDesc" class="text-sm text-gray-400 mb-4">Subscribe to our newsletter for exclusive offers and updates.</p>
+          <form id="newsletterForm" class="flex">
+            <input id="newsletterEmail" class="w-full rounded-l-md p-2 text-gray-800 focus:outline-none" placeholder="Your email" type="email" required/>
+            <button id="newsletterBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r-md transition-colors flex items-center" type="submit">
+              <span id="newsletterBtnText">Subscribe</span>
+              <div id="newsletterSpinner" class="loading-spinner hidden"></div>
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-500">
+        <p>© 2025 Dubaidrifters.com. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
+
+  <script>
+    // API Configuration - UPDATE THIS WITH YOUR ACTUAL BACKEND URL
+   const API_BASE_URL = 'http://localhost:5000/api'; // Replace with your actual backend URL
+    
+    // Global state
+    let currentCurrency = localStorage.getItem('preferredCurrency') || 'PKR';
+    let currentLanguage = localStorage.getItem('preferredLanguage') || 'English';
+    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+
+    // Currency conversion rates
+    const exchangeRates = {
+      usd: { usd: 1, aed: 3.67, eur: 0.92, gbp: 0.79, pkr: 278.5 },
+      aed: { usd: 0.27, aed: 1, eur: 0.25, gbp: 0.22, pkr: 75.8 },
+      eur: { usd: 1.09, aed: 4.0, eur: 1, gbp: 0.86, pkr: 302.5 },
+      gbp: { usd: 1.27, aed: 4.66, eur: 1.16, gbp: 1, pkr: 352.5 },
+      pkr: { usd: 0.0036, aed: 0.013, eur: 0.0033, gbp: 0.0028, pkr: 1 }
+    };
+
+    // Language translations
+    const translations = {
+      en: {
+        // Header
+        navHome: "Home",
+        navTours: "Tours",
+        navVisa: "Visa",
+        navAboutUs: "About Us",
+        navAbout: "About Us",
+        navContact: "Contact Us",
+        navBlog: "Blog",
+        authStatus: "Sign In",
+        
+        // Hero section
+        heroTitle: "About Us",
+        
+        // About section
+        aboutTitle: "Who We Are",
+        aboutPara1: "At Dubai Drifters, we believe every journey should be an unforgettable adventure. With years of expertise in tourism, we specialize in creating experiences that capture the beauty, culture, and thrill of Dubai.",
+        aboutPara2: "From breathtaking desert safaris and iconic city tours to luxury dhow cruises and world-famous attractions, we ensure every traveler discovers the best of Dubai with comfort, safety, and excitement.",
+        aboutPara3: "Our mission is simple: to turn your travel dreams into reality by delivering top-rated tours, personalized services, and memories that last a lifetime.",
+        
+        // Mission & Vision
+        missionTitle: "Our Mission",
+        missionText: "To deliver world-class travel experiences that blend adventure, culture, and luxury, ensuring every guest leaves with a smile and unforgettable memories.",
+        visionTitle: "Our Vision",
+        visionText: "To become the leading tour operator in Dubai, known globally for exceptional quality, trusted services, and innovative travel solutions.",
+        
+        // Values section
+        valuesTitle: "Our Values",
+        value1Title: "Excellence",
+        value1Text: "We strive for excellence in every tour, ensuring premium quality and unforgettable experiences.",
+        value2Title: "Customer Focus",
+        value2Text: "Our customers are at the heart of everything we do, with personalized service and attention.",
+        value3Title: "Cultural Respect",
+        value3Text: "We honor and showcase Dubai's rich culture and heritage in all our experiences.",
+        
+        // CTA section
+        ctaTitle: "Let's Plan Your Next Adventure!",
+        ctaText: "Book your Dubai experience with us and create memories you'll cherish forever.",
+        ctaButton: "Explore Tours",
+        
+        // Footer
+        footerAboutTitle: "About Dubaidrifters.com",
+        footerAboutDesc: "Your trusted partner for exploring the wonders of Dubai. We provide a wide range of tours, activities, and travel services to make your trip memorable.",
+        footerSupportTitle: "Support",
+        footerContact: "Contact Us",
+        footerFaq: "FAQs",
+        footerTerms: "Terms & Conditions",
+        footerPrivacy: "Privacy Policy",
+        footerFollowTitle: "Follow Us",
+        footerPaymentTitle: "Payment Methods",
+        footerNewsletterTitle: "Newsletter",
+        footerNewsletterDesc: "Subscribe to our newsletter for exclusive offers and updates.",
+        newsletterBtnText: "Subscribe",
+        
+        // Mobile menu
+        mobileNavHome: "Home",
+        mobileNavTours: "Tours",
+        mobileNavVisa: "Visa",
+        mobileNavAbout: "About Us",
+        mobileNavContact: "Contact Us",
+        mobileNavBlog: "Blog",
+        mobileAuthStatus: "Sign In",
+        
+        // Toast messages
+        toastPreferencesUpdated: "Preferences updated to",
+        toastNewsletterSuccess: "Successfully subscribed to our newsletter!",
+        toastNewsletterError: "Failed to subscribe. Please try again.",
+        toastEmailError: "Please enter a valid email address."
+      },
+      ar: {
+        // Header
+        navHome: "الرئيسية",
+        navTours: "الجولات",
+        navVisa: "التأشيرة",
+        navAboutUs: "من نحن",
+        navAbout: "من نحن",
+        navContact: "اتصل بنا",
+        navBlog: "المدونة",
+        authStatus: "تسجيل الدخول",
+        
+        // Hero section
+        heroTitle: "من نحن",
+        
+        // About section
+        aboutTitle: "من نحن",
+        aboutPara1: "في دبي دريفترز، نؤمن بأن كل رحلة يجب أن تكون مغامرة لا تنسى. مع سنوات من الخبرة في السياحة، نحن متخصصون في إنشاء تجارب تلتقط جمال وثقافة وإثارة دبي.",
+        aboutPara2: "من رحلات السفاري الصحراوية المذهلة والجولات السياحية في المدينة إلى رحلات القوارب التقليدية الفاخرة والمعالم الشهيرة عالميًا، نضمن لكل مسافر اكتشاف أفضل ما في دبي براحة وأمان وإثارة.",
+        aboutPara3: "مهمتنا بسيطة: تحويل أحلام سفرك إلى حقيقة من خلال تقديم جولات مصنفة على أعلى مستوى وخدمات مخصصة وذكريات تدوم مدى الحياة.",
+        
+        // Mission & Vision
+        missionTitle: "مهمتنا",
+        missionText: "تقديم تجارب سفر عالمية المستوى تمزج بين المغامرة والثقافة والرفاهية، مما يضمن أن يغادر كل ضيف بابتسامة وذكريات لا تنسى.",
+        visionTitle: "رؤيتنا",
+        visionText: "أن نصبح مشغل الجولات الرائد في دبي، المعروف عالميًا بالجودة الاستثنائية والخدمات الموثوقة وحلول السفر المبتكرة.",
+        
+        // Values section
+        valuesTitle: "قيمنا",
+        value1Title: "التميز",
+        value1Text: "نسعى للتميز في كل جولة، مما يضمن الجودة الممتازة والتجارب التي لا تنسى.",
+        value2Title: "التركيز على العميل",
+        value2Text: "عملاؤنا هم في قلب كل ما نقوم به، مع خدمة مخصصة واهتمام.",
+        value3Title: "الاحترام الثقافي",
+        value3Text: "نكرم ونعرض ثقافة دبي الغنية وتراثها في جميع تجاربنا.",
+        
+        // CTA section
+        ctaTitle: "دعنا نخطط لمغامرتك القادمة!",
+        ctaText: "احجز تجربة دبي معنا واصنع ذكريات ستعشقها إلى الأبد.",
+        ctaButton: "استكشف الجولات",
+        
+        // Footer
+        footerAboutTitle: "حول Dubaidrifters.com",
+        footerAboutDesc: "شريكك الموثوق لاستكشاف عجائب دبي. نحن نقدم مجموعة واسعة من الجولات والأنشطة وخدمات السفر لجعل رحلتك لا تنسى.",
+        footerSupportTitle: "الدعم",
+        footerContact: "اتصل بنا",
+        footerFaq: "الأسئلة الشائعة",
+        footerTerms: "الشروط والأحكام",
+        footerPrivacy: "سياسة الخصوصية",
+        footerFollowTitle: "تابعنا",
+        footerPaymentTitle: "طرق الدفع",
+        footerNewsletterTitle: "النشرة الإخبارية",
+        footerNewsletterDesc: "اشترك في نشرتنا الإخبارية للحصول على عروض حصرية وتحديثات.",
+        newsletterBtnText: "اشتراك",
+        
+        // Mobile menu
+        mobileNavHome: "الرئيسية",
+        mobileNavTours: "الجولات",
+        mobileNavVisa: "التأشيرة",
+        mobileNavAbout: "من نحن",
+        mobileNavContact: "اتصل بنا",
+        mobileNavBlog: "المدونة",
+        mobileAuthStatus: "تسجيل الدخول",
+        
+        // Toast messages
+        toastPreferencesUpdated: "تم تحديث التفضيلات إلى",
+        toastNewsletterSuccess: "تم الاشتراك في النشرة الإخبارية بنجاح!",
+        toastNewsletterError: "فشل الاشتراك. يرجى المحاولة مرة أخرى.",
+        toastEmailError: "يرجى إدخال عنوان بريد إلكتروني صحيح."
+      }
+    };
+
+    // API Functions
+    const api = {
+      async get(url) {
+        try {
+          const response = await fetch(`${API_BASE_URL}${url}`);
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          return await response.json();
+        } catch (error) {
+          console.error('API GET Error:', error);
+          throw error;
+        }
+      },
+
+      async post(url, data) {
+        try {
+          const response = await fetch(`${API_BASE_URL}${url}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+          });
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          return await response.json();
+        } catch (error) {
+          console.error('API POST Error:', error);
+          throw error;
+        }
+      }
+    };
+
+    // Utility Functions
+    const showToast = (message, type = 'info', duration = 5000) => {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        <div class="flex items-center">
+          <span class="material-icons mr-2">${type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info'}</span>
+          ${message}
+        </div>
+      `;
+      
+      document.getElementById('toastContainer').appendChild(toast);
+      
+      setTimeout(() => {
+        toast.classList.add('show');
+      }, 100);
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, duration);
+    };
+
+    // Language Functions
+    const updateLanguage = (language) => {
+      currentLanguage = language;
+      localStorage.setItem('preferredLanguage', language);
+      
+      // Update UI text
+      const langCode = language === 'Arabic' ? 'ar' : 'en';
+      const translation = translations[langCode];
+      
+      // Update all translatable elements
+      Object.keys(translation).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+          element.textContent = translation[key];
+        }
+      });
+      
+      // Update flag
+      const flagIcon = document.getElementById('flagIcon');
+      const selectedLang = document.querySelector(`[data-lang="${language}"]`);
+      if (flagIcon && selectedLang) {
+        flagIcon.src = `https://flagcdn.com/w20/${selectedLang.dataset.flag}.png`;
+      }
+      
+      // Update RTL/LTR
+      if (language === 'Arabic') {
+        document.body.classList.add('rtl');
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'ar');
+      } else {
+        document.body.classList.remove('rtl');
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', 'en');
+      }
+      
+      document.getElementById('langText').textContent = language;
+    };
+
+    // User Preferences
+    const updateUserPreferences = async (currency, language) => {
+      currentCurrency = currency;
+      currentLanguage = language;
+      
+      localStorage.setItem('preferredCurrency', currency);
+      localStorage.setItem('preferredLanguage', language);
+      
+      // Update UI
+      document.getElementById('currencyText').textContent = currency;
+      
+      // Update language
+      updateLanguage(language);
+      
+      // Save to backend if user is logged in
+      if (currentUser) {
+        try {
+          await api.post('/users/preferences', {
+            userId: currentUser.id,
+            currency,
+            language
+          });
+        } catch (error) {
+          console.error('Failed to save preferences:', error);
+        }
+      }
+      
+      showToast(
+        `${currentLanguage === 'Arabic' ? translations.ar.toastPreferencesUpdated : translations.en.toastPreferencesUpdated} ${currency}/${language}`, 
+        'success', 
+        2000
+      );
+    };
+
+    // Newsletter Subscription
+    const handleNewsletterSubscription = async (email) => {
+      const btn = document.getElementById('newsletterBtn');
+      const btnText = document.getElementById('newsletterBtnText');
+      const spinner = document.getElementById('newsletterSpinner');
+      
+      btn.disabled = true;
+      btnText.textContent = currentLanguage === 'Arabic' ? 'جاري الاشتراك...' : 'Subscribing...';
+      spinner.classList.remove('hidden');
+      
+      try {
+        await api.post('/newsletter/subscribe', { email });
+        showToast(
+          currentLanguage === 'Arabic' ? translations.ar.toastNewsletterSuccess : translations.en.toastNewsletterSuccess, 
+          'success'
+        );
+        document.getElementById('newsletterEmail').value = '';
+      } catch (error) {
+        showToast(
+          currentLanguage === 'Arabic' ? translations.ar.toastNewsletterError : translations.en.toastNewsletterError, 
+          'error'
+        );
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = currentLanguage === 'Arabic' ? translations.ar.newsletterBtnText : translations.en.newsletterBtnText;
+        spinner.classList.add('hidden');
+      }
+    };
+
+    // Initialize Application
+    document.addEventListener("DOMContentLoaded", () => {
+      // Initialize user preferences
+      document.getElementById('currencyText').textContent = currentCurrency;
+      
+      // Update auth status if user is logged in
+      if (currentUser) {
+        document.getElementById('authStatus').textContent = currentUser.name;
+        document.getElementById('mobileAuthStatus').textContent = currentUser.name;
+      }
+
+      // Initialize language
+      updateLanguage(currentLanguage);
+
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      
+      if(mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          mobileMenu.classList.toggle("open");
+          const icon = mobileMenuBtn.querySelector(".material-icons");
+          if(mobileMenu.classList.contains("open")) {
+            icon.textContent = "close";
+            mobileMenu.setAttribute('aria-hidden', 'false');
+          } else {
+            icon.textContent = "menu";
+            mobileMenu.setAttribute('aria-hidden', 'true');
+          }
+        });
+        
+        document.addEventListener("click", (e) => {
+          if(!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+            mobileMenu.classList.remove("open");
+            const icon = mobileMenuBtn.querySelector(".material-icons");
+            if (icon) icon.textContent = "menu";
+            mobileMenu.setAttribute('aria-hidden', 'true');
+          }
+        });
+      }
+
+      // Currency dropdown
+      const currencyBtn = document.getElementById("currencyBtn");
+      const currencyMenu = document.getElementById("currencyDropdown");
+      const languageBtn = document.getElementById("languageBtn");
+      const languageMenu = document.getElementById("languageDropdown");
+
+      if(currencyBtn && currencyMenu) {
+        currencyBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          currencyMenu.classList.toggle("hidden");
+          currencyMenu.setAttribute('aria-hidden', currencyMenu.classList.contains('hidden') ? 'true' : 'false');
+          if(languageMenu && !languageMenu.classList.contains('hidden')) languageMenu.classList.add("hidden");
+        });
+        
+        currencyMenu.querySelectorAll("li").forEach(item => {
+          item.addEventListener("click", () => {
+            updateUserPreferences(item.dataset.currency, currentLanguage);
+            currencyMenu.classList.add("hidden");
+            currencyMenu.setAttribute('aria-hidden', 'true');
+          });
+        });
+      }
+
+      // Language dropdown
+      if(languageBtn && languageMenu) {
+        languageBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          languageMenu.classList.toggle("hidden");
+          languageMenu.setAttribute('aria-hidden', languageMenu.classList.contains('hidden') ? 'true' : 'false');
+          if(currencyMenu && !currencyMenu.classList.contains('hidden')) currencyMenu.classList.add("hidden");
+        });
+        
+        languageMenu.querySelectorAll("li").forEach(item => {
+          item.addEventListener("click", () => {
+            updateUserPreferences(currentCurrency, item.dataset.lang);
+            languageMenu.classList.add("hidden");
+            languageMenu.setAttribute('aria-hidden', 'true');
+          });
+        });
+      }
+
+      // Close dropdowns when clicking elsewhere
+      document.addEventListener("click", () => {
+        if(currencyMenu) {
+          currencyMenu.classList.add("hidden");
+          currencyMenu.setAttribute('aria-hidden', 'true');
+        }
+        if(languageMenu) {
+          languageMenu.classList.add("hidden");
+          languageMenu.setAttribute('aria-hidden', 'true');
+        }
+      });
+
+      // Newsletter subscription
+      const newsletterForm = document.getElementById("newsletterForm");
+      const newsletterEmail = document.getElementById("newsletterEmail");
+      
+      if(newsletterForm && newsletterEmail) {
+        newsletterForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          if(newsletterEmail.value && newsletterEmail.value.includes("@")) {
+            handleNewsletterSubscription(newsletterEmail.value);
+          } else {
+            showToast(
+              currentLanguage === 'Arabic' ? translations.ar.toastEmailError : translations.en.toastEmailError,
+              'error'
+            );
+          }
+        });
+      }
+
+      // Check backend health on load
+      api.get('/health')
+        .then(data => console.log('Backend health:', data))
+        .catch(err => console.warn('Backend not reachable:', err.message));
+    });
+  </script>
+</body>
+</html>

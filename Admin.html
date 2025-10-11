@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dubaidrifters Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <style>
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background-color: #f9fafb;
+    }
+    
+    .sidebar-link.active {
+      background-color: #fef7e5;
+      color: #C89B52;
+      border-left: 4px solid #C89B52;
+    }
+    
+    .stat-card {
+      transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .notification {
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 300px;
+    }
+    
+    /* Login page styles */
+    .login-container {
+      background: linear-gradient(135deg, #C89B52 0%, #b38642 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .login-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      overflow: hidden;
+      width: 100%;
+      max-width: 400px;
+    }
+    
+    /* Loading states */
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal.active {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+  <!-- Login Page (shown when not authenticated) -->
+  <div id="loginPage" class="login-container">
+    <div class="login-card">
+      <div class="p-8">
+        <div class="text-center mb-8">
+          <div class="flex justify-center mb-4">
+            <img src="logo.jpg" alt="Logo" class="h-16 w-16 rounded-full object-cover border-4 border-[#C89B52]" onerror="this.style.display='none'"/>
+          </div>
+          <h1 class="text-2xl font-bold text-gray-800">Dubai Drifters</h1>
+          <p class="text-gray-600 mt-2">Admin Dashboard</p>
+        </div>
+        
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" id="email" name="email" required 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C89B52] focus:border-transparent"
+                   placeholder="admin@dubaidrifters.com">
+          </div>
+          
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" id="password" name="password" required 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C89B52] focus:border-transparent"
+                   placeholder="••••••••">
+          </div>
+          
+          <button type="submit" class="w-full bg-[#C89B52] hover:bg-[#b38642] text-white font-semibold py-2 px-4 rounded-md transition duration-200 flex items-center justify-center">
+            <span id="loginBtnText">Sign In</span>
+            <div id="loginSpinner" class="loading-spinner hidden ml-2"></div>
+          </button>
+        </form>
+        
+        <div id="loginError" class="mt-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-md hidden">
+          Invalid email or password
+        </div>
+        
+        <div class="mt-6 text-center text-sm text-gray-600">
+          <p>Default credentials:</p>
+          <p class="font-mono">admin@dubaidrifters.com / admin123</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard (shown when authenticated) -->
+  <div id="dashboardPage" class="hidden">
+    <!-- Main container -->
+    <div class="flex min-h-screen">
+      
+      <!-- Sidebar -->
+      <aside id="sidebar" class="w-64 bg-white border-r border-gray-200 transition-all duration-300 fixed md:relative h-full z-10">
+        <div class="p-4 flex justify-between items-center border-b">
+          <div class="flex items-center space-x-2">
+            <img src="logo.jpg" alt="Logo" class="h-8 w-8 rounded-full object-cover border-2 border-[#C89B52]" onerror="this.style.display='none'"/>
+            <h1 class="font-bold text-lg text-[#C89B52]">Dubaidrifters</h1>
+          </div>
+          <button id="toggleSidebar" class="md:hidden text-gray-600 hover:text-black">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <nav class="flex flex-col gap-1 p-4">
+          <a href="#" class="sidebar-link active px-3 py-3 rounded-md transition flex items-center" data-page="dashboard">
+            <span class="material-icons mr-3">dashboard</span>
+            Dashboard
+          </a>
+          <a href="#" class="sidebar-link px-3 py-3 rounded-md hover:bg-gray-100 transition flex items-center" data-page="bookings">
+            <span class="material-icons mr-3">event</span>
+            Bookings
+          </a>
+          <a href="#" class="sidebar-link px-3 py-3 rounded-md hover:bg-gray-100 transition flex items-center" data-page="users">
+            <span class="material-icons mr-3">people</span>
+            Users
+          </a>
+          <a href="#" class="sidebar-link px-3 py-3 rounded-md hover:bg-gray-100 transition flex items-center" data-page="tours">
+            <span class="material-icons mr-3">collections</span>
+            Tours
+          </a>
+          <a href="#" class="sidebar-link px-3 py-3 rounded-md hover:bg-gray-100 transition flex items-center" data-page="analytics">
+            <span class="material-icons mr-3">analytics</span>
+            Analytics
+          </a>
+          <a href="#" class="sidebar-link px-3 py-3 rounded-md hover:bg-gray-100 transition flex items-center" data-page="settings">
+            <span class="material-icons mr-3">settings</span>
+            Settings
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Content -->
+      <main class="flex-1 p-6 md:ml-0 transition-all duration-300">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-6">
+          <div>
+            <h2 class="text-2xl font-bold" id="pageTitle">Admin Dashboard</h2>
+            <p id="currentDate" class="text-sm text-gray-500"></p>
+          </div>
+          <div class="flex items-center space-x-4">
+            <!-- Notifications -->
+            <div class="relative">
+              <button id="notificationBtn" class="relative p-2 rounded-full hover:bg-gray-200 transition">
+                <span class="material-icons">notifications</span>
+                <span id="notificationBadge" class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center hidden">3</span>
+              </button>
+              <div id="notificationDropdown" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border hidden z-20">
+                <div class="p-3 border-b">
+                  <h3 class="font-semibold">Notifications</h3>
+                </div>
+                <div class="max-h-60 overflow-y-auto" id="notificationList">
+                  <!-- Notifications will be populated here -->
+                </div>
+              </div>
+            </div>
+            
+            <!-- User Menu -->
+            <div class="relative">
+              <button id="userMenuBtn" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-200 transition">
+                <div class="w-8 h-8 bg-[#C89B52] rounded-full flex items-center justify-center text-white font-semibold">A</div>
+                <span>Admin</span>
+                <span class="material-icons text-sm">expand_more</span>
+              </button>
+              <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border hidden z-20">
+                <div class="p-3 border-b">
+                  <p class="font-medium">Admin User</p>
+                  <p class="text-xs text-gray-500">admin@dubaidrifters.com</p>
+                </div>
+                <a href="#" class="block px-3 py-2 hover:bg-gray-100 transition">Profile</a>
+                <a href="#" class="block px-3 py-2 hover:bg-gray-100 transition">Settings</a>
+                <div class="border-t">
+                  <button id="logoutBtn" class="w-full text-left px-3 py-2 hover:bg-gray-100 transition text-red-600">Logout</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div id="dashboardContent">
+          <!-- Stats -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="p-4 bg-white border rounded-lg shadow stat-card">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-gray-500">Total Bookings</p>
+                  <p id="bookingsCount" class="text-2xl font-bold mt-1">0</p>
+                </div>
+                <div class="p-2 bg-blue-100 rounded-full">
+                  <span class="material-icons text-blue-600">event</span>
+                </div>
+              </div>
+              <p class="text-xs text-green-600 mt-2">↑ 12% from last month</p>
+            </div>
+            <div class="p-4 bg-white border rounded-lg shadow stat-card">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-gray-500">Active Users</p>
+                  <p id="usersCount" class="text-2xl font-bold mt-1">0</p>
+                </div>
+                <div class="p-2 bg-green-100 rounded-full">
+                  <span class="material-icons text-green-600">people</span>
+                </div>
+              </div>
+              <p class="text-xs text-green-600 mt-2">↑ 5% from last month</p>
+            </div>
+            <div class="p-4 bg-white border rounded-lg shadow stat-card">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-gray-500">Total Tours</p>
+                  <p id="toursCount" class="text-2xl font-bold mt-1">0</p>
+                </div>
+                <div class="p-2 bg-purple-100 rounded-full">
+                  <span class="material-icons text-purple-600">collections</span>
+                </div>
+              </div>
+              <p class="text-xs text-green-600 mt-2">↑ 3 new tours this month</p>
+            </div>
+            <div class="p-4 bg-white border rounded-lg shadow stat-card">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-gray-500">Revenue</p>
+                  <p id="revenueAmount" class="text-2xl font-bold mt-1">$0</p>
+                </div>
+                <div class="p-2 bg-yellow-100 rounded-full">
+                  <span class="material-icons text-yellow-600">attach_money</span>
+                </div>
+              </div>
+              <p class="text-xs text-green-600 mt-2">↑ 18% from last month</p>
+            </div>
+          </div>
+
+          <!-- Charts and Recent Bookings -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Chart -->
+            <div class="bg-white border rounded-lg shadow p-4">
+              <h3 class="text-lg font-semibold mb-3">Booking Trends</h3>
+              <div class="chart-container">
+                <canvas id="bookingChart"></canvas>
+              </div>
+            </div>
+            
+            <!-- Recent Bookings -->
+            <div class="bg-white border rounded-lg shadow p-4">
+              <div class="flex justify-between items-center mb-3">
+                <h3 class="text-lg font-semibold">Recent Bookings</h3>
+                <a href="#" class="text-sm text-[#C89B52] hover:underline" data-page="bookings">View All</a>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="border-b">
+                      <th class="text-left py-2">Tour</th>
+                      <th class="text-left py-2">Customer</th>
+                      <th class="text-left py-2">Date</th>
+                      <th class="text-left py-2">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bookingList">
+                    <!-- Bookings will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Quick Actions -->
+          <div class="bg-white border rounded-lg shadow p-4 mb-6">
+            <h3 class="text-lg font-semibold mb-3">Quick Actions</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <button class="p-4 border rounded-lg hover:bg-gray-50 transition flex flex-col items-center" id="addTourBtn">
+                <span class="material-icons text-[#C89B52] text-2xl mb-2">add</span>
+                <span>Add Tour</span>
+              </button>
+              <button class="p-4 border rounded-lg hover:bg-gray-50 transition flex flex-col items-center" id="addUserBtn">
+                <span class="material-icons text-[#C89B52] text-2xl mb-2">person_add</span>
+                <span>Add User</span>
+              </button>
+              <button class="p-4 border rounded-lg hover:bg-gray-50 transition flex flex-col items-center" id="generateReportBtn">
+                <span class="material-icons text-[#C89B52] text-2xl mb-2">receipt</span>
+                <span>Generate Report</span>
+              </button>
+              <button class="p-4 border rounded-lg hover:bg-gray-50 transition flex flex-col items-center" data-page="settings">
+                <span class="material-icons text-[#C89B52] text-2xl mb-2">settings</span>
+                <span>Settings</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other Pages Content -->
+        <div id="otherPagesContent" class="hidden">
+          <!-- Content for bookings, users, tours, etc. will be loaded here -->
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t text-center py-4 text-gray-600 text-sm">
+      © 2025 DubaiDrifters. All rights reserved. | Admin Dashboard v1.2
+    </footer>
+  </div>
+
+  <!-- Add Tour Modal -->
+  <div id="addTourModal" class="modal">
+    <div class="modal-content">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold">Add New Tour</h3>
+        <button class="text-gray-400 hover:text-gray-600" onclick="closeModal('addTourModal')">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <form id="addTourForm" class="space-y-4">
+        <div>
+          <label for="tourName" class="block text-sm font-medium text-gray-700 mb-1">Tour Name</label>
+          <input type="text" id="tourName" name="tourName" required 
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C89B52] focus:border-transparent">
+        </div>
+        <div>
+          <label for="tourDescription" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <textarea id="tourDescription" name="tourDescription" rows="3" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C89B52] focus:border-transparent"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="tourPrice" class="block text-sm font-medium text-gray-700 mb-1">Price ($)</label>
+            <input type="number" id="tourPrice" name="tourPrice" required 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C89B52] focus:border-transparent">
+          </div>
+          <div>
+            <label for="tourDuration" class="block text-sm font-medium text-gray-700 mb-1">Duration (hours)</label>
+            <input type="number" id="tourDuration" name="tourDuration" required 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C89B52] focus:border-transparent">
+          </div>
+        </div>
+        <div class="flex justify-end space-x-3 pt-4">
+          <button type="button" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition" onclick="closeModal('addTourModal')">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-[#C89B52] text-white rounded-md hover:bg-[#b38642] transition">Add Tour</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add User Modal -->
+  <div id="addUserModal" class="modal">
+    <div class="modal-content">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold">Add New User</h3>
+        <button class="text-gray-400 hover:text-gray-600" onclick="closeModal('addUserModal')">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <form id="addUserForm" class="space-y-4">
+        <div>
+          <label for="userName" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+          <input type="text" id="userName" name="userName" required 
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C89B52] focus:border-transparent">
+        </div>
+        <div>
+          <label for="userEmail" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input type="email" id="userEmail" name="userEmail" required 
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C89B52] focus:border-transparent">
+        </div>
+        <div>
+          <label for="userRole" class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+          <select id="userRole" name="userRole" required 
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C89B52] focus:border-transparent">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div>
+          <label for="userPassword" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+          <input type="password" id="userPassword" name="userPassword" required 
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C89B52] focus:border-transparent">
+        </div>
+        <div class="flex justify-end space-x-3 pt-4">
+          <button type="button" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition" onclick="closeModal('addUserModal')">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-[#C89B52] text-white rounded-md hover:bg-[#b38642] transition">Add User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // --------------------------
+  // API Configuration
+  // --------------------------
+  const API_BASE_URL = 'http://localhost:5000/api';
+
+  // --------------------------
+  // Authentication System
+  // --------------------------
+
+  async function login(email, password) {
+    try {
+      const btn = document.getElementById('loginBtnText');
+      const spinner = document.getElementById('loginSpinner');
+      const errorDiv = document.getElementById('loginError');
+      
+      btn.textContent = 'Signing In...';
+      spinner.classList.remove('hidden');
+      errorDiv.classList.add('hidden');
+
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        return true;
+      } else {
+        errorDiv.textContent = data.message || 'Invalid email or password';
+        errorDiv.classList.remove('hidden');
+        return false;
+      }
+    } catch (err) {
+      console.error(err);
+      document.getElementById('loginError').textContent = 'Server error. Please try again.';
+      document.getElementById('loginError').classList.remove('hidden');
+      return false;
+    } finally {
+      document.getElementById('loginBtnText').textContent = 'Sign In';
+      document.getElementById('loginSpinner').classList.add('hidden');
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.reload();
+  }
+
+  function isAuthenticated() {
+    return !!localStorage.getItem('token');
+  }
+
+  function getAuthHeaders() {
+    const token = localStorage.getItem('token');
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    };
+  }
+
+  // --------------------------
+  // Notifications
+  // --------------------------
+
+  function showNotification(message, type = 'info') {
+    const notification = document.createElement("div");
+    notification.className = `fixed top-4 right-4 bg-white border-l-4 ${
+      type === 'success' ? 'border-green-500' : 
+      type === 'error' ? 'border-red-500' : 'border-[#C89B52]'
+    } shadow-lg rounded-lg p-4 max-w-sm notification z-30`;
+    notification.innerHTML = `
+      <div class="flex justify-between items-start">
+        <div>
+          <p class="font-medium">${type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Notification'}</p>
+          <p class="text-sm text-gray-600 mt-1">${message}</p>
+        </div>
+        <button class="text-gray-400 hover:text-gray-600" onclick="this.parentElement.parentElement.remove()">
+          <span class="material-icons text-sm">close</span>
+        </button>
+      </div>
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => { if (notification.parentElement) notification.remove(); }, 5000);
+  }
+
+  // --------------------------
+  // Modal Functions
+  // --------------------------
+
+  function openModal(modalId) {
+    document.getElementById(modalId).classList.add('active');
+  }
+
+  function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+  }
+
+  // --------------------------
+  // API Functions
+  // --------------------------
+
+  async function fetchUsers() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/admin/users`, {
+        headers: getAuthHeaders()
+      });
+      if (!res.ok) throw new Error('Failed to fetch users');
+      const data = await res.json();
+      return data.data || data.users || [];
+    } catch (err) {
+      console.error(err);
+      return [];
+    }
+  }
+
+  async function fetchBookings() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/bookings`, {
+        headers: getAuthHeaders()
+      });
+      if (!res.ok) throw new Error('Failed to fetch bookings');
+      const data = await res.json();
+      return data.data || data.bookings || [];
+    } catch (err) {
+      console.error(err);
+      return [];
+    }
+  }
+
+  async function fetchTours() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/tours`, {
+        headers: getAuthHeaders()
+      });
+      if (!res.ok) throw new Error('Failed to fetch tours');
+      const data = await res.json();
+      return data.data || data.tours || [];
+    } catch (err) {
+      console.error(err);
+      return [];
+    }
+  }
+
+  async function createTour(tourData) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/admin/tours`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(tourData)
+      });
+      if (!res.ok) throw new Error('Failed to create tour');
+      return await res.json();
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  async function createUser(userData) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/admin/users`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(userData)
+      });
+      if (!res.ok) throw new Error('Failed to create user');
+      return await res.json();
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  // --------------------------
+  // UI Functions
+  // --------------------------
+
+  async function updateStats() {
+    try {
+      const [bookings, users, tours] = await Promise.all([
+        fetchBookings(),
+        fetchUsers(),
+        fetchTours()
+      ]);
+
+      document.getElementById('bookingsCount').textContent = bookings.length;
+      document.getElementById('usersCount').textContent = users.length;
+      document.getElementById('toursCount').textContent = tours.length;
+
+      const revenue = bookings.reduce((sum, b) => sum + (b.price || b.amount || 0), 0);
+      document.getElementById('revenueAmount').textContent = `$${revenue.toLocaleString()}`;
+    } catch (err) {
+      console.error('Error updating stats:', err);
+    }
+  }
+
+  async function loadBookingsTable() {
+    try {
+      const bookings = await fetchBookings();
+      const list = document.getElementById('bookingList');
+      list.innerHTML = '';
+
+      if (!bookings.length) {
+        list.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-gray-500">No bookings found</td></tr>`;
+        return;
+      }
+
+      bookings.slice(-5).reverse().forEach(b => {
+        const row = document.createElement('tr');
+        row.className = "border-b hover:bg-gray-50";
+        row.innerHTML = `
+          <td class="py-3">${b.tourName || b.tour || 'N/A'}</td>
+          <td class="py-3">${b.customerName || b.name || b.email || 'Customer'}</td>
+          <td class="py-3">${new Date(b.date || b.createdAt).toLocaleDateString()}</td>
+          <td class="py-3">
+            <span class="px-2 py-1 ${b.status === 'confirmed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} text-xs rounded-full">
+              ${b.status === 'confirmed' ? 'Confirmed' : 'Pending'}
+            </span>
+          </td>
+        `;
+        list.appendChild(row);
+      });
+    } catch (err) {
+      console.error('Error loading bookings:', err);
+    }
+  }
+
+  async function loadNotifications() {
+    try {
+      const bookings = await fetchBookings();
+      const notificationList = document.getElementById('notificationList');
+      notificationList.innerHTML = '';
+
+      if (!bookings.length) {
+        notificationList.innerHTML = '<div class="p-3 text-center text-gray-500">No notifications</div>';
+        document.getElementById('notificationBadge').classList.add('hidden');
+        return;
+      }
+
+      const recent = bookings.slice(-3).reverse();
+      recent.forEach(b => {
+        const div = document.createElement('div');
+        div.className = "p-3 border-b hover:bg-gray-50 cursor-pointer";
+        div.innerHTML = `
+          <p class="text-sm font-medium">New ${b.status} Booking</p>
+          <p class="text-xs text-gray-500">${b.tourName || b.tour} - ${b.customerName || b.name}</p>
+          <p class="text-xs text-gray-400">${new Date(b.date || b.createdAt).toLocaleDateString()}</p>
+        `;
+        notificationList.appendChild(div);
+      });
+
+      document.getElementById('notificationBadge').classList.remove('hidden');
+      document.getElementById('notificationBadge').textContent = Math.min(bookings.length, 9);
+    } catch (err) {
+      console.error('Error loading notifications:', err);
+    }
+  }
+
+  async function initChart() {
+    try {
+      const ctx = document.getElementById('bookingChart').getContext('2d');
+      const bookings = await fetchBookings();
+      
+      // Group bookings by month for the last 6 months
+      const monthlyData = Array(6).fill(0);
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+      
+      const currentMonth = new Date().getMonth();
+      bookings.forEach(b => {
+        const bookingDate = new Date(b.date || b.createdAt);
+        const monthDiff = currentMonth - bookingDate.getMonth();
+        if (monthDiff >= 0 && monthDiff < 6) {
+          monthlyData[5 - monthDiff]++;
+        }
+      });
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: monthNames,
+          datasets: [{
+            label: 'Bookings',
+            data: monthlyData,
+            borderColor: '#C89B52',
+            backgroundColor: 'rgba(200,155,82,0.1)',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: { 
+          responsive: true, 
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+    } catch (err) {
+      console.error('Error initializing chart:', err);
+    }
+  }
+
+  // --------------------------
+  // Page Navigation
+  // --------------------------
+
+  function navigateToPage(page) {
+    // Update active sidebar link
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+      link.classList.remove('active');
+    });
+    document.querySelector(`[data-page="${page}"]`).classList.add('active');
+
+    // Update page title
+    const titles = {
+      dashboard: 'Admin Dashboard',
+      bookings: 'Bookings Management',
+      users: 'User Management',
+      tours: 'Tour Management',
+      analytics: 'Analytics & Reports',
+      settings: 'Settings'
+    };
+    document.getElementById('pageTitle').textContent = titles[page] || 'Admin Dashboard';
+
+    // Show appropriate content
+    if (page === 'dashboard') {
+      document.getElementById('dashboardContent').classList.remove('hidden');
+      document.getElementById('otherPagesContent').classList.add('hidden');
+    } else {
+      document.getElementById('dashboardContent').classList.add('hidden');
+      document.getElementById('otherPagesContent').classList.remove('hidden');
+      loadPageContent(page);
+    }
+  }
+
+  async function loadPageContent(page) {
+    const content = document.getElementById('otherPagesContent');
+    
+    switch (page) {
+      case 'bookings':
+        content.innerHTML = `
+          <div class="bg-white border rounded-lg shadow p-6">
+            <h3 class="text-xl font-semibold mb-4">Bookings Management</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b">
+                    <th class="text-left py-2">ID</th>
+                    <th class="text-left py-2">Tour</th>
+                    <th class="text-left py-2">Customer</th>
+                    <th class="text-left py-2">Date</th>
+                    <th class="text-left py-2">Amount</th>
+                    <th class="text-left py-2">Status</th>
+                    <th class="text-left py-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="allBookingsList">
+                  <!-- All bookings will be populated here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+        await loadAllBookings();
+        break;
+        
+      case 'users':
+        content.innerHTML = `
+          <div class="bg-white border rounded-lg shadow p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-xl font-semibold">User Management</h3>
+              <button class="bg-[#C89B52] text-white px-4 py-2 rounded-md hover:bg-[#b38642] transition" onclick="openModal('addUserModal')">
+                Add User
+              </button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b">
+                    <th class="text-left py-2">Name</th>
+                    <th class="text-left py-2">Email</th>
+                    <th class="text-left py-2">Role</th>
+                    <th class="text-left py-2">Joined</th>
+                    <th class="text-left py-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="usersList">
+                  <!-- Users will be populated here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+        await loadAllUsers();
+        break;
+        
+      case 'tours':
+        content.innerHTML = `
+          <div class="bg-white border rounded-lg shadow p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-xl font-semibold">Tour Management</h3>
+              <button class="bg-[#C89B52] text-white px-4 py-2 rounded-md hover:bg-[#b38642] transition" onclick="openModal('addTourModal')">
+                Add Tour
+              </button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b">
+                    <th class="text-left py-2">Name</th>
+                    <th class="text-left py-2">Description</th>
+                    <th class="text-left py-2">Price</th>
+                    <th class="text-left py-2">Duration</th>
+                    <th class="text-left py-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="toursList">
+                  <!-- Tours will be populated here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+        await loadAllTours();
+        break;
+        
+      case 'analytics':
+        content.innerHTML = `
+          <div class="bg-white border rounded-lg shadow p-6">
+            <h3 class="text-xl font-semibold mb-4">Analytics & Reports</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="chart-container">
+                <canvas id="revenueChart"></canvas>
+              </div>
+              <div class="chart-container">
+                <canvas id="userGrowthChart"></canvas>
+              </div>
+            </div>
+          </div>
+        `;
+        initAnalyticsCharts();
+        break;
+        
+      case 'settings':
+        content.innerHTML = `
+          <div class="bg-white border rounded-lg shadow p-6">
+            <h3 class="text-xl font-semibold mb-4">Settings</h3>
+            <div class="space-y-6">
+              <div>
+                <h4 class="font-semibold mb-2">General Settings</h4>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Site Name</label>
+                    <input type="text" value="Dubai Drifters" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Contact Email</label>
+                    <input type="email" value="info@dubaidrifters.com" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                  </div>
+                </div>
+              </div>
+              <div>
+                <button class="bg-[#C89B52] text-white px-4 py-2 rounded-md hover:bg-[#b38642] transition">
+                  Save Settings
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        break;
+    }
+  }
+
+  async function loadAllBookings() {
+    try {
+      const bookings = await fetchBookings();
+      const list = document.getElementById('allBookingsList');
+      list.innerHTML = '';
+
+      if (!bookings.length) {
+        list.innerHTML = `<tr><td colspan="7" class="py-4 text-center text-gray-500">No bookings found</td></tr>`;
+        return;
+      }
+
+      bookings.forEach(b => {
+        const row = document.createElement('tr');
+        row.className = "border-b hover:bg-gray-50";
+        row.innerHTML = `
+          <td class="py-3">${b._id || b.id}</td>
+          <td class="py-3">${b.tourName || b.tour}</td>
+          <td class="py-3">${b.customerName || b.name}</td>
+          <td class="py-3">${new Date(b.date || b.createdAt).toLocaleDateString()}</td>
+          <td class="py-3">$${b.price || b.amount}</td>
+          <td class="py-3">
+            <span class="px-2 py-1 ${b.status === 'confirmed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'} text-xs rounded-full">
+              ${b.status}
+            </span>
+          </td>
+          <td class="py-3">
+            <button class="text-blue-600 hover:text-blue-800 text-sm">Edit</button>
+          </td>
+        `;
+        list.appendChild(row);
+      });
+    } catch (err) {
+      console.error('Error loading all bookings:', err);
+    }
+  }
+
+  async function loadAllUsers() {
+    try {
+      const users = await fetchUsers();
+      const list = document.getElementById('usersList');
+      list.innerHTML = '';
+
+      if (!users.length) {
+        list.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-500">No users found</td></tr>`;
+        return;
+      }
+
+      users.forEach(u => {
+        const row = document.createElement('tr');
+        row.className = "border-b hover:bg-gray-50";
+        row.innerHTML = `
+          <td class="py-3">${u.name}</td>
+          <td class="py-3">${u.email}</td>
+          <td class="py-3">
+            <span class="px-2 py-1 ${u.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'} text-xs rounded-full">
+              ${u.role}
+            </span>
+          </td>
+          <td class="py-3">${new Date(u.createdAt || u.joined).toLocaleDateString()}</td>
+          <td class="py-3">
+            <button class="text-blue-600 hover:text-blue-800 text-sm mr-2">Edit</button>
+            <button class="text-red-600 hover:text-red-800 text-sm">Delete</button>
+          </td>
+        `;
+        list.appendChild(row);
+      });
+    } catch (err) {
+      console.error('Error loading all users:', err);
+    }
+  }
+
+  async function loadAllTours() {
+    try {
+      const tours = await fetchTours();
+      const list = document.getElementById('toursList');
+      list.innerHTML = '';
+
+      if (!tours.length) {
+        list.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-gray-500">No tours found</td></tr>`;
+        return;
+      }
+
+      tours.forEach(t => {
+        const row = document.createElement('tr');
+        row.className = "border-b hover:bg-gray-50";
+        row.innerHTML = `
+          <td class="py-3">${t.name}</td>
+          <td class="py-3">${t.description?.substring(0, 50)}${t.description?.length > 50 ? '...' : ''}</td>
+          <td class="py-3">$${t.price}</td>
+          <td class="py-3">${t.duration} hours</td>
+          <td class="py-3">
+            <button class="text-blue-600 hover:text-blue-800 text-sm mr-2">Edit</button>
+            <button class="text-red-600 hover:text-red-800 text-sm">Delete</button>
+          </td>
+        `;
+        list.appendChild(row);
+      });
+    } catch (err) {
+      console.error('Error loading all tours:', err);
+    }
+  }
+
+  function initAnalyticsCharts() {
+    // This would be implemented with real data
+    setTimeout(() => {
+      showNotification('Analytics charts loaded', 'success');
+    }, 1000);
+  }
+
+  // --------------------------
+  // Initialize
+  // --------------------------
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    // Set current date
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { 
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+    });
+
+    // Show login page if not authenticated
+    if (!isAuthenticated()) {
+      document.getElementById('loginPage').classList.remove('hidden');
+      document.getElementById('dashboardPage').classList.add('hidden');
+    } else {
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('dashboardPage').classList.remove('hidden');
+
+      await updateStats();
+      await loadBookingsTable();
+      await loadNotifications();
+      await initChart();
+    }
+
+    // Login form
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const success = await login(email, password);
+      if (success) {
+        showNotification('Login successful!', 'success');
+        setTimeout(() => window.location.reload(), 1000);
+      }
+    });
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+
+    // Sidebar navigation
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const page = link.getAttribute('data-page');
+        navigateToPage(page);
+      });
+    });
+
+    // Modal buttons
+    document.getElementById('addTourBtn').addEventListener('click', () => openModal('addTourModal'));
+    document.getElementById('addUserBtn').addEventListener('click', () => openModal('addUserModal'));
+
+    // Add tour form
+    document.getElementById('addTourForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const tourData = {
+        name: formData.get('tourName'),
+        description: formData.get('tourDescription'),
+        price: parseFloat(formData.get('tourPrice')),
+        duration: parseInt(formData.get('tourDuration'))
+      };
+
+      try {
+        await createTour(tourData);
+        showNotification('Tour created successfully!', 'success');
+        closeModal('addTourModal');
+        e.target.reset();
+        await updateStats();
+        if (document.getElementById('toursList')) {
+          await loadAllTours();
+        }
+      } catch (err) {
+        showNotification('Failed to create tour', 'error');
+      }
+    });
+
+    // Add user form
+    document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const userData = {
+        name: formData.get('userName'),
+        email: formData.get('userEmail'),
+        role: formData.get('userRole'),
+        password: formData.get('userPassword')
+      };
+
+      try {
+        await createUser(userData);
+        showNotification('User created successfully!', 'success');
+        closeModal('addUserModal');
+        e.target.reset();
+        await updateStats();
+        if (document.getElementById('usersList')) {
+          await loadAllUsers();
+        }
+      } catch (err) {
+        showNotification('Failed to create user', 'error');
+      }
+    });
+
+    // Generate report
+    document.getElementById('generateReportBtn').addEventListener('click', () => {
+      showNotification('Report generation started...', 'info');
+      setTimeout(() => {
+        showNotification('Report generated successfully!', 'success');
+      }, 2000);
+    });
+
+    // Dropdown toggles
+    document.getElementById('notificationBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('notificationDropdown').classList.toggle('hidden');
+      document.getElementById('userDropdown').classList.add('hidden');
+    });
+
+    document.getElementById('userMenuBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('userDropdown').classList.toggle('hidden');
+      document.getElementById('notificationDropdown').classList.add('hidden');
+    });
+
+    // Close dropdowns when clicking elsewhere
+    document.addEventListener('click', () => {
+      document.getElementById('notificationDropdown').classList.add('hidden');
+      document.getElementById('userDropdown').classList.add('hidden');
+    });
+
+    // Mobile sidebar toggle
+    document.getElementById('toggleSidebar').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('hidden');
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blog - Dubai Drifters</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    body { 
+      font-family: 'Poppins', sans-serif; 
+    }
+    
+    /* RTL Support */
+    body.rtl {
+        direction: rtl;
+        text-align: right;
+    }
+    
+    body.rtl .material-icons {
+        transform: scaleX(-1);
+    }
+    
+    @keyframes fadeDown { 
+      from { opacity: 0; transform: translateY(-20px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    }
+    
+    @keyframes fadeUp { 
+      from { opacity: 0; transform: translateY(20px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    }
+    
+    .animate-fadeDown { animation: fadeDown 0.6s ease-out; }
+    .animate-fadeUp { animation: fadeUp 0.6s ease-out 0.2s; }
+    
+    /* Mobile menu styles */
+    .mobile-menu {
+        transition: all 0.3s ease;
+        max-height: 0;
+        overflow: hidden;
+    }
+    
+    .mobile-menu.open {
+        max-height: 500px;
+    }
+    
+    /* Loading placeholder for images */
+    .image-placeholder {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+        height: 192px; /* Match blog image height */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 1rem 1rem 0 0;
+    }
+    
+    @keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+    
+    /* Blog card hover effects */
+    .blog-card {
+      transition: all 0.3s ease;
+    }
+    
+    .blog-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    /* Category filter styles */
+    .category-filter.active {
+      background-color: #C89B52;
+      color: white;
+    }
+
+    /* Toast notifications */
+    .toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        color: white;
+        z-index: 1000;
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+    }
+
+    .toast.show {
+        transform: translateX(0);
+    }
+
+    .toast.success {
+        background-color: #10B981;
+    }
+
+    .toast.error {
+        background-color: #EF4444;
+    }
+
+    .toast.info {
+        background-color: #3B82F6;
+    }
+
+    /* Loading spinner */
+    .loading-spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #3498db;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="bg-white text-gray-800">
+
+  <!-- ============ HEADER ============ -->
+  <header class="bg-gradient-to-r from-black via-[#1a1a1a] to-[#0d0d0d] shadow-lg sticky top-0 z-50">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-center py-2 animate-fadeDown">
+        <!-- Logo + Name -->
+        <a href="index.html" class="flex items-center space-x-4">
+          <img src="logo.jpg" alt="Logo" 
+               class="h-16 w-16 rounded-full object-cover border-4 border-[#C89B52] shadow-lg hover:scale-110 transition-transform duration-300"
+               onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9IiNDODlCNTIiLz4KPHN2Zz4K'"/>
+          <span class="text-2xl font-bold tracking-wide text-[#C89B52]">Dubai Drifters</span>
+        </a>
+        
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center space-x-6 text-sm text-white font-medium">
+          <a class="hover:text-[#C89B52] transition-colors duration-300 hover:scale-105" href="about.html" id="navAbout">About Us</a>
+          <a class="hover:text-[#C89B52] transition-colors duration-300 hover:scale-105" href="contact.html" id="navContact">Contact Us</a>
+          <a class="text-[#C89B52] underline" href="blog.html" id="navBlog">Blog</a>
+
+          <!-- Currency Dropdown -->
+          <div class="relative group" aria-haspopup="true">
+            <button id="currencyBtn" class="flex items-center hover:text-[#C89B52] transition duration-300" aria-expanded="false" aria-controls="currencyDropdown">
+              <span id="currencyText">USD</span>
+              <span class="material-icons text-sm">expand_more</span>
+            </button>
+            <ul id="currencyDropdown" class="absolute right-0 mt-2 w-28 bg-[#1a1a1a] border border-[#C89B52] shadow-md rounded hidden text-white" role="menu" aria-hidden="true">
+              <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="USD">USD</li>
+              <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="AED">AED</li>
+              <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="EUR">EUR</li>
+              <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="GBP">GBP</li>
+              <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="PKR">PKR</li>
+            </ul>
+          </div>
+
+          <!-- Language Dropdown -->
+          <div class="relative group" aria-haspopup="true">
+            <button id="languageBtn" class="flex items-center hover:text-[#C89B52] transition duration-300" aria-expanded="false" aria-controls="languageDropdown">
+              <img id="flagIcon" alt="USA Flag" class="h-4 w-6 mr-2 rounded-sm shadow" src="https://flagcdn.com/w20/us.png"/>
+              <span id="langText">English</span>
+              <span class="material-icons text-sm">expand_more</span>
+            </button>
+            <ul id="languageDropdown" class="absolute right-0 mt-2 w-32 bg-[#1a1a1a] border border-[#C89B52] shadow-md rounded hidden text-white" role="menu" aria-hidden="true">
+              <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-lang="English" data-flag="us">English</li>
+              <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-lang="Arabic" data-flag="ae">العربية</li>
+            </ul>
+          </div>
+
+          <a class="flex items-center hover:text-[#C89B52] transition duration-300 hover:scale-105" href="signin.html">
+            <span class="material-icons text-lg mr-1">person</span>
+            <span id="authStatus">Sign In</span>
+          </a>
+        </div>
+        
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden">
+          <button id="mobileMenuBtn" class="text-white hover:text-[#C89B52] transition duration-300">
+            <span class="material-icons">menu</span>
+          </button>
+        </div>
+      </div>
+
+      <hr class="opacity-20 border-[#C89B52]"/>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex justify-center items-center py-3 space-x-8 text-sm font-semibold text-white animate-fadeUp">
+        <a href="index.html" class="hover:text-[#C89B52] transition hover:scale-105" id="navHome">Home</a>
+        <a href="tours.html" class="hover:text-[#C89B52] transition hover:scale-105" id="navTours">Tours</a>
+        <a href="visa.html" class="hover:text-[#C89B52] transition hover:scale-105" id="navVisa">Visa</a>
+        <a href="about.html" class="hover:text-[#C89B52] transition hover:scale-105" id="navAboutUs">About Us</a>
+        <a href="blog.html" class="text-[#C89B52] underline" id="navBlogPage">Blog</a>
+        <a href="contact.html" class="hover:text-[#C89B52] transition hover:scale-105" id="navContactPage">Contact</a>
+      </nav>
+      
+      <!-- Mobile Menu -->
+      <div id="mobileMenu" class="mobile-menu md:hidden bg-[#1a1a1a] rounded-b-lg shadow-lg" aria-hidden="true">
+        <div class="py-4 px-4 space-y-4">
+          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="index.html" id="mobileNavHome">Home</a>
+          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="tours.html" id="mobileNavTours">Tours</a>
+          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="visa.html" id="mobileNavVisa">Visa</a>
+          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="about.html" id="mobileNavAbout">About Us</a>
+          <a class="block text-[#C89B52] font-semibold" href="blog.html" id="mobileNavBlog">Blog</a>
+          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="contact.html" id="mobileNavContact">Contact</a>
+          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="signin.html" id="mobileAuthStatus">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="relative bg-cover bg-center h-72" style="background-image: url('blog.jpeg');">
+    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div class="text-center text-white">
+        <h1 id="heroTitle" class="text-4xl md:text-5xl font-bold mb-4">Our Blog</h1>
+        <p id="heroSubtitle" class="text-lg md:text-xl">Discover tips, guides, and experiences from Dubai Drifters</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BLOG CONTENT ============ -->
+  <section class="py-16 container mx-auto px-6">
+    <div class="text-center mb-12">
+      <h2 id="blogTitle" class="text-3xl font-bold text-[#C89B52] mb-4">Latest Stories & Guides</h2>
+      <p id="blogSubtitle" class="text-lg text-gray-600 max-w-2xl mx-auto">Discover tips, guides, and experiences from Dubai Drifters to inspire your journey.</p>
+      
+      <!-- Search and Filter -->
+      <div class="flex flex-col md:flex-row justify-center items-center mt-8 gap-4">
+        <div class="relative w-full md:w-64">
+          <input type="text" id="blogSearch" placeholder="Search articles..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C89B52]">
+          <span class="material-icons absolute left-3 top-2 text-gray-400">search</span>
+        </div>
+        
+        <div class="flex flex-wrap justify-center gap-2">
+          <button class="category-filter active px-4 py-2 bg-[#C89B52] text-white rounded-full text-sm transition" data-category="all" id="filterAll">All</button>
+          <button class="category-filter px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm transition" data-category="adventure" id="filterAdventure">Adventure</button>
+          <button class="category-filter px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm transition" data-category="culture" id="filterCulture">Culture</button>
+          <button class="category-filter px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm transition" data-category="food" id="filterFood">Food</button>
+          <button class="category-filter px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm transition" data-category="tips" id="filterTips">Tips</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Blog Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="blogGrid">
+      <!-- Blog posts will be dynamically loaded here -->
+    </div>
+    
+    <!-- Load More Button -->
+    <div class="text-center mt-12">
+      <button id="loadMore" class="bg-[#C89B52] hover:bg-[#b38642] text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition">
+        <span id="loadMoreText">Load More Articles</span>
+        <div id="loadMoreSpinner" class="loading-spinner hidden ml-2"></div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ NEWSLETTER ============ -->
+  <section class="py-16 bg-gray-100">
+    <div class="container mx-auto px-6 text-center max-w-2xl">
+      <h2 id="newsletterTitle" class="text-3xl font-bold text-[#C89B52] mb-4">Stay Updated with Dubai Drifters</h2>
+      <p id="newsletterSubtitle" class="text-lg text-gray-600 mb-6">Subscribe to our newsletter and never miss travel tips, exclusive deals, and Dubai insights.</p>
+      <form id="newsletterForm" class="flex flex-col sm:flex-row gap-4">
+        <input id="newsletterEmail" type="email" placeholder="Your email address" class="flex-1 px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#C89B52]">
+        <button type="submit" class="bg-[#C89B52] hover:bg-[#b38642] text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition flex items-center justify-center">
+          <span id="newsletterBtnText">Subscribe</span>
+          <div id="newsletterSpinner" class="loading-spinner hidden ml-2"></div>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white">
+    <div class="container mx-auto px-4 py-10">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h4 id="footerAboutTitle" class="font-bold text-lg mb-4">About Dubaidrifters.com</h4>
+          <p id="footerAboutDesc" class="text-sm text-gray-400">Your trusted partner for exploring the wonders of Dubai. We provide a wide range of tours, activities, and travel services to make your trip memorable.</p>
+        </div>
+        <div>
+          <h4 id="footerSupportTitle" class="font-bold text-lg mb-4">Support</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a class="text-gray-400 hover:text-white" href="contact.html" id="footerContact">Contact Us</a></li>
+            <li><a class="text-gray-400 hover:text-white" href="#" id="footerFaq">FAQs</a></li>
+            <li><a class="text-gray-400 hover:text-white" href="termsandconditions.html" id="footerTerms">Terms & Conditions</a></li>
+            <li><a class="text-gray-400 hover:text-white" href="#" id="footerPrivacy">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 id="footerFollowTitle" class="font-bold text-lg mb-4">Follow Us</h4>
+          <div class="flex space-x-2">
+            <!-- Facebook -->
+            <a class="text-gray-400 hover:text-white" href="https://www.facebook.com/YourPageName" target="_blank">
+              <i class="fab fa-facebook"></i>
+            </a>
+
+            <!-- WhatsApp -->
+            <a class="text-gray-400 hover:text-white" href="https://wa.me/923001234567" target="_blank">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+
+            <!-- Instagram -->
+            <a class="text-gray-400 hover:text-white" href="https://www.instagram.com/YourUsername" target="_blank">
+              <i class="fab fa-instagram"></i>
+            </a>
+          </div>
+          <h4 id="footerPaymentTitle" class="font-bold text-lg mt-6 mb-4">Payment Methods</h4>
+          <div class="flex space-x-2">
+            <a href="https://www.easypaisa.com.pk" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="text-xs bg-gray-700 px-2 py-1 rounded hover:bg-gray-600 transition">
+               EasyPaisa
+            </a>
+          </div>
+        </div>
+        <div>
+          <h4 id="footerNewsletterTitle" class="font-bold text-lg mb-4">Newsletter</h4>
+          <p id="footerNewsletterDesc" class="text-sm text-gray-400 mb-4">Subscribe to our newsletter for exclusive offers and updates.</p>
+          <form id="footerNewsletterForm" class="flex">
+            <input id="footerNewsletterEmail" class="w-full rounded-l-md p-2 text-gray-800 focus:outline-none" placeholder="Your email" type="email" required/>
+            <button id="footerNewsletterBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r-md transition-colors flex items-center" type="submit">
+              <span id="footerNewsletterBtnText">Subscribe</span>
+              <div id="footerNewsletterSpinner" class="loading-spinner hidden"></div>
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-500">
+        <p>© 2025 Dubaidrifters.com. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
+
+  <script>
+    // API Configuration
+    const API_BASE_URL = 'https://your-backend-domain.com/api'; // Replace with your actual backend URL
+    
+    // Global state
+    let currentCurrency = localStorage.getItem('preferredCurrency') || 'USD';
+    let currentLanguage = localStorage.getItem('preferredLanguage') || 'English';
+    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+    let currentPage = 1;
+    let hasMorePosts = true;
+    let currentCategory = 'all';
+
+    // Language translations
+    const translations = {
+      en: {
+        // Header
+        navHome: "Home",
+        navTours: "Tours",
+        navVisa: "Visa",
+        navAboutUs: "About Us",
+        navAbout: "About Us",
+        navContact: "Contact Us",
+        navBlog: "Blog",
+        navBlogPage: "Blog",
+        navContactPage: "Contact",
+        authStatus: "Sign In",
+        
+        // Hero section
+        heroTitle: "Our Blog",
+        heroSubtitle: "Discover tips, guides, and experiences from Dubai Drifters",
+        
+        // Blog section
+        blogTitle: "Latest Stories & Guides",
+        blogSubtitle: "Discover tips, guides, and experiences from Dubai Drifters to inspire your journey.",
+        
+        // Filters
+        filterAll: "All",
+        filterAdventure: "Adventure",
+        filterCulture: "Culture",
+        filterFood: "Food",
+        filterTips: "Tips",
+        
+        // Load More
+        loadMoreText: "Load More Articles",
+        loadMoreLoading: "Loading...",
+        loadMoreNoMore: "No more articles",
+        
+        // Newsletter
+        newsletterTitle: "Stay Updated with Dubai Drifters",
+        newsletterSubtitle: "Subscribe to our newsletter and never miss travel tips, exclusive deals, and Dubai insights.",
+        newsletterBtnText: "Subscribe",
+        newsletterSubscribing: "Subscribing...",
+        
+        // Footer
+        footerAboutTitle: "About Dubaidrifters.com",
+        footerAboutDesc: "Your trusted partner for exploring the wonders of Dubai. We provide a wide range of tours, activities, and travel services to make your trip memorable.",
+        footerSupportTitle: "Support",
+        footerContact: "Contact Us",
+        footerFaq: "FAQs",
+        footerTerms: "Terms & Conditions",
+        footerPrivacy: "Privacy Policy",
+        footerFollowTitle: "Follow Us",
+        footerPaymentTitle: "Payment Methods",
+        footerNewsletterTitle: "Newsletter",
+        footerNewsletterDesc: "Subscribe to our newsletter for exclusive offers and updates.",
+        footerNewsletterBtnText: "Subscribe",
+        
+        // Mobile menu
+        mobileNavHome: "Home",
+        mobileNavTours: "Tours",
+        mobileNavVisa: "Visa",
+        mobileNavAbout: "About Us",
+        mobileNavBlog: "Blog",
+        mobileNavContact: "Contact",
+        mobileAuthStatus: "Sign In",
+        
+        // Toast messages
+        toastPreferencesUpdated: "Preferences updated to",
+        toastNewsletterSuccess: "Successfully subscribed to our newsletter!",
+        toastNewsletterError: "Failed to subscribe. Please try again.",
+        toastEmailError: "Please enter a valid email address.",
+        toastArticlesLoaded: "More articles loaded successfully!",
+        toastNoMoreArticles: "No more articles to load",
+        toastBlogLoadError: "Failed to load blog posts. Please try again."
+      },
+      ar: {
+        // Header
+        navHome: "الرئيسية",
+        navTours: "الجولات",
+        navVisa: "التأشيرة",
+        navAboutUs: "من نحن",
+        navAbout: "من نحن",
+        navContact: "اتصل بنا",
+        navBlog: "المدونة",
+        navBlogPage: "المدونة",
+        navContactPage: "اتصل بنا",
+        authStatus: "تسجيل الدخول",
+        
+        // Hero section
+        heroTitle: "مدونتنا",
+        heroSubtitle: "اكتشف النصائح والإرشادات والتجارب من دبي دريفترز",
+        
+        // Blog section
+        blogTitle: "أحدث القصص والإرشادات",
+        blogSubtitle: "اكتشف النصائح والإرشادات والتجارب من دبي دريفترز لإلهام رحلتك.",
+        
+        // Filters
+        filterAll: "الكل",
+        filterAdventure: "المغامرة",
+        filterCulture: "الثقافة",
+        filterFood: "الطعام",
+        filterTips: "النصائح",
+        
+        // Load More
+        loadMoreText: "تحميل المزيد من المقالات",
+        loadMoreLoading: "جاري التحميل...",
+        loadMoreNoMore: "لا توجد المزيد من المقالات",
+        
+        // Newsletter
+        newsletterTitle: "ابق على اطلاع مع دبي دريفترز",
+        newsletterSubtitle: "اشترك في نشرتنا الإخبارية ولا تفوت نصائح السفر والعروض الحصرية ورؤى دبي.",
+        newsletterBtnText: "اشتراك",
+        newsletterSubscribing: "جاري الاشتراك...",
+        
+        // Footer
+        footerAboutTitle: "حول Dubaidrifters.com",
+        footerAboutDesc: "شريكك الموثوق لاستكشاف عجائب دبي. نحن نقدم مجموعة واسعة من الجولات والأنشطة وخدمات السفر لجعل رحلتك لا تنسى.",
+        footerSupportTitle: "الدعم",
+        footerContact: "اتصل بنا",
+        footerFaq: "الأسئلة الشائعة",
+        footerTerms: "الشروط والأحكام",
+        footerPrivacy: "سياسة الخصوصية",
+        footerFollowTitle: "تابعنا",
+        footerPaymentTitle: "طرق الدفع",
+        footerNewsletterTitle: "النشرة الإخبارية",
+        footerNewsletterDesc: "اشترك في نشرتنا الإخبارية للحصول على عروض حصرية وتحديثات.",
+        footerNewsletterBtnText: "اشتراك",
+        
+        // Mobile menu
+        mobileNavHome: "الرئيسية",
+        mobileNavTours: "الجولات",
+        mobileNavVisa: "التأشيرة",
+        mobileNavAbout: "من نحن",
+        mobileNavBlog: "المدونة",
+        mobileNavContact: "اتصل بنا",
+        mobileAuthStatus: "تسجيل الدخول",
+        
+        // Toast messages
+        toastPreferencesUpdated: "تم تحديث التفضيلات إلى",
+        toastNewsletterSuccess: "تم الاشتراك في النشرة الإخبارية بنجاح!",
+        toastNewsletterError: "فشل الاشتراك. يرجى المحاولة مرة أخرى.",
+        toastEmailError: "يرجى إدخال عنوان بريد إلكتروني صحيح.",
+        toastArticlesLoaded: "تم تحميل المزيد من المقالات بنجاح!",
+        toastNoMoreArticles: "لا توجد المزيد من المقالات للتحميل",
+        toastBlogLoadError: "فشل تحميل المقالات. يرجى المحاولة مرة أخرى."
+      }
+    };
+
+    // API Functions
+    const api = {
+      async get(url) {
+        try {
+          const response = await fetch(`${API_BASE_URL}${url}`);
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          return await response.json();
+        } catch (error) {
+          console.error('API GET Error:', error);
+          throw error;
+        }
+      },
+
+      async post(url, data) {
+        try {
+          const response = await fetch(`${API_BASE_URL}${url}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+          });
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          return await response.json();
+        } catch (error) {
+          console.error('API POST Error:', error);
+          throw error;
+        }
+      }
+    };
+
+    // Utility Functions
+    const showToast = (message, type = 'info', duration = 5000) => {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        <div class="flex items-center">
+          <span class="material-icons mr-2">${type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info'}</span>
+          ${message}
+        </div>
+      `;
+      
+      document.getElementById('toastContainer').appendChild(toast);
+      
+      setTimeout(() => {
+        toast.classList.add('show');
+      }, 100);
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, duration);
+    };
+
+    // Blog Functions
+    const fetchBlogPosts = async (page = 1, category = 'all') => {
+      try {
+        let url = `/blog/posts?page=${page}&limit=6`;
+        if (category !== 'all') {
+          url += `&category=${category}`;
+        }
+        
+        const data = await api.get(url);
+        return data.data || data.posts || [];
+      } catch (error) {
+        console.error('Error fetching blog posts:', error);
+        // Fallback to static posts if API fails
+        return getFallbackPosts();
+      }
+    };
+
+    const getFallbackPosts = () => {
+      // Fallback posts if API is not available
+      return [
+        {
+          id: 1,
+          title: "Top 5 Desert Safari Experiences",
+          excerpt: "From dune bashing to camel rides, explore Dubai's thrilling desert adventures.",
+          category: "adventure",
+          image: "https://source.unsplash.com/600x400/?desert,dubai",
+          date: "2025-05-15",
+          views: 1200,
+          slug: "top-5-desert-safari-experiences"
+        },
+        {
+          id: 2,
+          title: "Dubai City Tour Guide",
+          excerpt: "Uncover Dubai's skyscrapers, cultural gems, and must-visit attractions.",
+          category: "culture",
+          image: "https://source.unsplash.com/600x400/?dubai,city",
+          date: "2025-04-28",
+          views: 2400,
+          slug: "dubai-city-tour-guide"
+        },
+        {
+          id: 3,
+          title: "Adventure Activities in Dubai",
+          excerpt: "Skydiving, jet skiing, and more adrenaline-filled experiences await.",
+          category: "adventure",
+          image: "https://source.unsplash.com/600x400/?adventure,travel",
+          date: "2025-04-10",
+          views: 1800,
+          slug: "adventure-activities-in-dubai"
+        },
+        {
+          id: 4,
+          title: "Luxury Hotels in Dubai",
+          excerpt: "Discover world-class luxury hotels redefining hospitality in Dubai.",
+          category: "tips",
+          image: "https://source.unsplash.com/600x400/?luxury,dubai",
+          date: "2025-03-22",
+          views: 3100,
+          slug: "luxury-hotels-in-dubai"
+        },
+        {
+          id: 5,
+          title: "Dubai Food Guide",
+          excerpt: "From shawarma to fine dining, explore the flavors of Dubai.",
+          category: "food",
+          image: "https://source.unsplash.com/600x400/?food,dubai",
+          date: "2025-03-05",
+          views: 2700,
+          slug: "dubai-food-guide"
+        },
+        {
+          id: 6,
+          title: "Shopping in Dubai",
+          excerpt: "Discover where to shop — from luxury malls to traditional souks.",
+          category: "tips",
+          image: "https://source.unsplash.com/600x400/?shopping,dubai",
+          date: "2025-02-18",
+          views: 1500,
+          slug: "shopping-in-dubai"
+        }
+      ];
+    };
+
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+    };
+
+    const formatViews = (views) => {
+      if (views >= 1000) {
+        return (views / 1000).toFixed(1) + 'k';
+      }
+      return views.toString();
+    };
+
+    const renderBlogPosts = (posts, append = false) => {
+      const blogGrid = document.getElementById('blogGrid');
+      
+      if (!append) {
+        blogGrid.innerHTML = '';
+      }
+
+      if (posts.length === 0) {
+        blogGrid.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <span class="material-icons text-4xl text-gray-400 mb-4">article</span>
+            <p class="text-gray-500 text-lg">No blog posts found</p>
+          </div>
+        `;
+        return;
+      }
+
+      posts.forEach(post => {
+        const blogCard = document.createElement('div');
+        blogCard.className = 'blog-card bg-white rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden';
+        blogCard.setAttribute('data-category', post.category);
+        
+        blogCard.innerHTML = `
+          <div class="h-48 overflow-hidden">
+            <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onerror="this.classList.add('image-placeholder')">
+          </div>
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-xs font-semibold text-[#C89B52] uppercase">${post.category}</span>
+              <span class="text-xs text-gray-500">${formatDate(post.date)}</span>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">${post.title}</h3>
+            <p class="text-gray-600 mb-4">${post.excerpt}</p>
+            <div class="flex justify-between items-center">
+              <a href="blog-post.html?slug=${post.slug}" class="text-[#C89B52] font-semibold hover:underline flex items-center">
+                ${currentLanguage === 'Arabic' ? 'اقرأ المزيد' : 'Read More'} 
+                <span class="material-icons ml-1 text-sm">arrow_forward</span>
+              </a>
+              <div class="flex items-center text-gray-500 text-sm">
+                <span class="material-icons text-sm mr-1">visibility</span>
+                <span>${formatViews(post.views)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        blogGrid.appendChild(blogCard);
+      });
+    };
+
+    const loadBlogPosts = async (page = 1, category = 'all', append = false) => {
+      try {
+        const posts = await fetchBlogPosts(page, category);
+        
+        if (posts.length < 6) {
+          hasMorePosts = false;
+          document.getElementById('loadMore').style.display = 'none';
+        }
+        
+        renderBlogPosts(posts, append);
+        
+        if (append && posts.length > 0) {
+          showToast(
+            currentLanguage === 'Arabic' ? translations.ar.toastArticlesLoaded : translations.en.toastArticlesLoaded,
+            'success'
+          );
+        }
+      } catch (error) {
+        console.error('Error loading blog posts:', error);
+        showToast(
+          currentLanguage === 'Arabic' ? translations.ar.toastBlogLoadError : translations.en.toastBlogLoadError,
+          'error'
+        );
+      }
+    };
+
+    // Newsletter Functions
+    const subscribeToNewsletter = async (email) => {
+      try {
+        await api.post('/newsletter/subscribe', { email });
+        return true;
+      } catch (error) {
+        console.error('Error subscribing to newsletter:', error);
+        throw error;
+      }
+    };
+
+    // Language Functions
+    const updateLanguage = (language) => {
+      currentLanguage = language;
+      localStorage.setItem('preferredLanguage', language);
+      
+      // Update UI text
+      const langCode = language === 'Arabic' ? 'ar' : 'en';
+      const translation = translations[langCode];
+      
+      // Update all translatable elements
+      Object.keys(translation).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+          element.textContent = translation[key];
+        }
+      });
+      
+      // Update flag
+      const flagIcon = document.getElementById('flagIcon');
+      const selectedLang = document.querySelector(`[data-lang="${language}"]`);
+      if (flagIcon && selectedLang) {
+        flagIcon.src = `https://flagcdn.com/w20/${selectedLang.dataset.flag}.png`;
+      }
+      
+      // Update RTL/LTR
+      if (language === 'Arabic') {
+        document.body.classList.add('rtl');
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'ar');
+      } else {
+        document.body.classList.remove('rtl');
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', 'en');
+      }
+      
+      document.getElementById('langText').textContent = language;
+    };
+
+    // User Preferences
+    const updateUserPreferences = async (currency, language) => {
+      currentCurrency = currency;
+      currentLanguage = language;
+      
+      localStorage.setItem('preferredCurrency', currency);
+      localStorage.setItem('preferredLanguage', language);
+      
+      // Update UI
+      document.getElementById('currencyText').textContent = currency;
+      
+      // Update language
+      updateLanguage(language);
+      
+      // Save to backend if user is logged in
+      if (currentUser) {
+        try {
+          await api.post('/users/preferences', {
+            userId: currentUser.id,
+            currency,
+            language
+          });
+        } catch (error) {
+          console.error('Failed to save preferences:', error);
+        }
+      }
+      
+      showToast(
+        `${currentLanguage === 'Arabic' ? translations.ar.toastPreferencesUpdated : translations.en.toastPreferencesUpdated} ${currency}/${language}`, 
+        'success', 
+        2000
+      );
+    };
+
+    // Initialize Application
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Initialize user preferences
+      document.getElementById('currencyText').textContent = currentCurrency;
+      
+      // Update auth status if user is logged in
+      if (currentUser) {
+        document.getElementById('authStatus').textContent = currentUser.name;
+        document.getElementById('mobileAuthStatus').textContent = currentUser.name;
+      }
+
+      // Initialize language
+      updateLanguage(currentLanguage);
+
+      // Load initial blog posts
+      await loadBlogPosts(currentPage, currentCategory, false);
+
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      
+      if(mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          mobileMenu.classList.toggle("open");
+          const icon = mobileMenuBtn.querySelector(".material-icons");
+          if(mobileMenu.classList.contains("open")) {
+            icon.textContent = "close";
+            mobileMenu.setAttribute('aria-hidden', 'false');
+          } else {
+            icon.textContent = "menu";
+            mobileMenu.setAttribute('aria-hidden', 'true');
+          }
+        });
+        
+        document.addEventListener("click", (e) => {
+          if(!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+            mobileMenu.classList.remove("open");
+            const icon = mobileMenuBtn.querySelector(".material-icons");
+            if (icon) icon.textContent = "menu";
+            mobileMenu.setAttribute('aria-hidden', 'true');
+          }
+        });
+      }
+
+      // Currency dropdown
+      const currencyBtn = document.getElementById("currencyBtn");
+      const currencyMenu = document.getElementById("currencyDropdown");
+      const languageBtn = document.getElementById("languageBtn");
+      const languageMenu = document.getElementById("languageDropdown");
+
+      if(currencyBtn && currencyMenu) {
+        currencyBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          currencyMenu.classList.toggle("hidden");
+          currencyMenu.setAttribute('aria-hidden', currencyMenu.classList.contains('hidden') ? 'true' : 'false');
+          if(languageMenu && !languageMenu.classList.contains('hidden')) languageMenu.classList.add("hidden");
+        });
+        
+        currencyMenu.querySelectorAll("li").forEach(item => {
+          item.addEventListener("click", () => {
+            updateUserPreferences(item.dataset.currency, currentLanguage);
+            currencyMenu.classList.add("hidden");
+            currencyMenu.setAttribute('aria-hidden', 'true');
+          });
+        });
+      }
+
+      // Language dropdown
+      if(languageBtn && languageMenu) {
+        languageBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          languageMenu.classList.toggle("hidden");
+          languageMenu.setAttribute('aria-hidden', languageMenu.classList.contains('hidden') ? 'true' : 'false');
+          if(currencyMenu && !currencyMenu.classList.contains('hidden')) currencyMenu.classList.add("hidden");
+        });
+        
+        languageMenu.querySelectorAll("li").forEach(item => {
+          item.addEventListener("click", () => {
+            updateUserPreferences(currentCurrency, item.dataset.lang);
+            languageMenu.classList.add("hidden");
+            languageMenu.setAttribute('aria-hidden', 'true');
+          });
+        });
+      }
+
+      // Close dropdowns when clicking elsewhere
+      document.addEventListener("click", () => {
+        if(currencyMenu) {
+          currencyMenu.classList.add("hidden");
+          currencyMenu.setAttribute('aria-hidden', 'true');
+        }
+        if(languageMenu) {
+          languageMenu.classList.add("hidden");
+          languageMenu.setAttribute('aria-hidden', 'true');
+        }
+      });
+
+      // Blog search functionality
+      const blogSearch = document.getElementById("blogSearch");
+      if(blogSearch) {
+        blogSearch.addEventListener("input", () => {
+          const searchTerm = blogSearch.value.toLowerCase();
+          const blogCards = document.querySelectorAll(".blog-card");
+          
+          blogCards.forEach(card => {
+            const title = card.querySelector("h3").textContent.toLowerCase();
+            const content = card.querySelector("p").textContent.toLowerCase();
+            
+            if (title.includes(searchTerm) || content.includes(searchTerm)) {
+              card.style.display = "block";
+            } else {
+              card.style.display = "none";
+            }
+          });
+        });
+      }
+
+      // Category filter functionality
+      const categoryFilters = document.querySelectorAll(".category-filter");
+      
+      categoryFilters.forEach(filter => {
+        filter.addEventListener("click", async () => {
+          // Remove active class from all filters
+          categoryFilters.forEach(f => f.classList.remove("active", "bg-[#C89B52]", "text-white"));
+          categoryFilters.forEach(f => f.classList.add("bg-gray-200", "hover:bg-gray-300"));
+          
+          // Add active class to clicked filter
+          filter.classList.add("active", "bg-[#C89B52]", "text-white");
+          filter.classList.remove("bg-gray-200", "hover:bg-gray-300");
+          
+          currentCategory = filter.getAttribute("data-category");
+          currentPage = 1;
+          hasMorePosts = true;
+          document.getElementById('loadMore').style.display = 'block';
+          
+          await loadBlogPosts(currentPage, currentCategory, false);
+        });
+      });
+
+      // Load more functionality
+      const loadMoreBtn = document.getElementById("loadMore");
+      if(loadMoreBtn) {
+        loadMoreBtn.addEventListener("click", async () => {
+          if (!hasMorePosts) return;
+          
+          const loadMoreText = document.getElementById("loadMoreText");
+          const loadMoreSpinner = document.getElementById("loadMoreSpinner");
+          
+          // Show loading state
+          loadMoreBtn.disabled = true;
+          loadMoreText.textContent = currentLanguage === 'Arabic' ? translations.ar.loadMoreLoading : translations.en.loadMoreLoading;
+          loadMoreSpinner.classList.remove("hidden");
+          
+          currentPage++;
+          await loadBlogPosts(currentPage, currentCategory, true);
+          
+          // Reset button state
+          loadMoreBtn.disabled = false;
+          loadMoreText.textContent = currentLanguage === 'Arabic' ? translations.ar.loadMoreText : translations.en.loadMoreText;
+          loadMoreSpinner.classList.add("hidden");
+        });
+      }
+
+      // Newsletter subscription
+      const newsletterForm = document.getElementById("newsletterForm");
+      const newsletterEmail = document.getElementById("newsletterEmail");
+      
+      if(newsletterForm && newsletterEmail) {
+        newsletterForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          if(newsletterEmail.value && newsletterEmail.value.includes("@")) {
+            const btn = newsletterForm.querySelector('button');
+            const btnText = document.getElementById("newsletterBtnText");
+            const spinner = document.getElementById("newsletterSpinner");
+            
+            btn.disabled = true;
+            btnText.textContent = currentLanguage === 'Arabic' ? translations.ar.newsletterSubscribing : translations.en.newsletterSubscribing;
+            spinner.classList.remove("hidden");
+            
+            try {
+              await subscribeToNewsletter(newsletterEmail.value);
+              btnText.textContent = currentLanguage === 'Arabic' ? translations.ar.newsletterBtnText : translations.en.newsletterBtnText;
+              spinner.classList.add("hidden");
+              newsletterEmail.value = '';
+              showToast(
+                currentLanguage === 'Arabic' ? translations.ar.toastNewsletterSuccess : translations.en.toastNewsletterSuccess,
+                'success'
+              );
+            } catch (error) {
+              btnText.textContent = currentLanguage === 'Arabic' ? translations.ar.newsletterBtnText : translations.en.newsletterBtnText;
+              spinner.classList.add("hidden");
+              showToast(
+                currentLanguage === 'Arabic' ? translations.ar.toastNewsletterError : translations.en.toastNewsletterError,
+                'error'
+              );
+            } finally {
+              btn.disabled = false;
+            }
+          } else {
+            showToast(
+              currentLanguage === 'Arabic' ? translations.ar.toastEmailError : translations.en.toastEmailError,
+              'error'
+            );
+          }
+        });
+      }
+
+      // Footer newsletter subscription
+      const footerNewsletterForm = document.getElementById("footerNewsletterForm");
+      const footerNewsletterEmail = document.getElementById("footerNewsletterEmail");
+      
+      if(footerNewsletterForm && footerNewsletterEmail) {
+        footerNewsletterForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          if(footerNewsletterEmail.value && footerNewsletterEmail.value.includes("@")) {
+            const btn = document.getElementById("footerNewsletterBtn");
+            const btnText = document.getElementById("footerNewsletterBtnText");
+            const spinner = document.getElementById("footerNewsletterSpinner");
+            
+            btn.disabled = true;
+            btnText.textContent = currentLanguage === 'Arabic' ? translations.ar.newsletterSubscribing : translations.en.newsletterSubscribing;
+            spinner.classList.remove("hidden");
+            
+            try {
+              await subscribeToNewsletter(footerNewsletterEmail.value);
+              btnText.textContent = currentLanguage === 'Arabic' ? translations.ar.footerNewsletterBtnText : translations.en.footerNewsletterBtnText;
+              spinner.classList.add("hidden");
+              footerNewsletterEmail.value = '';
+              showToast(
+                currentLanguage === 'Arabic' ? translations.ar.toastNewsletterSuccess : translations.en.toastNewsletterSuccess,
+                'success'
+              );
+            } catch (error) {
+              btnText.textContent = currentLanguage === 'Arabic' ? translations.ar.footerNewsletterBtnText : translations.en.footerNewsletterBtnText;
+              spinner.classList.add("hidden");
+              showToast(
+                currentLanguage === 'Arabic' ? translations.ar.toastNewsletterError : translations.en.toastNewsletterError,
+                'error'
+              );
+            } finally {
+              btn.disabled = false;
+            }
+          } else {
+            showToast(
+              currentLanguage === 'Arabic' ? translations.ar.toastEmailError : translations.en.toastEmailError,
+              'error'
+            );
+          }
+        });
+      }
+
+      // Check backend health on load
+      try {
+        await api.get('/health');
+        console.log('Backend is connected');
+      } catch (err) {
+        console.warn('Backend not reachable, using fallback data');
+      }
+    });
+  </script>
+</body>
+</html>
