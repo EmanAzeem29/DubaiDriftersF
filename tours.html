@@ -152,7 +152,7 @@
                         <p class="text-gray-600 mb-4">Evening safari with dune bashing, live shows & BBQ dinner.</p>
                         <div class="flex justify-between items-center">
                             <span class="text-[#C89B52] font-bold text-lg">$120</span>
-                            <button onclick="addToCart('Desert Safari Adventure', 120)"
+                            <button onclick="addToCart('Alqasar Hotel', 120)"
                                 class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
                                 to Cart</button>
                         </div>
@@ -696,11 +696,8 @@
     </footer>
   <!-- JavaScript -->
   <script>
-    // Backend API Configuration
-    const API_BASE_URL = 'https://your-backend-api.com/api';
-    
-    // Cart functionality
-    let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    // Cart functionality - Cart will be empty on browser reload
+    let cartItems = [];
     const cartBtn = document.getElementById('cartBtn');
     const closeCart = document.getElementById('closeCart');
     const overlay = document.getElementById('overlay');
@@ -792,16 +789,14 @@
     closeCart.addEventListener('click', closeCartPanel);
     overlay.addEventListener('click', closeCartPanel);
 
-    // Add to cart function
+    // Add to cart function - Now redirects to cart.html with tour details
     function addToCart(name, price) {
-      // Check if item already exists in cart
+      // Add item to cart
       const existingItemIndex = cartItems.findIndex(item => item.name === name);
       
       if (existingItemIndex !== -1) {
-        // If exists, increase quantity
         cartItems[existingItemIndex].quantity += 1;
       } else {
-        // If not exists, add new item
         cartItems.push({
           name: name,
           price: price,
@@ -813,6 +808,13 @@
       
       // Show confirmation message
       Toast.show(`${name} added to cart!`);
+      
+      // Redirect to cart.html after a short delay
+      setTimeout(() => {
+        // Store cart items in sessionStorage for cart.html to access
+        sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+        window.location.href = 'cart.html';
+      }, 1000);
     }
 
     // Remove item from cart
@@ -834,9 +836,6 @@
 
     // Update cart UI
     function updateCart() {
-      // Persist to localStorage
-      localStorage.setItem('cart', JSON.stringify(cartItems));
-
       // Update cart count
       const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
       if (cartCount) cartCount.textContent = totalItems;
@@ -860,10 +859,8 @@
         cartItemElement.className = 'flex justify-between items-center mb-4 pb-4 border-b';
         cartItemElement.innerHTML = `
           <div class="flex-1">
-            <a href="booking.html?item=${encodeURIComponent(item.name)}&price=${encodeURIComponent(item.price)}&qty=${encodeURIComponent(item.quantity)}" class="block hover:underline">
-              <h4 class="font-semibold">${item.name}</h4>
-              <p class="text-gray-600">$${item.price} x ${item.quantity}</p>
-            </a>
+            <h4 class="font-semibold">${item.name}</h4>
+            <p class="text-gray-600">$${item.price} x ${item.quantity}</p>
           </div>
           <div class="flex items-center">
             <button onclick="updateQuantity(${index}, -1)" class="text-gray-500 hover:text-gray-700 mr-2">
@@ -892,14 +889,14 @@
       cartTotal.textContent = `$${total.toFixed(2)}`;
     }
 
-    // Checkout button
+    // Checkout button - Redirect to cart.html with current cart items
     checkoutBtn.addEventListener('click', () => {
-      // Redirect to cart page first
+      // Store cart items in sessionStorage for cart.html to access
+      sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
       window.location.href = 'cart.html';
     });
 
-    // Initialize cart from localStorage
-    cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    // Initialize cart - Empty on page load
     updateCart();
   </script>
 </body>
