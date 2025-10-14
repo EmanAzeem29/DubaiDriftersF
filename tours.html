@@ -200,17 +200,500 @@
     </div>
   </section>
 
-  <!-- Tours Section -->
-  <section class="py-16 bg-gray-50">
-    <div class="container mx-auto px-6">
-      <h2 id="toursTitle" class="text-4xl font-bold text-center mb-4 text-[#0F172A]">Discover Dubai's Wonders</h2>
-      <p id="toursSubtitle" class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Explore the most iconic landmarks and experiences that Dubai has to offer with our expertly curated tours.</p>
+<!-- Tours Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-4 text-[#0F172A]">Discover Dubai's Wonders</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Explore the most iconic landmarks and
+                experiences that Dubai has to offer with our expertly curated tours.</p>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="toursGrid">
-        <!-- Tours will be populated dynamically -->
-      </div>
-    </div>
-  </section>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- 1. Desert Safari -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img alt="Dubai City Tour" class="w-full h-48 object-cover" src="./IMAGES/AlqasarHotel.jpg" />
+                    <div class="p-4 relative z-10 bg-white">
+                        <h3 class="font-bold text-lg mb-2">Alqasar Hotel</h3>
+                        <p class="text-gray-600 mb-4">Evening safari with dune bashing, live shows & BBQ dinner.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$120</span>
+                            <button onclick="addToCart('Desert Safari Adventure', 120)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Dubai City Tour -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                        alt="Dubai City" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai City Tour</h3>
+                        <p class="text-gray-600 mb-4">Guided city tour covering major landmarks.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$90</span>
+                            <button onclick="addToCart('Dubai City Tour', 90)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Burj Khalifa -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/BurjKhalifa.avif"
+                        alt="Burj Khalifa" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Burj Khalifa Experience</h3>
+                        <p class="text-gray-600 mb-4">Observation deck tickets & Dubai Mall visit.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$150</span>
+                            <button onclick="addToCart('Burj Khalifa Experience', 150)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Dhow Cruise -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DhowCruise.avif"
+                        alt="Dhow Cruise" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Luxury Dhow Cruise</h3>
+                        <p class="text-gray-600 mb-4">Dinner cruise with live entertainment.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$80</span>
+                            <button onclick="addToCart('Luxury Dhow Cruise', 80)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Atlantis -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/Atlantis.webp"
+                        alt="Atlantis" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Atlantis Adventure</h3>
+                        <p class="text-gray-600 mb-4">Aquaventure Waterpark + The Lost Chambers.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$110</span>
+                            <button onclick="addToCart('Atlantis Adventure', 110)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Marina Walk -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DubaiMarina.jpg"
+                        alt="Dubai Marina" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Marina Walk Tour</h3>
+                        <p class="text-gray-600 mb-4">Explore Dubai Marina promenade & skyline views.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$70</span>
+                            <button onclick="addToCart('Marina Walk Tour', 70)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Cultural Evening -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/CulturalEvening.avif"
+                        alt="Cultural Evening" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Cultural Evening</h3>
+                        <p class="text-gray-600 mb-4">Traditional dinner with belly dance & fire shows.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$95</span>
+                            <button onclick="addToCart('Cultural Evening', 95)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. Palm Jumeirah -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/PalmJumeirah.avif"
+                        alt="Palm Jumeirah" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Palm Jumeirah Visit</h3>
+                        <p class="text-gray-600 mb-4">Visit the man-made wonder island.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$60</span>
+                            <button onclick="addToCart('Palm Jumeirah Visit', 60)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. Water Sports -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/WaterSports.webp"
+                        alt="Water Sports" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Adventure Water Sports</h3>
+                        <p class="text-gray-600 mb-4">Jet skiing, parasailing & banana boat rides.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$130</span>
+                            <button onclick="addToCart('Adventure Water Sports', 130)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10. Dubai Frame -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DubaiFrame.jpg"
+                        alt="Dubai Frame" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Frame Experience</h3>
+                        <p class="text-gray-600 mb-4">Visit the world's largest frame structure.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$65</span>
+                            <button onclick="addToCart('Dubai Frame Experience', 65)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 11. Dubai Mall -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DubaiMall.avif"
+                        alt="Dubai Mall" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Mall Shopping</h3>
+                        <p class="text-gray-600 mb-4">World's largest shopping mall with endless options.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$40</span>
+                            <button onclick="addToCart('Dubai Mall Shopping', 40)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 12. Jumeirah Mosque -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/JumeirahMosque.webp"
+                        alt="Jumeirah Mosque" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Jumeirah Mosque Tour</h3>
+                        <p class="text-gray-600 mb-4">Visit one of Dubai's most beautiful mosques.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$55</span>
+                            <button onclick="addToCart('Jumeirah Mosque Tour', 55)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 13. Global Village -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/GlobalVillage.jpg"
+                        alt="Global Village" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Global Village Experience</h3>
+                        <p class="text-gray-600 mb-4">Cultural, entertainment and shopping destination.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$50</span>
+                            <button onclick="addToCart('Global Village Experience', 50)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 14. Miracle Garden -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/MiracleGarden.webp"
+                        alt="Miracle Garden" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Miracle Garden</h3>
+                        <p class="text-gray-600 mb-4">Visit the world's largest natural flower garden.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$45</span>
+                            <button onclick="addToCart('Dubai Miracle Garden', 45)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 15. Ski Dubai -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/SkiDubai.avif"
+                        alt="Ski Dubai" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Ski Dubai Experience</h3>
+                        <p class="text-gray-600 mb-4">Indoor ski resort with penguin encounters.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$85</span>
+                            <button onclick="addToCart('Ski Dubai Experience', 85)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 16. Dubai Creek -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DubaiCreek.jpg"
+                        alt="Dubai Creek" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Creek & Souks</h3>
+                        <p class="text-gray-600 mb-4">Traditional abra ride and shopping in gold and spice souks.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$60</span>
+                            <button onclick="addToCart('Dubai Creek & Souks', 60)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 17. Dubai Opera -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DubaiOpera.jpg"
+                        alt="Dubai Opera" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Opera Show</h3>
+                        <p class="text-gray-600 mb-4">World-class performances in an architectural masterpiece.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$100+</span>
+                            <button onclick="addToCart('Dubai Opera Show', 100)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 18. Dubai Aquarium -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DubaiAquarium.jpg"
+                        alt="Dubai Aquarium" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Aquarium & Underwater Zoo</h3>
+                        <p class="text-gray-600 mb-4">Walk through the tunnel with aquatic life all around.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$75</span>
+                            <button onclick="addToCart('Dubai Aquarium & Underwater Zoo', 75)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 19. IMG Worlds -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/IMGWorlds.jpg"
+                        alt="IMG Worlds" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">IMG Worlds of Adventure</h3>
+                        <p class="text-gray-600 mb-4">Massive indoor theme park with Marvel and Cartoon Network zones.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$95</span>
+                            <button onclick="addToCart('IMG Worlds of Adventure', 95)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 20. La Perle -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/LaPerle.jpg"
+                        alt="La Perle" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">La Perle by Dragone</h3>
+                        <p class="text-gray-600 mb-4">Breathtaking aquatic and aerial performance show.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$120</span>
+                            <button onclick="addToCart('La Perle by Dragone', 120)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 21. Garden Glow -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/GardenGlow.webp"
+                        alt="Garden Glow" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Garden Glow</h3>
+                        <p class="text-gray-600 mb-4">Magical park with glow-in-the-dark installations and dinosaur
+                            park.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$55</span>
+                            <button onclick="addToCart('Dubai Garden Glow', 55)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 22. Hot Air Balloon -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/HotAirBalloon.webp"
+                        alt="Hot Air Balloon" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Hot Air Balloon Ride</h3>
+                        <p class="text-gray-600 mb-4">Spectacular sunrise views of the desert landscape.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$250</span>
+                            <button onclick="addToCart('Hot Air Balloon Ride', 250)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 23. Heritage Tour -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/HeritageTour.webp"
+                        alt="Heritage Tour" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Heritage Desert Tour</h3>
+                        <p class="text-gray-600 mb-4">Experience traditional Bedouin culture and customs.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$110</span>
+                            <button onclick="addToCart('Heritage Desert Tour', 110)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 24. Ferrari World -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/FerrariWorld.jpeg"
+                        alt="Ferrari World" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Ferrari World Abu Dhabi</h3>
+                        <p class="text-gray-600 mb-4">Experience the world's fastest roller coaster.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$125</span>
+                            <button onclick="addToCart('Ferrari World Abu Dhabi', 125)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 25. Sheikh Zayed Mosque -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/SheikhZayedMosque.jpg"
+                        alt="Sheikh Zayed Mosque" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Sheikh Zayed Mosque Tour</h3>
+                        <p class="text-gray-600 mb-4">Visit the majestic mosque in Abu Dhabi.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$90</span>
+                            <button onclick="addToCart('Sheikh Zayed Mosque Tour', 90)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 26. Deep Dive Dubai -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DeepDiveDubai.jpg"
+                        alt="Deep Dive Dubai" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Deep Dive Dubai</h3>
+                        <p class="text-gray-600 mb-4">Explore the world's deepest swimming pool for diving.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$180</span>
+                            <button onclick="addToCart('Deep Dive Dubai', 180)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 27. Yellow Boats -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/YellowBoats.jpg"
+                        alt="Yellow Boats" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Yellow Boat Tour</h3>
+                        <p class="text-gray-600 mb-4">Thrilling speedboat tour of Dubai's coastline.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$85</span>
+                            <button onclick="addToCart('Yellow Boat Tour', 85)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 28. Al Marmoom -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/AlMarmoom.avif"
+                        alt="Al Marmoom" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Al Marmoom Desert Conservation</h3>
+                        <p class="text-gray-600 mb-4">Explore the desert conservation reserve and spot wildlife.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$95</span>
+                            <button onclick="addToCart('Al Marmoom Desert Conservation', 95)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 29. Dubai Parks -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DubaiParks.jpg"
+                        alt="Dubai Parks" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Parks and Resorts</h3>
+                        <p class="text-gray-600 mb-4">Theme park complex with Motiongate, Bollywood Parks, and Legoland.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$135</span>
+                            <button onclick="addToCart('Dubai Parks and Resorts', 135)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 30. Hatta Mountain -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/HattaMountain.jpg"
+                        alt="Hatta Mountain" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Hatta Mountain Safari</h3>
+                        <p class="text-gray-600 mb-4">Explore the Hajar Mountains and Hatta Heritage Village.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$110</span>
+                            <button onclick="addToCart('Hatta Mountain Safari', 110)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
 
   <!-- Footer -->
   <footer class="bg-gray-800 text-white">
@@ -1149,3 +1632,4 @@
 </body>
 
 </html>
+
