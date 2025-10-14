@@ -694,10 +694,10 @@
             </div>
         </div>
     </footer>
-  <!-- JavaScript -->
+    <!-- JavaScript -->
   <script>
-    // Cart functionality
-    let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    // Cart functionality - No localStorage
+    let cartItems = [];
     const cartBtn = document.getElementById('cartBtn');
     const closeCart = document.getElementById('closeCart');
     const overlay = document.getElementById('overlay');
@@ -711,10 +711,6 @@
     const cartTotal = document.getElementById('cartTotal');
     const checkoutBtn = document.getElementById('checkoutBtn');
 
-    // Mobile Menu Elements
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-
     // Initialize toast
     const Toast = {
       init() {
@@ -725,12 +721,11 @@
         document.body.appendChild(this.el);
       },
       
-      show(message, type = 'success') {
+      show(message) {
         clearTimeout(this.hideTimeout);
         
         this.el.textContent = message;
-        const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
-        this.el.className = `toast toast-visible fixed bottom-4 left-1/2 transform -translate-x-1/2 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg`;
+        this.el.className = 'toast toast-visible fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg';
         
         this.hideTimeout = setTimeout(() => {
           this.el.classList.remove('toast-visible');
@@ -738,56 +733,38 @@
       }
     };
 
-    // Initialize on DOM load
+    // Initialize toast on DOM load
     document.addEventListener('DOMContentLoaded', () => {
       Toast.init();
       updateCart();
-      setupMobileMenu();
     });
 
-    // Mobile Menu Functionality
-    function setupMobileMenu() {
-      // Toggle mobile menu
-      mobileMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-      });
-
-      // Close mobile menu when clicking on links
-      const mobileMenuLinks = mobileMenu.querySelectorAll('a');
-      mobileMenuLinks.forEach(link => {
-        link.addEventListener('click', () => {
-          mobileMenu.classList.add('hidden');
-        });
-      });
-
-      // Close mobile menu when clicking cart button in mobile
-      const cartBtnMobile = document.getElementById('cartBtnMobile');
-      if (cartBtnMobile) {
-        cartBtnMobile.addEventListener('click', () => {
-          mobileMenu.classList.add('hidden');
-          openCart();
-        });
-      }
-    }
-
     // Open cart panel
-    function openCart() {
+    cartBtn.addEventListener('click', () => {
       cartPanel.classList.add('open');
       overlay.classList.add('open');
       document.body.style.overflow = 'hidden';
+    });
+
+    // Also open from mobile cart button if present
+    const cartBtnMobile = document.getElementById('cartBtnMobile');
+    if (cartBtnMobile) {
+      cartBtnMobile.addEventListener('click', () => {
+        cartPanel.classList.add('open');
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
     }
 
     // Close cart panel
+    closeCart.addEventListener('click', closeCartPanel);
+    overlay.addEventListener('click', closeCartPanel);
+
     function closeCartPanel() {
       cartPanel.classList.remove('open');
       overlay.classList.remove('open');
       document.body.style.overflow = 'auto';
     }
-
-    // Cart event listeners
-    cartBtn.addEventListener('click', openCart);
-    closeCart.addEventListener('click', closeCartPanel);
-    overlay.addEventListener('click', closeCartPanel);
 
     // Add to cart function
     function addToCart(name, price) {
@@ -831,9 +808,6 @@
 
     // Update cart UI
     function updateCart() {
-      // Persist to localStorage
-      localStorage.setItem('cart', JSON.stringify(cartItems));
-
       // Update cart count
       const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
       if (cartCount) cartCount.textContent = totalItems;
@@ -887,16 +861,26 @@
       cartTotal.textContent = `$${total.toFixed(2)}`;
     }
 
-    // Checkout button - Redirect to cart.html with all selected tour details
+    // Checkout button - Pass cart items as URL parameters
     checkoutBtn.addEventListener('click', () => {
-      if (cartItems.length > 0) {
-        // Redirect to cart page with all selected tours
-        window.location.href = 'cart.html';
+      if (cartItems.length === 0) {
+        Toast.show('Please add items to cart first!');
+        return;
       }
+      
+      // Convert cart items to URL parameters
+      const cartParams = new URLSearchParams();
+      cartItems.forEach((item, index) => {
+        cartParams.append(`item${index}`, `${item.name}|${item.price}|${item.quantity}`);
+      });
+      
+      // Redirect to cart.html with cart data
+      window.location.href = `cart.html?${cartParams.toString()}`;
     });
 
-    // Initialize cart from localStorage
+    // Initialize empty cart
     updateCart();
   </script>
 </body>
 </html>
+
