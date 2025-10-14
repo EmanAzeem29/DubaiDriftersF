@@ -446,7 +446,8 @@
 <script>
   // --------------------------
   // API Configuration
- const API_BASE = "https://dubaidriftersb.onrender.com/api";
+const API_BASE_URL = "https://api.dubaidrifters.com";
+
   // Authentication System
   async function login(email, password) {
     try {
@@ -503,11 +504,7 @@
       'Authorization': `Bearer ${token}`
     };
   }
-
-  // --------------------------
   // Notifications
-  // --------------------------
-
   function showNotification(message, type = 'info') {
     const notification = document.createElement("div");
     notification.className = `fixed top-4 right-4 bg-white border-l-4 ${
@@ -528,23 +525,14 @@
     document.body.appendChild(notification);
     setTimeout(() => { if (notification.parentElement) notification.remove(); }, 5000);
   }
-
-  // --------------------------
   // Modal Functions
-  // --------------------------
-
-  function openModal(modalId) {
+ function openModal(modalId) {
     document.getElementById(modalId).classList.add('active');
   }
-
-  function closeModal(modalId) {
+ function closeModal(modalId) {
     document.getElementById(modalId).classList.remove('active');
   }
-
-  // --------------------------
   // API Functions
-  // --------------------------
-
   async function fetchUsers() {
     try {
       const res = await fetch(`${API_BASE_URL}/admin/users`, {
@@ -616,11 +604,7 @@
       throw err;
     }
   }
-
-  // --------------------------
   // UI Functions
-  // --------------------------
-
   async function updateStats() {
     try {
       const [bookings, users, tours] = await Promise.all([
@@ -1168,3 +1152,4 @@
 </body>
 
 </html>
+
