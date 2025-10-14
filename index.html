@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -112,11 +113,10 @@
         .toast.success {
             background-color: #10B981;
         }
-.toast.error {
+        .toast.error {
             background-color: #EF4444;
         }
-
-    .toast.info {
+        .toast.info {
             background-color: #3B82F6;
         }
         .loading-spinner {
@@ -132,6 +132,15 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        /* Mobile currency/language dropdown styles */
+        .mobile-dropdown {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .mobile-dropdown.open {
+            max-height: 200px;
         }
     </style>
 </head>
@@ -180,7 +189,33 @@
         </a>
       </div>
       <!-- Mobile Menu Button -->
-      <div class="md:hidden">
+      <div class="md:hidden flex items-center space-x-4">
+        <!-- Mobile Currency Dropdown -->
+        <div class="relative">
+          <button id="mobileCurrencyBtn" class="flex items-center text-white hover:text-[#C89B52] transition duration-300">
+            <span id="mobileCurrencyText">USD</span>
+            <span class="material-icons text-sm">expand_more</span>
+          </button>
+          <ul id="mobileCurrencyDropdown" class="mobile-dropdown absolute right-0 mt-2 w-28 bg-[#1a1a1a] border border-[#C89B52] shadow-md rounded text-white z-50">
+            <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="USD">USD</li>
+            <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="AED">AED</li>
+            <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="EUR">EUR</li>
+            <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-currency="PKR">PKR</li>
+          </ul>
+        </div>
+        
+        <!-- Mobile Language Dropdown -->
+        <div class="relative">
+          <button id="mobileLanguageBtn" class="flex items-center text-white hover:text-[#C89B52] transition duration-300">
+            <img id="mobileFlagIcon" alt="USA Flag" class="h-4 w-6 mr-2 rounded-sm shadow" src="https://flagcdn.com/w20/us.png"/>
+            <span class="material-icons text-sm">expand_more</span>
+          </button>
+          <ul id="mobileLanguageDropdown" class="mobile-dropdown absolute right-0 mt-2 w-32 bg-[#1a1a1a] border border-[#C89B52] shadow-md rounded text-white z-50">
+            <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-lang="English" data-flag="us">English</li>
+            <li class="px-4 py-2 hover:bg-[#C89B52] cursor-pointer" data-lang="Arabic" data-flag="ae">العربية</li>
+          </ul>
+        </div>
+        
         <button id="mobileMenuBtn" class="text-white hover:text-[#C89B52] transition duration-300" aria-label="Toggle menu">
           <span class="material-icons">menu</span>
         </button>
@@ -234,111 +269,8 @@
         <section class="py-12 bg-white glitter">
             <div class="container mx-auto px-4">
                 <h2 class="text-3xl font-bold text-center mb-8">✨ Top-Rated Tours & Must-See Attractions ✨</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-                    <!-- Tour Cards -->
-                    <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card">
-                        <img alt="Alqasar Hotel" class="w-full h-48 object-cover" src="Alqasarhotel.jpg" onerror="this.classList.add('image-placeholder')"/>
-                        <div class="p-4 relative z-10 bg-white">
-                            <h3 class="font-bold text-lg mb-2">Alqasar Hotel</h3>
-                            <p class="text-gray-600 text-sm">From <span class="font-bold text-black">$35.00</span></p>
-                        </div>
-                    </div>
-
-                    <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card">
-                        <img alt="Atlantis" class="w-full h-48 object-cover" src="Atlantis.jpg" onerror="this.classList.add('image-placeholder')"/>
-                        <div class="p-4 relative z-10 bg-white">
-                            <h3 class="font-bold text-lg mb-2">Atlantis</h3>
-                            <p class="text-gray-600 text-sm">From <span class="font-bold text-black">$75.00</span></p>
-                        </div>
-                    </div>
-
-                    <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card">
-                        <img alt="Burj Khalifa" class="w-full h-48 object-cover" src="BurjKhalifa.jpg" onerror="this.classList.add('image-placeholder')"/>
-                        <div class="p-4 relative z-10 bg-white">
-                            <h3 class="font-bold text-lg mb-2">Burj Khalifa</h3>
-                            <p class="text-gray-600 text-sm">From <span class="font-bold text-black">$55.00</span></p>
-                        </div>
-                    </div>
-
-                    <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card">
-                        <img alt="Burj Al Arab" class="w-full h-48 object-cover" src="BurjAlarab.jpg" onerror="this.classList.add('image-placeholder')"/>
-                        <div class="p-4 relative z-10 bg-white">
-                            <h3 class="font-bold text-lg mb-2">Burj Al Arab</h3>
-                            <p class="text-gray-600 text-sm">From <span class="font-bold text-black">$45.00</span></p>
-                        </div>
-                    </div>
-
-                    <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card">
-                        <img alt="Jummeria Beach" class="w-full h-48 object-cover" src="jummeirahBeach.jpg" onerror="this.classList.add('image-placeholder')"/>
-                        <div class="p-4 relative z-10 bg-white">
-                            <h3 class="font-bold text-lg mb-2">Jummeria Beach</h3>
-                            <p class="text-gray-600 text-sm">From <span class="font-bold text-black">$60.00</span></p>
-                        </div>
-                    </div>
-
-                    <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card">
-                        <img alt="Jummeira Mosque" class="w-full h-48 object-cover" src="JummeirahMosque.jpg" onerror="this.classList.add('image-placeholder')"/>
-                        <div class="p-4 relative z-10 bg-white">
-                            <h3 class="font-bold text-lg mb-2">Jummeira Mosque</h3>
-                            <p class="text-gray-600 text-sm">From <span class="font-bold text-black">$25.00</span></p>
-                        </div>
-                    </div>
-
-                    <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card">
-                        <img alt="Lamer Beach" class="w-full h-48 object-cover" src="LamerBeach.jpg" onerror="this.classList.add('image-placeholder')"/>
-                        <div class="p-4 relative z-10 bg-white">
-                            <h3 class="font-bold text-lg mb-2">Lamer Beach</h3>
-                            <p class="text-gray-600 text-sm">From <span class="font-bold text-black">$20.00</span></p>
-                        </div>
-                    </div>
-
-                    <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card">
-                        <img alt="Marina Walk" class="w-full h-48 object-cover" src="MarinaWalk.jpg" onerror="this.classList.add('image-placeholder')"/>
-                        <div class="p-4 relative z-10 bg-white">
-                            <h3 class="font-bold text-lg mb-2">Marina Walk</h3>
-                            <p class="text-gray-600 text-sm">From <span class="font-bold text-black">$40.00</span></p>
-                        </div>
-                    </div>
-
-                    <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card">
-                        <img alt="Palm Jummeirah" class="w-full h-48 object-cover" src="palm jumeirah1.jpg" onerror="this.classList.add('image-placeholder')"/>
-                        <div class="p-4 relative z-10 bg-white">
-                            <h3 class="font-bold text-lg mb-2">Palm Jummeirah</h3>
-                            <p class="text-gray-600 text-sm">From <span class="font-bold text-black">$65.00</span></p>
-                        </div>
-                    </div>
-
-                    <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card">
-                        <img alt="Red Dunes Desert" class="w-full h-48 object-cover" src="RedDunesDesert.jpg" onerror="this.classList.add('image-placeholder')"/>
-                        <div class="p-4 relative z-10 bg-white">
-                            <h3 class="font-bold text-lg mb-2">Red Dunes Desert</h3>
-                            <p class="text-gray-600 text-sm">From <span class="font-bold text-black">$30.00</span></p>
-                        </div>
-                    </div>
-
-                    <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card">
-                        <img alt="RoyalDesertAD" class="w-full h-48 object-cover" src="Royal desert AD+1.jpg" onerror="this.classList.add('image-placeholder')"/>
-                        <div class="p-4 relative z-10 bg-white">
-                            <h3 class="font-bold text-lg mb-2">RoyalDesertAD</h3>
-                            <p class="text-gray-600 text-sm">From <span class="font-bold text-black">$35.00</span></p>
-                        </div>
-                    </div>
-
-                    <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card">
-                        <img alt="Sheikh Zayed Road" class="w-full h-48 object-cover" src="SheikhZayedRoad.jpg" onerror="this.classList.add('image-placeholder')"/>
-                        <div class="p-4 relative z-10 bg-white">
-                            <h3 class="font-bold text-lg mb-2">Sheikh Zayed Road</h3>
-                            <p class="text-gray-600 text-sm">From <span class="font-bold text-black">$35.00</span></p>
-                        </div>
-                    </div>
-
-                    <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card">
-                        <img alt="ZabeelPlace" class="w-full h-48 object-cover" src="zabeelplace.jpg" onerror="this.classList.add('image-placeholder')"/>
-                        <div class="p-4 relative z-10 bg-white">
-                            <h3 class="font-bold text-lg mb-2">ZabeelPlace</h3>
-                            <p class="text-gray-600 text-sm">From <span class="font-bold text-black">$35.00</span></p>
-                        </div>
-                    </div>
+                <div id="toursContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                    <!-- Tour Cards will be dynamically loaded here -->
                 </div>
 
                 <div class="text-center mt-8">
@@ -421,30 +353,27 @@
                 <div>
                     <h4 id="footerFollowTitle" class="font-bold text-lg mb-4">Follow Us</h4>
                     <div class="flex space-x-2">
-                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-       <!-- WhatsApp -->
-    <a class="text-gray-400 hover:text-white" href="https://wa.me/+971524408513" target="_blank">
-      <i class="fab fa-whatsapp"></i>
-    </a>
-
-    <!-- Instagram -->
-    <a class="text-gray-400 hover:text-white" href="https://www.instagram.com/dubaidrifterss?utm_source=qr&igsh=MTk0d2JoYmllZWdnbA==" target="_blank">
-      <i class="fab fa-instagram"></i>
-    </a>
-    
-    <!-- TikTok -->
-    <a class="text-gray-400 hover:text-white" href="https://www.tiktok.com/@dubaidrifterssgmail.com?_t=ZN-908Na7dtnvP&_r=1" target="_blank">
-      <i class="fab fa-tiktok"></i>
-    </a>
+                        <!-- WhatsApp -->
+                        <a class="text-gray-400 hover:text-white" href="https://wa.me/+971524408513" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <!-- Instagram -->
+                        <a class="text-gray-400 hover:text-white" href="https://www.instagram.com/dubaidrifterss?utm_source=qr&igsh=MTk0d2JoYmllZWdnbA==" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <!-- TikTok -->
+                        <a class="text-gray-400 hover:text-white" href="https://www.tiktok.com/@dubaidrifterssgmail.com?_t=ZN-908Na7dtnvP&_r=1" target="_blank">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
                     </div>
                     <h4 id="footerPaymentTitle" class="font-bold text-lg mt-6 mb-4">Payment Methods</h4>
                     <div class="flex space-x-2">
-                    <a href="https://www.easypaisa.com.pk" 
-                         target="_blank" 
-                         rel="noopener noreferrer"
-                         class="text-xs bg-gray-700 px-2 py-1 rounded hover:bg-gray-600 transition">
-                         EasyPaisa
-                </a>   
+                        <a href="https://www.easypaisa.com.pk" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            class="text-xs bg-gray-700 px-2 py-1 rounded hover:bg-gray-600 transition">
+                            EasyPaisa
+                        </a>   
                     </div>
                 </div>
                 <div>
@@ -470,9 +399,9 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         // API Configuration 
-const API_BASE_URL = "https://api.dubaidrifters.com/api";
+        const API_BASE_URL = "https://api.dubaidrifters.com/api";
 
-// Global state
+        // Global state
         let currentCurrency = localStorage.getItem('preferredCurrency') || 'USD';
         let currentLanguage = localStorage.getItem('preferredLanguage') || 'English';
         let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
@@ -588,6 +517,7 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
                 toastToursError: "فشل تحميل الجولات. يرجى المحاولة مرة أخرى لاحقًا."
             }
         };
+
         // Utility Functions
         const showToast = (message, type = 'info', duration = 5000) => {
             const toast = document.createElement('div');
@@ -611,12 +541,14 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
                 }, 300);
             }, duration);
         };
+
         const convertCurrency = (price, fromCurrency, toCurrency) => {
             const fromRate = exchangeRates[fromCurrency.toLowerCase()];
             if (!fromRate) return price;          
             const rate = fromRate[toCurrency.toLowerCase()];
             return rate ? price * rate : price;
         };
+
         const formatPrice = (price, currency = currentCurrency) => {
             const symbols = {
                 'USD': '$',
@@ -632,6 +564,7 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
             const convertedPrice = convertCurrency(price, 'USD', currency);
             return `${symbols[currency]}${convertedPrice.toFixed(2)}`;
         };
+
         // API Functions
         const api = {
             async get(url) {
@@ -661,6 +594,7 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
                 }
             }
         };
+
         // Language Functions
         const updateLanguage = (language) => {
             currentLanguage = language;
@@ -679,9 +613,13 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
             });            
             // Update flag
             const flagIcon = document.getElementById('flagIcon');
+            const mobileFlagIcon = document.getElementById('mobileFlagIcon');
             const selectedLang = document.querySelector(`[data-lang="${language}"]`);
             if (flagIcon && selectedLang) {
                 flagIcon.src = `https://flagcdn.com/w20/${selectedLang.dataset.flag}.png`;
+            }
+            if (mobileFlagIcon && selectedLang) {
+                mobileFlagIcon.src = `https://flagcdn.com/w20/${selectedLang.dataset.flag}.png`;
             }
            // Update RTL/LTR
             if (language === 'Arabic') {
@@ -695,6 +633,7 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
             }            
             document.getElementById('langText').textContent = language;
         };
+
         // Tour Functions
         const loadTours = async () => {
             try {
@@ -718,6 +657,7 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
                 displayFallbackTours();
             }
         };
+
         const displayTours = (tours) => {
             const container = document.getElementById('toursContainer');
             
@@ -751,6 +691,7 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
                 </div>
             `).join('');
         };
+
         // Fallback tours if API is not available
         const displayFallbackTours = () => {
             const fallbackTours = [
@@ -768,9 +709,11 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
             
             displayTours(fallbackTours);
         };
+
         const viewTour = (tourId) => {
             window.location.href = `tour-details.html?id=${tourId}`;
         };
+
         // Newsletter Subscription
         const handleNewsletterSubscription = async (email) => {
             const btn = document.getElementById('newsletterBtn');
@@ -798,6 +741,7 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
                 spinner.classList.add('hidden');
             }
         };
+
         // User Preferences
         const updateUserPreferences = async (currency, language) => {
             currentCurrency = currency;
@@ -805,7 +749,9 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
             localStorage.setItem('preferredCurrency', currency);
             localStorage.setItem('preferredLanguage', language);           
             // Update UI
-            document.getElementById('currencyText').textContent = currency;          
+            document.getElementById('currencyText').textContent = currency;
+            document.getElementById('mobileCurrencyText').textContent = currency;
+            
             // Update language
             updateLanguage(language);           
             // Reload tours to update prices
@@ -828,6 +774,7 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
                 2000
             );
         };
+
         // Search Functionality
         const handleSearch = () => {
             const searchTerm = document.getElementById('searchInput').value.trim();
@@ -846,10 +793,12 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
                 );
             }
         };
+
         // Initialize Application
         document.addEventListener("DOMContentLoaded", () => {
             // Initialize user preferences
             document.getElementById('currencyText').textContent = currentCurrency;
+            document.getElementById('mobileCurrencyText').textContent = currentCurrency;
             
             // Update auth status if user is logged in
             if (currentUser) {
@@ -959,6 +908,46 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
                     });
                 });
             }
+            // Mobile Currency dropdown
+            const mobileCurrencyBtn = document.getElementById("mobileCurrencyBtn");
+            const mobileCurrencyMenu = document.getElementById("mobileCurrencyDropdown");
+            
+            if(mobileCurrencyBtn && mobileCurrencyMenu) {
+                mobileCurrencyBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    mobileCurrencyMenu.classList.toggle("open");
+                    if(mobileLanguageMenu && mobileLanguageMenu.classList.contains('open')) {
+                        mobileLanguageMenu.classList.remove("open");
+                    }
+                });
+                
+                mobileCurrencyMenu.querySelectorAll("li").forEach(item => {
+                    item.addEventListener("click", () => {
+                        updateUserPreferences(item.dataset.currency, currentLanguage);
+                        mobileCurrencyMenu.classList.remove("open");
+                    });
+                });
+            }
+            // Mobile Language dropdown
+            const mobileLanguageBtn = document.getElementById("mobileLanguageBtn");
+            const mobileLanguageMenu = document.getElementById("mobileLanguageDropdown");
+            
+            if(mobileLanguageBtn && mobileLanguageMenu) {
+                mobileLanguageBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    mobileLanguageMenu.classList.toggle("open");
+                    if(mobileCurrencyMenu && mobileCurrencyMenu.classList.contains('open')) {
+                        mobileCurrencyMenu.classList.remove("open");
+                    }
+                });
+                
+                mobileLanguageMenu.querySelectorAll("li").forEach(item => {
+                    item.addEventListener("click", () => {
+                        updateUserPreferences(currentCurrency, item.dataset.lang);
+                        mobileLanguageMenu.classList.remove("open");
+                    });
+                });
+            }
             // Close dropdowns when clicking elsewhere
             document.addEventListener("click", () => {
                 if(currencyMenu) {
@@ -969,8 +958,14 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
                     languageMenu.classList.add("hidden");
                     languageMenu.setAttribute('aria-hidden', 'true');
                 }
+                if(mobileCurrencyMenu) {
+                    mobileCurrencyMenu.classList.remove("open");
+                }
+                if(mobileLanguageMenu) {
+                    mobileLanguageMenu.classList.remove("open");
+                }
             });
-        // Like buttons
+            // Like buttons
             document.querySelectorAll(".like-btn").forEach(button => {
                 button.addEventListener("click", () => {
                     const countSpan = button.querySelector(".count");
