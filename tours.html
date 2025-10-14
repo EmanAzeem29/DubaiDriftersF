@@ -60,6 +60,15 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    /* Mobile menu styles */
+    #mobileMenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    #mobileMenu.open {
+      max-height: 300px;
+    }
   </style>
 </head>
 <body class="bg-[#FDF6EC]">
@@ -94,16 +103,17 @@
     </div>
 
     <!-- Mobile Nav -->
-    <div id="mobileMenu" class="hidden md:hidden bg-black bg-opacity-95 text-white text-center space-y-4 py-6">
-      <a href="index.html" class="block hover:text-[#C89B52]">Home</a>
-      <a href="about.html" class="block hover:text-[#C89B52]">About</a>
-      <a href="tours.html" class="block text-[#C89B52] font-semibold">Tours</a>
-      <a href="blog.html" class="block hover:text-[#C89B52]">Blog</a>
-      <a href="contact.html" class="block hover:text-[#C89B52]">Contact</a>
+    <div id="mobileMenu" class="md:hidden bg-black bg-opacity-95 text-white text-center space-y-4 py-6">
+      <a href="index.html" class="block hover:text-[#C89B52] py-2">Home</a>
+      <a href="about.html" class="block hover:text-[#C89B52] py-2">About</a>
+      <a href="tours.html" class="block text-[#C89B52] font-semibold py-2">Tours</a>
+      <a href="blog.html" class="block hover:text-[#C89B52] py-2">Blog</a>
+      <a href="contact.html" class="block hover:text-[#C89B52] py-2">Contact</a>
       <!-- Cart in mobile -->
-      <button id="cartBtnMobile" class="relative hover:text-[#C89B52]">
+      <button id="cartBtnMobile" class="relative hover:text-[#C89B52] py-2">
         <i class="fas fa-shopping-cart text-lg"></i>
         <span id="cartCountMobile" class="bg-[#C89B52] text-black text-xs font-bold rounded-full px-1.5 py-0.5 absolute -top-2 -right-2">0</span>
+        <span class="ml-2">Cart</span>
       </button>
     </div>
   </header>
@@ -233,282 +243,311 @@
 // ✅ Fix: keep only one /api path here
 const API_BASE_URL = "https://api.dubaidrifters.com/api";
 
+// API endpoints
+const API_ENDPOINTS = {
+  TOURS: `${API_BASE_URL}/tours?limit=10&sort=rating`,
+  CART: `${API_BASE_URL}/cart`,
+  NEWSLETTER: `${API_BASE_URL}/newsletter`
+};
 
-// ✅ Load tours
-async function loadTours() {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/tours?limit=10&sort=rating`);
-    if (!response.ok) throw new Error(`Failed to fetch tours: ${response.status}`);
-    const tours = await response.json();
-    console.log("Tours loaded:", tours);
-    // render your tours...
-  } catch (error) {
-    console.error("Error loading tours:", error);
+// --- CART VARIABLES ---
+let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+const cartBtn = document.getElementById('cartBtn');
+const closeCart = document.getElementById('closeCart');
+const overlay = document.getElementById('overlay');
+const cartPanel = document.getElementById('cartPanel');
+const cartCount = document.getElementById('cartCount');
+const cartCountMobile = document.getElementById('cartCountMobile');
+const cartItemsContainer = document.getElementById('cartItems');
+const emptyCart = document.getElementById('emptyCart');
+const cartSubtotal = document.getElementById('cartSubtotal');
+const cartTax = document.getElementById('cartTax');
+const cartTotal = document.getElementById('cartTotal');
+const checkoutBtn = document.getElementById('checkoutBtn');
+
+// --- MOBILE MENU ---
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+
+// --- TOURS ---
+const toursGrid = document.getElementById('toursGrid');
+const toursLoading = document.getElementById('toursLoading');
+const toursError = document.getElementById('toursError');
+const retryToursBtn = document.getElementById('retryToursBtn');
+
+// --- NEWSLETTER ---
+const newsletterForm = document.getElementById('newsletterForm');
+const newsletterEmail = document.getElementById('newsletterEmail');
+const newsletterBtn = document.getElementById('newsletterBtn');
+const newsletterBtnText = document.getElementById('newsletterBtnText');
+const newsletterSpinner = document.getElementById('newsletterSpinner');
+const newsletterMessage = document.getElementById('newsletterMessage');
+
+// ✅ Toast Notifications
+const Toast = {
+  init() {
+    this.hideTimeout = null;
+    this.el = document.createElement('div');
+    this.el.className = 'toast';
+    document.body.appendChild(this.el);
+  },
+  show(message, type = 'success') {
+    clearTimeout(this.hideTimeout);
+    this.el.textContent = message;
+    const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+    this.el.className = `toast toast-visible fixed bottom-4 left-1/2 transform -translate-x-1/2 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg`;
+    this.hideTimeout = setTimeout(() => {
+      this.el.classList.remove('toast-visible');
+    }, 3000);
+  }
+};
+
+// ✅ DOM Content Loaded
+document.addEventListener('DOMContentLoaded', () => {
+  Toast.init();
+  updateCart();
+  loadTours();
+
+  // Mobile menu event listener
+  mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+  
+  retryToursBtn.addEventListener('click', loadTours);
+  newsletterForm.addEventListener('submit', handleNewsletterSubmit);
+});
+
+// ✅ MOBILE MENU FUNCTIONALITY
+function toggleMobileMenu() {
+  mobileMenu.classList.toggle('open');
+  // Change icon based on menu state
+  const icon = mobileMenuBtn.querySelector('i');
+  if (mobileMenu.classList.contains('open')) {
+    icon.classList.remove('fa-bars');
+    icon.classList.add('fa-times');
+  } else {
+    icon.classList.remove('fa-times');
+    icon.classList.add('fa-bars');
   }
 }
 
-
-  // --- CART VARIABLES ---
-  let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-  const cartBtn = document.getElementById('cartBtn');
-  const closeCart = document.getElementById('closeCart');
-  const overlay = document.getElementById('overlay');
-  const cartPanel = document.getElementById('cartPanel');
-  const cartCount = document.getElementById('cartCount');
-  const cartCountMobile = document.getElementById('cartCountMobile');
-  const cartItemsContainer = document.getElementById('cartItems');
-  const emptyCart = document.getElementById('emptyCart');
-  const cartSubtotal = document.getElementById('cartSubtotal');
-  const cartTax = document.getElementById('cartTax');
-  const cartTotal = document.getElementById('cartTotal');
-  const checkoutBtn = document.getElementById('checkoutBtn');
-
-  // --- TOURS ---
-  const toursGrid = document.getElementById('toursGrid');
-  const toursLoading = document.getElementById('toursLoading');
-  const toursError = document.getElementById('toursError');
-  const retryToursBtn = document.getElementById('retryToursBtn');
-
-  // --- NEWSLETTER ---
-  const newsletterForm = document.getElementById('newsletterForm');
-  const newsletterEmail = document.getElementById('newsletterEmail');
-  const newsletterBtn = document.getElementById('newsletterBtn');
-  const newsletterBtnText = document.getElementById('newsletterBtnText');
-  const newsletterSpinner = document.getElementById('newsletterSpinner');
-  const newsletterMessage = document.getElementById('newsletterMessage');
-
-  // ✅ Toast Notifications
-  const Toast = {
-    init() {
-      this.hideTimeout = null;
-      this.el = document.createElement('div');
-      this.el.className = 'toast';
-      document.body.appendChild(this.el);
-    },
-    show(message, type = 'success') {
-      clearTimeout(this.hideTimeout);
-      this.el.textContent = message;
-      const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
-      this.el.className = `toast toast-visible fixed bottom-4 left-1/2 transform -translate-x-1/2 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg`;
-      this.hideTimeout = setTimeout(() => {
-        this.el.classList.remove('toast-visible');
-      }, 3000);
-    }
-  };
-
-  // ✅ DOM Content Loaded
-  document.addEventListener('DOMContentLoaded', () => {
-    Toast.init();
-    updateCart();
-    loadTours();
-
-    retryToursBtn.addEventListener('click', loadTours);
-    newsletterForm.addEventListener('submit', handleNewsletterSubmit);
+// Close mobile menu when clicking on a link
+document.querySelectorAll('#mobileMenu a').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    const icon = mobileMenuBtn.querySelector('i');
+    icon.classList.remove('fa-times');
+    icon.classList.add('fa-bars');
   });
+});
 
-  // --- CART PANEL OPEN/CLOSE ---
-  cartBtn.addEventListener('click', () => openCartPanel());
-  const cartBtnMobile = document.getElementById('cartBtnMobile');
-  if (cartBtnMobile) cartBtnMobile.addEventListener('click', () => openCartPanel());
-  closeCart.addEventListener('click', closeCartPanel);
-  overlay.addEventListener('click', closeCartPanel);
+// --- CART PANEL OPEN/CLOSE ---
+cartBtn.addEventListener('click', () => openCartPanel());
+const cartBtnMobile = document.getElementById('cartBtnMobile');
+if (cartBtnMobile) cartBtnMobile.addEventListener('click', () => {
+  openCartPanel();
+  // Close mobile menu when opening cart
+  mobileMenu.classList.remove('open');
+  const icon = mobileMenuBtn.querySelector('i');
+  icon.classList.remove('fa-times');
+  icon.classList.add('fa-bars');
+});
+closeCart.addEventListener('click', closeCartPanel);
+overlay.addEventListener('click', closeCartPanel);
 
-  function openCartPanel() {
-    cartPanel.classList.add('open');
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
+function openCartPanel() {
+  cartPanel.classList.add('open');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCartPanel() {
+  cartPanel.classList.remove('open');
+  overlay.classList.remove('open');
+  document.body.style.overflow = 'auto';
+}
+
+// ✅ LOAD TOURS FROM BACKEND
+async function loadTours() {
+  try {
+    toursLoading.classList.remove('hidden');
+    toursGrid.classList.add('hidden');
+    toursError.classList.add('hidden');
+
+    const response = await fetch(API_ENDPOINTS.TOURS);
+    if (!response.ok) throw new Error(`Failed to fetch tours: ${response.status}`);
+
+    const tours = await response.json();
+    toursLoading.classList.add('hidden');
+    toursGrid.classList.remove('hidden');
+    renderTours(tours);
+  } catch (error) {
+    console.error('Error loading tours:', error);
+    toursLoading.classList.add('hidden');
+    toursError.classList.remove('hidden');
   }
+}
 
-  function closeCartPanel() {
-    cartPanel.classList.remove('open');
-    overlay.classList.remove('open');
-    document.body.style.overflow = 'auto';
-  }
+// ✅ RENDER TOURS
+function renderTours(tours) {
+  toursGrid.innerHTML = '';
+  tours.forEach(tour => {
+    const imageUrl = tour.image?.startsWith('http')
+      ? tour.image
+      : `${API_BASE_URL}/uploads/${tour.image}`;
 
-  // ✅ LOAD TOURS FROM BACKEND
-  async function loadTours() {
-    try {
-      toursLoading.classList.remove('hidden');
-      toursGrid.classList.add('hidden');
-      toursError.classList.add('hidden');
-
-      const response = await fetch(API_ENDPOINTS.TOURS);
-      if (!response.ok) throw new Error(`Failed to fetch tours: ${response.status}`);
-
-      const tours = await response.json();
-      toursLoading.classList.add('hidden');
-      toursGrid.classList.remove('hidden');
-      renderTours(tours);
-    } catch (error) {
-      console.error('Error loading tours:', error);
-      toursLoading.classList.add('hidden');
-      toursError.classList.remove('hidden');
-    }
-  }
-
-  // ✅ RENDER TOURS
-  function renderTours(tours) {
-    toursGrid.innerHTML = '';
-    tours.forEach(tour => {
-      const imageUrl = tour.image?.startsWith('http')
-        ? tour.image
-        : `${API_BASE_URL}/uploads/${tour.image}`;
-
-      const tourCard = document.createElement('div');
-      tourCard.className = 'tour-card bg-white shadow-lg rounded-xl overflow-hidden';
-      tourCard.innerHTML = `
-        <img src="${imageUrl}" alt="${tour.name}" class="tour-image">
-        <div class="p-6">
-          <h3 class="text-xl font-semibold mb-2">${tour.name}</h3>
-          <p class="text-gray-600 mb-4">${tour.description}</p>
-          <div class="flex justify-between items-center">
-            <span class="text-[#C89B52] font-bold text-lg">$${tour.price}</span>
-            <button onclick="addToCart('${tour._id}', '${tour.name}', ${tour.price})"
-              class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add to Cart</button>
-          </div>
-        </div>`;
-      toursGrid.appendChild(tourCard);
-    });
-  }
-
-  // ✅ ADD TO CART
-  async function addToCart(tourId, name, price) {
-    try {
-      const existingIndex = cartItems.findIndex(item => item.id === tourId);
-      if (existingIndex !== -1) {
-        cartItems[existingIndex].quantity += 1;
-      } else {
-        cartItems.push({ id: tourId, name, price, quantity: 1 });
-      }
-      updateCart();
-
-      await fetch(API_ENDPOINTS.CART, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tourId, quantity: 1 })
-      });
-
-      Toast.show(`${name} added to cart!`);
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      Toast.show('Failed to add item to cart.', 'error');
-    }
-  }
-
-  // ✅ REMOVE FROM CART
-  async function removeFromCart(index) {
-    const item = cartItems[index];
-    cartItems.splice(index, 1);
-    updateCart();
-
-    try {
-      await fetch(`${API_ENDPOINTS.CART}/${item.id}`, { method: 'DELETE' });
-    } catch (error) {
-      console.error('Error removing from cart:', error);
-      Toast.show('Error removing from cart.', 'error');
-    }
-  }
-
-  // ✅ UPDATE CART QUANTITY
-  async function updateQuantity(index, change) {
-    const item = cartItems[index];
-    cartItems[index].quantity += change;
-
-    if (cartItems[index].quantity <= 0) removeFromCart(index);
-    else {
-      updateCart();
-      try {
-        await fetch(API_ENDPOINTS.CART, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tourId: item.id, quantity: cartItems[index].quantity })
-        });
-      } catch (error) {
-        console.error('Error updating quantity:', error);
-      }
-    }
-  }
-
-  // ✅ UPDATE CART UI
-  function updateCart() {
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-    const totalItems = cartItems.reduce((t, i) => t + i.quantity, 0);
-    if (cartCount) cartCount.textContent = totalItems;
-    if (cartCountMobile) cartCountMobile.textContent = totalItems;
-
-    emptyCart.style.display = cartItems.length === 0 ? 'block' : 'none';
-    checkoutBtn.disabled = cartItems.length === 0;
-
-    cartItemsContainer.innerHTML = '';
-    cartItems.forEach((item, index) => {
-      const el = document.createElement('div');
-      el.className = 'flex justify-between items-center mb-4 pb-4 border-b';
-      el.innerHTML = `
-        <div class="flex-1">
-          <a href="booking.html?item=${encodeURIComponent(item.name)}&price=${item.price}&qty=${item.quantity}" class="block hover:underline">
-            <h4 class="font-semibold">${item.name}</h4>
-            <p class="text-gray-600">$${item.price} x ${item.quantity}</p>
-          </a>
+    const tourCard = document.createElement('div');
+    tourCard.className = 'tour-card bg-white shadow-lg rounded-xl overflow-hidden';
+    tourCard.innerHTML = `
+      <img src="${imageUrl}" alt="${tour.name}" class="tour-image">
+      <div class="p-6">
+        <h3 class="text-xl font-semibold mb-2">${tour.name}</h3>
+        <p class="text-gray-600 mb-4">${tour.description}</p>
+        <div class="flex justify-between items-center">
+          <span class="text-[#C89B52] font-bold text-lg">$${tour.price}</span>
+          <button onclick="addToCart('${tour._id}', '${tour.name}', ${tour.price})"
+            class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add to Cart</button>
         </div>
-        <div class="flex items-center">
-          <button onclick="updateQuantity(${index}, -1)" class="text-gray-500 hover:text-gray-700 mr-2"><i class="fas fa-minus-circle"></i></button>
-          <span>${item.quantity}</span>
-          <button onclick="updateQuantity(${index}, 1)" class="text-gray-500 hover:text-gray-700 ml-2"><i class="fas fa-plus-circle"></i></button>
-          <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 ml-4"><i class="fas fa-trash"></i></button>
-        </div>`;
-      cartItemsContainer.appendChild(el);
+      </div>`;
+    toursGrid.appendChild(tourCard);
+  });
+}
+
+// ✅ ADD TO CART
+async function addToCart(tourId, name, price) {
+  try {
+    const existingIndex = cartItems.findIndex(item => item.id === tourId);
+    if (existingIndex !== -1) {
+      cartItems[existingIndex].quantity += 1;
+    } else {
+      cartItems.push({ id: tourId, name, price, quantity: 1 });
+    }
+    updateCart();
+
+    await fetch(API_ENDPOINTS.CART, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tourId, quantity: 1 })
     });
 
-    const subtotal = cartItems.reduce((t, i) => t + (i.price * i.quantity), 0);
-    const tax = subtotal * 0.05;
-    const total = subtotal + tax;
-
-    cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
-    cartTax.textContent = `$${tax.toFixed(2)}`;
-    cartTotal.textContent = `$${total.toFixed(2)}`;
+    Toast.show(`${name} added to cart!`);
+  } catch (error) {
+    console.error('Error adding to cart:', error);
+    Toast.show('Failed to add item to cart.', 'error');
   }
+}
 
-  // ✅ NEWSLETTER
-  async function handleNewsletterSubmit(e) {
-    e.preventDefault();
-    const email = newsletterEmail.value.trim();
-    if (!email) return showNewsletterMessage('Enter a valid email.', 'error');
+// ✅ REMOVE FROM CART
+async function removeFromCart(index) {
+  const item = cartItems[index];
+  cartItems.splice(index, 1);
+  updateCart();
 
-    newsletterBtn.disabled = true;
-    newsletterBtnText.textContent = 'Subscribing...';
-    newsletterSpinner.classList.remove('hidden');
+  try {
+    await fetch(`${API_ENDPOINTS.CART}/${item.id}`, { method: 'DELETE' });
+  } catch (error) {
+    console.error('Error removing from cart:', error);
+    Toast.show('Error removing from cart.', 'error');
+  }
+}
 
+// ✅ UPDATE CART QUANTITY
+async function updateQuantity(index, change) {
+  const item = cartItems[index];
+  cartItems[index].quantity += change;
+
+  if (cartItems[index].quantity <= 0) removeFromCart(index);
+  else {
+    updateCart();
     try {
-      const res = await fetch(API_ENDPOINTS.NEWSLETTER, {
-        method: 'POST',
+      await fetch(API_ENDPOINTS.CART, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ tourId: item.id, quantity: cartItems[index].quantity })
       });
-      if (!res.ok) throw new Error('Subscription failed');
-      showNewsletterMessage('Subscribed successfully!', 'success');
-      newsletterEmail.value = '';
-    } catch (err) {
-      console.error(err);
-      showNewsletterMessage('Subscription failed. Try again.', 'error');
-    } finally {
-      newsletterBtn.disabled = false;
-      newsletterBtnText.textContent = 'Subscribe';
-      newsletterSpinner.classList.add('hidden');
+    } catch (error) {
+      console.error('Error updating quantity:', error);
     }
   }
+}
 
-  function showNewsletterMessage(message, type) {
-    const color = type === 'success' ? 'text-green-400' : 'text-red-400';
-    newsletterMessage.innerHTML = `<p class="${color}">${message}</p>`;
-    setTimeout(() => newsletterMessage.innerHTML = '', 5000);
-  }
+// ✅ UPDATE CART UI
+function updateCart() {
+  localStorage.setItem('cart', JSON.stringify(cartItems));
+  const totalItems = cartItems.reduce((t, i) => t + i.quantity, 0);
+  if (cartCount) cartCount.textContent = totalItems;
+  if (cartCountMobile) cartCountMobile.textContent = totalItems;
 
-  // ✅ CHECKOUT
-  checkoutBtn.addEventListener('click', async () => {
-    window.location.href = 'checkout.html';
+  emptyCart.style.display = cartItems.length === 0 ? 'block' : 'none';
+  checkoutBtn.disabled = cartItems.length === 0;
+
+  cartItemsContainer.innerHTML = '';
+  cartItems.forEach((item, index) => {
+    const el = document.createElement('div');
+    el.className = 'flex justify-between items-center mb-4 pb-4 border-b';
+    el.innerHTML = `
+      <div class="flex-1">
+        <a href="booking.html?item=${encodeURIComponent(item.name)}&price=${item.price}&qty=${item.quantity}" class="block hover:underline">
+          <h4 class="font-semibold">${item.name}</h4>
+          <p class="text-gray-600">$${item.price} x ${item.quantity}</p>
+        </a>
+      </div>
+      <div class="flex items-center">
+        <button onclick="updateQuantity(${index}, -1)" class="text-gray-500 hover:text-gray-700 mr-2"><i class="fas fa-minus-circle"></i></button>
+        <span>${item.quantity}</span>
+        <button onclick="updateQuantity(${index}, 1)" class="text-gray-500 hover:text-gray-700 ml-2"><i class="fas fa-plus-circle"></i></button>
+        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 ml-4"><i class="fas fa-trash"></i></button>
+      </div>`;
+    cartItemsContainer.appendChild(el);
   });
+
+  const subtotal = cartItems.reduce((t, i) => t + (i.price * i.quantity), 0);
+  const tax = subtotal * 0.05;
+  const total = subtotal + tax;
+
+  cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+  cartTax.textContent = `$${tax.toFixed(2)}`;
+  cartTotal.textContent = `$${total.toFixed(2)}`;
+}
+
+// ✅ NEWSLETTER
+async function handleNewsletterSubmit(e) {
+  e.preventDefault();
+  const email = newsletterEmail.value.trim();
+  if (!email) return showNewsletterMessage('Enter a valid email.', 'error');
+
+  newsletterBtn.disabled = true;
+  newsletterBtnText.textContent = 'Subscribing...';
+  newsletterSpinner.classList.remove('hidden');
+
+  try {
+    const res = await fetch(API_ENDPOINTS.NEWSLETTER, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    if (!res.ok) throw new Error('Subscription failed');
+    showNewsletterMessage('Subscribed successfully!', 'success');
+    newsletterEmail.value = '';
+  } catch (err) {
+    console.error(err);
+    showNewsletterMessage('Subscription failed. Try again.', 'error');
+  } finally {
+    newsletterBtn.disabled = false;
+    newsletterBtnText.textContent = 'Subscribe';
+    newsletterSpinner.classList.add('hidden');
+  }
+}
+
+function showNewsletterMessage(message, type) {
+  const color = type === 'success' ? 'text-green-400' : 'text-red-400';
+  newsletterMessage.innerHTML = `<p class="${color}">${message}</p>`;
+  setTimeout(() => newsletterMessage.innerHTML = '', 5000);
+}
+
+// ✅ CHECKOUT
+checkoutBtn.addEventListener('click', async () => {
+  window.location.href = 'checkout.html';
+});
 </script>
 
 </body>
 </html>
-
