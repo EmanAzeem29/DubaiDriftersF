@@ -197,9 +197,9 @@
       <h2 class="text-4xl font-bold text-center mb-4 text-[#0F172A]">Discover Dubai's Wonders</h2>
       <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Explore the most iconic landmarks and experiences that Dubai has to offer with our expertly curated tours.</p>
 
-      <!-- Tours grid - Loaded instantly -->
+      <!-- Tours grid -->
       <div id="toursGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Tours are loaded instantly from JavaScript -->
+        <!-- Tours will be loaded here -->
       </div>
     </div>
   </section>
@@ -331,8 +331,8 @@ const Toast = {
 document.addEventListener('DOMContentLoaded', () => {
   Toast.init();
   updateCart();
-  // Load tours INSTANTLY without API delay
-  loadToursInstant();
+  // Load tours immediately
+  loadTours();
 
   // Mobile menu event listener
   mobileMenuBtn.addEventListener('click', toggleMobileMenu);
@@ -394,37 +394,43 @@ function closeCartPanel() {
   document.body.style.overflow = 'auto';
 }
 
-// ✅ LOAD TOURS INSTANTLY - No API delay
-function loadToursInstant() {
-  const tours = getFallbackTours();
-  renderTours(tours);
-  
-  // Try to fetch from API in background for updates
-  fetch(API_ENDPOINTS.TOURS)
-    .then(response => {
-      if (!response.ok) throw new Error('API not available');
-      return response.json();
-    })
-    .then(data => {
-      let apiTours = [];
+// ✅ LOAD TOURS - FIXED to ensure all tours load
+async function loadTours() {
+  try {
+    // Try to fetch from API first
+    const response = await fetch(API_ENDPOINTS.TOURS);
+    
+    if (response.ok) {
+      const data = await response.json();
+      let tours = [];
+      
+      // Handle different API response formats
       if (data && data.success && data.data && Array.isArray(data.data.tours)) {
-        apiTours = data.data.tours;
+        tours = data.data.tours;
       } else if (data && Array.isArray(data)) {
-        apiTours = data;
+        tours = data;
       } else if (data && data.data && Array.isArray(data.data)) {
-        apiTours = data.data;
+        tours = data.data;
       }
       
-      if (apiTours.length > 0) {
-        renderTours(apiTours);
+      if (tours.length > 0) {
+        renderTours(tours);
+        return;
       }
-    })
-    .catch(error => {
-      console.log('Using cached tours, API not available');
-    });
+    }
+    
+    // If API fails or returns no tours, use fallback
+    throw new Error('API failed or no tours returned');
+    
+  } catch (error) {
+    console.log('Using fallback tours:', error);
+    // Use fallback tours - ALL 13 TOURS
+    const fallbackTours = getFallbackTours();
+    renderTours(fallbackTours);
+  }
 }
 
-// ✅ COMPLETE FALLBACK TOURS DATA - All 13 tours
+// ✅ COMPLETE FALLBACK TOURS DATA - ALL 13 TOURS
 function getFallbackTours() {
   return [
     { 
@@ -521,13 +527,17 @@ function getFallbackTours() {
   ];
 }
 
-// ✅ RENDER TOURS
+// ✅ RENDER TOURS - FIXED to ensure all tours display
 function renderTours(tours) {
-  if (!Array.isArray(tours)) {
+  console.log('Rendering tours:', tours.length); // Debug log
+  
+  if (!Array.isArray(tours) || tours.length === 0) {
+    console.error('No tours to display');
     tours = getFallbackTours();
   }
   
   toursGrid.innerHTML = '';
+  
   tours.forEach(tour => {
     const imageUrl = tour.image && !tour.image.startsWith('http')
       ? tour.image
@@ -548,6 +558,8 @@ function renderTours(tours) {
       </div>`;
     toursGrid.appendChild(tourCard);
   });
+  
+  console.log('Total tours rendered:', toursGrid.children.length); // Debug log
 }
 
 // ✅ ADD TO CART with Backend API
