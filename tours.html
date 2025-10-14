@@ -230,15 +230,23 @@
   </footer>
 
  <script>
-  // ✅ Your live backend base URL
+// ✅ Fix: keep only one /api path here
 const API_BASE_URL = "https://api.dubaidrifters.com/api";
-// ✅ Define backend API endpoints
-  const API_ENDPOINTS = {
-    TOURS: `${API_BASE_URL}/api/tours`,
-    NEWSLETTER: `${API_BASE_URL}/api/newsletter/subscribe`,
-    CART: `${API_BASE_URL}/api/cart`,
-    CHECKOUT: `${API_BASE_URL}/api/checkout`
-  };
+
+
+// ✅ Load tours
+async function loadTours() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/tours?limit=10&sort=rating`);
+    if (!response.ok) throw new Error(`Failed to fetch tours: ${response.status}`);
+    const tours = await response.json();
+    console.log("Tours loaded:", tours);
+    // render your tours...
+  } catch (error) {
+    console.error("Error loading tours:", error);
+  }
+}
+
 
   // --- CART VARIABLES ---
   let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
@@ -503,3 +511,4 @@ const API_BASE_URL = "https://api.dubaidrifters.com/api";
 
 </body>
 </html>
+
