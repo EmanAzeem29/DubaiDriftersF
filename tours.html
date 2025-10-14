@@ -47,69 +47,6 @@
       visibility: visible;
       opacity: 1;
     }
-    .loading-spinner {
-      border: 2px solid #f3f3f3;
-      border-top: 2px solid #3498db;
-      border-radius: 50%;
-      width: 16px;
-      height: 16px;
-      animation: spin 1s linear infinite;
-      margin-left: 8px;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    /* Mobile menu styles */
-    #mobileMenu {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease-out;
-    }
-    #mobileMenu.open {
-      max-height: 300px;
-    }
-    .image-placeholder {
-      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-      background-size: 200% 100%;
-      animation: loading 1.5s infinite;
-      min-height: 192px;
-    }
-    @keyframes loading {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-    /* Cart notification dot */
-    .cart-notification {
-      position: absolute;
-      top: -2px;
-      right: -2px;
-      width: 8px;
-      height: 8px;
-      background-color: #ef4444;
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.2); opacity: 0.7; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    /* Fix mobile menu scroll */
-    @media (max-width: 768px) {
-      #mobileMenu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: black;
-        z-index: 40;
-      }
-      #mobileMenu.open {
-        max-height: 100vh;
-        overflow-y: auto;
-      }
-    }
   </style>
 </head>
 <body class="bg-[#FDF6EC]">
@@ -119,7 +56,7 @@
     <div class="container mx-auto flex justify-between items-center py-4 px-6">
       <!-- Logo -->
       <a href="index.html" class="flex items-center space-x-3">
-        <img src="logo.jpg" alt="Logo" class="h-14 w-14 rounded-full object-cover border-4 border-[#C89B52] shadow-lg" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9IiNDODlCNTIiLz4KPHN2Zz4K'">
+        <img src="logo.jpg" alt="Logo" class="h-14 w-14 rounded-full object-cover border-4 border-[#C89B52] shadow-lg">
         <span class="text-2xl font-bold text-[#C89B52]">Dubai Drifters</span>
       </a>
 
@@ -134,35 +71,31 @@
         <button id="cartBtn" class="relative hover:text-[#C89B52]">
           <i class="fas fa-shopping-cart text-lg"></i>
           <span id="cartCount" class="bg-[#C89B52] text-black text-xs font-bold rounded-full px-1.5 py-0.5 absolute -top-2 -right-2">0</span>
-          <div id="cartNotification" class="cart-notification hidden"></div>
         </button>
       </nav>
 
       <!-- Mobile Menu Button -->
-      <button id="mobileMenuBtn" class="md:hidden text-white text-2xl relative">
+      <button id="mobileMenuBtn" class="md:hidden text-white text-2xl">
         <i class="fas fa-bars"></i>
-        <div id="mobileCartNotification" class="cart-notification hidden"></div>
       </button>
     </div>
 
     <!-- Mobile Nav -->
-    <div id="mobileMenu" class="md:hidden bg-black bg-opacity-95 text-white text-center space-y-4 py-6">
-      <a href="index.html" class="block hover:text-[#C89B52] py-2">Home</a>
-      <a href="about.html" class="block hover:text-[#C89B52] py-2">About</a>
-      <a href="tours.html" class="block text-[#C89B52] font-semibold py-2">Tours</a>
-      <a href="blog.html" class="block hover:text-[#C89B52] py-2">Blog</a>
-      <a href="contact.html" class="block hover:text-[#C89B52] py-2">Contact</a>
+    <div id="mobileMenu" class="hidden md:hidden bg-black bg-opacity-95 text-white text-center space-y-4 py-6">
+      <a href="index.html" class="block hover:text-[#C89B52]">Home</a>
+      <a href="about.html" class="block hover:text-[#C89B52]">About</a>
+      <a href="tours.html" class="block text-[#C89B52] font-semibold">Tours</a>
+      <a href="blog.html" class="block hover:text-[#C89B52]">Blog</a>
+      <a href="contact.html" class="block hover:text-[#C89B52]">Contact</a>
       <!-- Cart in mobile -->
-      <button id="cartBtnMobile" class="relative hover:text-[#C89B52] py-2">
+      <button id="cartBtnMobile" class="relative hover:text-[#C89B52]">
         <i class="fas fa-shopping-cart text-lg"></i>
         <span id="cartCountMobile" class="bg-[#C89B52] text-black text-xs font-bold rounded-full px-1.5 py-0.5 absolute -top-2 -right-2">0</span>
-        <span class="ml-2">Cart</span>
-        <div id="mobileNavCartNotification" class="cart-notification hidden"></div>
       </button>
     </div>
   </header>
 
-  <!-- Overlay + Cart Panel -->
+  <!-- Overlay + Cart -->
   <div id="overlay" class="overlay fixed inset-0 bg-black bg-opacity-50 z-40"></div>
   <div id="cartPanel" class="cart-panel fixed top-0 right-0 h-full w-full md:w-96 bg-white z-50 shadow-2xl overflow-y-auto">
     <div class="p-6">
@@ -179,7 +112,7 @@
         <div class="flex justify-between mb-2"><span>Subtotal:</span> <span id="cartSubtotal">$0</span></div>
         <div class="flex justify-between mb-2"><span>Tax (5%):</span> <span id="cartTax">$0</span></div>
         <div class="flex justify-between font-bold text-lg"><span>Total:</span> <span id="cartTotal" class="text-[#C89B52]">$0</span></div>
-        <button id="checkoutBtn" disabled class="mt-4 w-full bg-[#C89B52] text-white py-3 rounded-lg font-semibold hover:bg-[#a67c3b] transition disabled:opacity-50">Proceed to Checkout</button>
+        <button id="checkoutBtn" disabled class="mt-4 w-full bg-[#C89B52] text-white py-3 rounded-lg font-semibold hover:bg-[#a67c3b] transition disabled:opacity-50">Checkout</button>
       </div>
     </div>
   </div>
@@ -190,600 +123,746 @@
       <h1 class="text-white text-4xl md:text-5xl font-bold">Explore Tours</h1>
     </div>
   </section>
+<!-- Tours Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-4 text-[#0F172A]">Discover Dubai's Wonders</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Explore the most iconic landmarks and
+                experiences that Dubai has to offer with our expertly curated tours.</p>
 
-  <!-- Tours Section -->
-  <section class="py-16 bg-gray-50">
-    <div class="container mx-auto px-6">
-      <h2 class="text-4xl font-bold text-center mb-4 text-[#0F172A]">Discover Dubai's Wonders</h2>
-      <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Explore the most iconic landmarks and experiences that Dubai has to offer with our expertly curated tours.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
-      <!-- Tours grid -->
-      <div id="toursGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Tours will be loaded here -->
-      </div>
-    </div>
-  </section>
+                <!-- 1. Desert Safari -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img alt="Dubai City Tour" class="w-full h-48 object-cover" src="./IMAGES/AlqasarHotel.jpg" />
+                    <div class="p-4 relative z-10 bg-white">
+                        <h3 class="font-bold text-lg mb-2">Alqasar Hotel</h3>
+                        <p class="text-gray-600 mb-4">Evening safari with dune bashing, live shows & BBQ dinner.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$120</span>
+                            <button onclick="addToCart('Desert Safari Adventure', 120)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Dubai City Tour -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                        alt="Dubai City" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai City Tour</h3>
+                        <p class="text-gray-600 mb-4">Guided city tour covering major landmarks.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$90</span>
+                            <button onclick="addToCart('Dubai City Tour', 90)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Burj Khalifa -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/BurjKhalifa.avif"
+                        alt="Burj Khalifa" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Burj Khalifa Experience</h3>
+                        <p class="text-gray-600 mb-4">Observation deck tickets & Dubai Mall visit.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$150</span>
+                            <button onclick="addToCart('Burj Khalifa Experience', 150)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Dhow Cruise -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DhowCruise.avif"
+                        alt="Dhow Cruise" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Luxury Dhow Cruise</h3>
+                        <p class="text-gray-600 mb-4">Dinner cruise with live entertainment.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$80</span>
+                            <button onclick="addToCart('Luxury Dhow Cruise', 80)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Atlantis -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/Atlantis.webp"
+                        alt="Atlantis" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Atlantis Adventure</h3>
+                        <p class="text-gray-600 mb-4">Aquaventure Waterpark + The Lost Chambers.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$110</span>
+                            <button onclick="addToCart('Atlantis Adventure', 110)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Marina Walk -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DubaiMarina.jpg"
+                        alt="Dubai Marina" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Marina Walk Tour</h3>
+                        <p class="text-gray-600 mb-4">Explore Dubai Marina promenade & skyline views.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$70</span>
+                            <button onclick="addToCart('Marina Walk Tour', 70)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Cultural Evening -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/CulturalEvening.avif"
+                        alt="Cultural Evening" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Cultural Evening</h3>
+                        <p class="text-gray-600 mb-4">Traditional dinner with belly dance & fire shows.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$95</span>
+                            <button onclick="addToCart('Cultural Evening', 95)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. Palm Jumeirah -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/PalmJumeirah.avif"
+                        alt="Palm Jumeirah" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Palm Jumeirah Visit</h3>
+                        <p class="text-gray-600 mb-4">Visit the man-made wonder island.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$60</span>
+                            <button onclick="addToCart('Palm Jumeirah Visit', 60)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. Water Sports -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/WaterSports.webp"
+                        alt="Water Sports" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Adventure Water Sports</h3>
+                        <p class="text-gray-600 mb-4">Jet skiing, parasailing & banana boat rides.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$130</span>
+                            <button onclick="addToCart('Adventure Water Sports', 130)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10. Dubai Frame -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DubaiFrame.jpg"
+                        alt="Dubai Frame" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Frame Experience</h3>
+                        <p class="text-gray-600 mb-4">Visit the world's largest frame structure.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$65</span>
+                            <button onclick="addToCart('Dubai Frame Experience', 65)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 11. Dubai Mall -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DubaiMall.avif"
+                        alt="Dubai Mall" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Mall Shopping</h3>
+                        <p class="text-gray-600 mb-4">World's largest shopping mall with endless options.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$40</span>
+                            <button onclick="addToCart('Dubai Mall Shopping', 40)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 12. Jumeirah Mosque -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/JumeirahMosque.webp"
+                        alt="Jumeirah Mosque" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Jumeirah Mosque Tour</h3>
+                        <p class="text-gray-600 mb-4">Visit one of Dubai's most beautiful mosques.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$55</span>
+                            <button onclick="addToCart('Jumeirah Mosque Tour', 55)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 13. Global Village -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/GlobalVillage.jpg"
+                        alt="Global Village" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Global Village Experience</h3>
+                        <p class="text-gray-600 mb-4">Cultural, entertainment and shopping destination.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$50</span>
+                            <button onclick="addToCart('Global Village Experience', 50)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 14. Miracle Garden -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/MiracleGarden.webp"
+                        alt="Miracle Garden" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Miracle Garden</h3>
+                        <p class="text-gray-600 mb-4">Visit the world's largest natural flower garden.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$45</span>
+                            <button onclick="addToCart('Dubai Miracle Garden', 45)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 15. Ski Dubai -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/SkiDubai.avif"
+                        alt="Ski Dubai" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Ski Dubai Experience</h3>
+                        <p class="text-gray-600 mb-4">Indoor ski resort with penguin encounters.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$85</span>
+                            <button onclick="addToCart('Ski Dubai Experience', 85)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 16. Dubai Creek -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DubaiCreek.jpg"
+                        alt="Dubai Creek" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Creek & Souks</h3>
+                        <p class="text-gray-600 mb-4">Traditional abra ride and shopping in gold and spice souks.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$60</span>
+                            <button onclick="addToCart('Dubai Creek & Souks', 60)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 17. Dubai Opera -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DubaiOpera.jpg"
+                        alt="Dubai Opera" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Opera Show</h3>
+                        <p class="text-gray-600 mb-4">World-class performances in an architectural masterpiece.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$100+</span>
+                            <button onclick="addToCart('Dubai Opera Show', 100)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 18. Dubai Aquarium -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DubaiAquarium.jpg"
+                        alt="Dubai Aquarium" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Aquarium & Underwater Zoo</h3>
+                        <p class="text-gray-600 mb-4">Walk through the tunnel with aquatic life all around.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$75</span>
+                            <button onclick="addToCart('Dubai Aquarium & Underwater Zoo', 75)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 19. IMG Worlds -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/IMGWorlds.jpg"
+                        alt="IMG Worlds" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">IMG Worlds of Adventure</h3>
+                        <p class="text-gray-600 mb-4">Massive indoor theme park with Marvel and Cartoon Network zones.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$95</span>
+                            <button onclick="addToCart('IMG Worlds of Adventure', 95)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 20. La Perle -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/LaPerle.jpg"
+                        alt="La Perle" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">La Perle by Dragone</h3>
+                        <p class="text-gray-600 mb-4">Breathtaking aquatic and aerial performance show.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$120</span>
+                            <button onclick="addToCart('La Perle by Dragone', 120)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 21. Garden Glow -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/GardenGlow.webp"
+                        alt="Garden Glow" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Garden Glow</h3>
+                        <p class="text-gray-600 mb-4">Magical park with glow-in-the-dark installations and dinosaur
+                            park.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$55</span>
+                            <button onclick="addToCart('Dubai Garden Glow', 55)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 22. Hot Air Balloon -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/HotAirBalloon.webp"
+                        alt="Hot Air Balloon" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Hot Air Balloon Ride</h3>
+                        <p class="text-gray-600 mb-4">Spectacular sunrise views of the desert landscape.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$250</span>
+                            <button onclick="addToCart('Hot Air Balloon Ride', 250)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 23. Heritage Tour -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/HeritageTour.webp"
+                        alt="Heritage Tour" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Heritage Desert Tour</h3>
+                        <p class="text-gray-600 mb-4">Experience traditional Bedouin culture and customs.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$110</span>
+                            <button onclick="addToCart('Heritage Desert Tour', 110)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 24. Ferrari World -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/FerrariWorld.jpeg"
+                        alt="Ferrari World" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Ferrari World Abu Dhabi</h3>
+                        <p class="text-gray-600 mb-4">Experience the world's fastest roller coaster.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$125</span>
+                            <button onclick="addToCart('Ferrari World Abu Dhabi', 125)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 25. Sheikh Zayed Mosque -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/SheikhZayedMosque.jpg"
+                        alt="Sheikh Zayed Mosque" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Sheikh Zayed Mosque Tour</h3>
+                        <p class="text-gray-600 mb-4">Visit the majestic mosque in Abu Dhabi.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$90</span>
+                            <button onclick="addToCart('Sheikh Zayed Mosque Tour', 90)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 26. Deep Dive Dubai -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DeepDiveDubai.jpg"
+                        alt="Deep Dive Dubai" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Deep Dive Dubai</h3>
+                        <p class="text-gray-600 mb-4">Explore the world's deepest swimming pool for diving.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$180</span>
+                            <button onclick="addToCart('Deep Dive Dubai', 180)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 27. Yellow Boats -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/YellowBoats.jpg"
+                        alt="Yellow Boats" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Yellow Boat Tour</h3>
+                        <p class="text-gray-600 mb-4">Thrilling speedboat tour of Dubai's coastline.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$85</span>
+                            <button onclick="addToCart('Yellow Boat Tour', 85)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 28. Al Marmoom -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/AlMarmoom.avif"
+                        alt="Al Marmoom" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Al Marmoom Desert Conservation</h3>
+                        <p class="text-gray-600 mb-4">Explore the desert conservation reserve and spot wildlife.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$95</span>
+                            <button onclick="addToCart('Al Marmoom Desert Conservation', 95)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 29. Dubai Parks -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/DubaiParks.jpg"
+                        alt="Dubai Parks" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Dubai Parks and Resorts</h3>
+                        <p class="text-gray-600 mb-4">Theme park complex with Motiongate, Bollywood Parks, and Legoland.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$135</span>
+                            <button onclick="addToCart('Dubai Parks and Resorts', 135)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 30. Hatta Mountain -->
+                <div class="tour-card bg-white shadow-lg rounded-xl overflow-hidden">
+                    <img src="./IMAGES/HattaMountain.jpg"
+                        alt="Hatta Mountain" class="tour-image">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Hatta Mountain Safari</h3>
+                        <p class="text-gray-600 mb-4">Explore the Hajar Mountains and Hatta Heritage Village.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[#C89B52] font-bold text-lg">$110</span>
+                            <button onclick="addToCart('Hatta Mountain Safari', 110)"
+                                class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
 
   <!-- Footer -->
-  <footer class="bg-gray-800 text-white">
-    <div class="container mx-auto px-4 py-10">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div>
-          <h4 class="font-bold text-lg mb-4">About Dubaidrifters.com</h4>
-          <p class="text-sm text-gray-400">Your trusted partner for exploring the wonders of Dubai. We provide a wide range of tours, activities, and travel services to make your trip memorable.</p>
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto px-4 py-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h4 class="font-bold text-lg mb-4">About Dubaidrifters.com</h4>
+                    <p class="text-sm text-gray-400">Your trusted partner for exploring the wonders of Dubai. We provide a wide range of tours, activities, and travel services to make your trip memorable.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Support</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a class="text-gray-400 hover:text-white" href="contact.html">Contact Us</a></li>
+                        <li><a class="text-gray-400 hover:text-white" href="#">FAQs</a></li>
+                        <li><a class="text-gray-400 hover:text-white" href="termsandconditions.html">Terms & Conditions</a></li>
+                        <li><a class="text-gray-400 hover:text-white" href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Follow Us</h4>
+                    <div class="flex space-x-2">
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                        <!-- Facebook -->
+    <a class="text-gray-400 hover:text-white" href="https://www.facebook.com/YourPageName" target="_blank">
+      <i class="fab fa-facebook"></i>
+    </a>
+
+    <!-- WhatsApp -->
+    <a class="text-gray-400 hover:text-white" href="https://wa.me/923001234567" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Instagram -->
+    <a class="text-gray-400 hover:text-white" href="https://www.instagram.com/YourUsername" target="_blank">
+      <i class="fab fa-instagram"></i>
+    </a>
+                    </div>
+                    <h4 class="font-bold text-lg mt-6 mb-4">Payment Methods</h4>
+                    <div class="flex space-x-2">
+                    <a href="https://www.easypaisa.com.pk" 
+                         target="_blank" 
+                         rel="noopener noreferrer"
+                         class="text-xs bg-gray-700 px-2 py-1 rounded hover:bg-gray-600 transition">
+                         EasyPaisa
+                </a>
+                        
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Newsletter</h4>
+                    <p class="text-sm text-gray-400 mb-4">Subscribe to our newsletter for exclusive offers and updates.</p>
+                    <form id="newsletterForm" class="flex">
+                        <input id="newsletterEmail" class="w-full rounded-l-md p-2 text-gray-800 focus:outline-none" placeholder="Your email" type="email" required/>
+                        <button id="newsletterBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r-md transition-colors flex items-center" type="submit">
+                            <span id="newsletterBtnText">Subscribe</span>
+                            <div id="newsletterSpinner" class="loading-spinner hidden"></div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-500">
+                <p>© 2025 Dubaidrifters.com. All Rights Reserved.</p>
+            </div>
         </div>
-        <div>
-          <h4 class="font-bold text-lg mb-4">Support</h4>
-          <ul class="space-y-2 text-sm">
-            <li><a class="text-gray-400 hover:text-white" href="contact.html">Contact Us</a></li>
-            <li><a class="text-gray-400 hover:text-white" href="#">FAQs</a></li>
-            <li><a class="text-gray-400 hover:text-white" href="termsandconditions.html">Terms & Conditions</a></li>
-            <li><a class="text-gray-400 hover:text-white" href="#">Privacy Policy</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="font-bold text-lg mb-4">Follow Us</h4>
-          <div class="flex space-x-2">
-            <!-- WhatsApp -->
-            <a class="text-gray-400 hover:text-white" href="https://wa.me/+971524408513" target="_blank">
-              <i class="fab fa-whatsapp"></i>
-            </a>
-            <!-- Instagram -->
-            <a class="text-gray-400 hover:text-white" href="https://www.instagram.com/dubaidrifterss?utm_source=qr&igsh=MTk0d2JoYmllZWdnbA==" target="_blank">
-              <i class="fab fa-instagram"></i>
-            </a>
-            <!-- TikTok -->
-            <a class="text-gray-400 hover:text-white" href="https://www.tiktok.com/@dubaidrifterssgmail.com?_t=ZN-908Na7dtnvP&_r=1" target="_blank">
-              <i class="fab fa-tiktok"></i>
-            </a>
-          </div>
-          <h4 class="font-bold text-lg mt-6 mb-4">Payment Methods</h4>
-          <div class="flex space-x-2">
-            <a href="https://www.easypaisa.com.pk" 
-               target="_blank" 
-               rel="noopener noreferrer"
-               class="text-xs bg-gray-700 px-2 py-1 rounded hover:bg-gray-600 transition">
-               EasyPaisa
-            </a>
-          </div>
-        </div>
-        <div>
-          <h4 class="font-bold text-lg mb-4">Newsletter</h4>
-          <p class="text-sm text-gray-400 mb-4">Subscribe to our newsletter for exclusive offers and updates.</p>
-          <form id="newsletterForm" class="flex">
-            <input id="newsletterEmail" class="w-full rounded-l-md p-2 text-gray-800 focus:outline-none" placeholder="Your email" type="email" required/>
-            <button id="newsletterBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r-md transition-colors flex items-center" type="submit">
-              <span id="newsletterBtnText">Subscribe</span>
-              <div id="newsletterSpinner" class="loading-spinner hidden"></div>
-            </button>
-          </form>
-          <div id="newsletterMessage" class="mt-2 text-sm"></div>
-        </div>
-      </div>
-      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-500">
-        <p>© 2025 Dubaidrifters.com. All Rights Reserved.</p>
-      </div>
-    </div>
-  </footer>
+    </footer>
+  <!-- JavaScript -->
+  <script>
+    // Cart functionality
+    let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartBtn = document.getElementById('cartBtn');
+    const closeCart = document.getElementById('closeCart');
+    const overlay = document.getElementById('overlay');
+    const cartPanel = document.getElementById('cartPanel');
+    const cartCount = document.getElementById('cartCount');
+    const cartCountMobile = document.getElementById('cartCountMobile');
+    const cartItemsContainer = document.getElementById('cartItems');
+    const emptyCart = document.getElementById('emptyCart');
+    const cartSubtotal = document.getElementById('cartSubtotal');
+    const cartTax = document.getElementById('cartTax');
+    const cartTotal = document.getElementById('cartTotal');
+    const checkoutBtn = document.getElementById('checkoutBtn');
 
- <script>
-// ✅ API Configuration
-const API_BASE_URL = "https://api.dubaidrifters.com";
+    // Initialize toast
+    const Toast = {
+      init() {
+        this.hideTimeout = null;
+        
+        this.el = document.createElement('div');
+        this.el.className = 'toast';
+        document.body.appendChild(this.el);
+      },
+      
+      show(message) {
+        clearTimeout(this.hideTimeout);
+        
+        this.el.textContent = message;
+        this.el.className = 'toast toast-visible fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg';
+        
+        this.hideTimeout = setTimeout(() => {
+          this.el.classList.remove('toast-visible');
+        }, 3000);
+      }
+    };
 
-// API endpoints
-const API_ENDPOINTS = {
-  TOURS: `${API_BASE_URL}/api/tours`,
-  CART: `${API_BASE_URL}/api/cart`,
-  NEWSLETTER: `${API_BASE_URL}/api/newsletter/subscribe`
-};
-
-// --- CART VARIABLES ---
-let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-const cartBtn = document.getElementById('cartBtn');
-const closeCart = document.getElementById('closeCart');
-const overlay = document.getElementById('overlay');
-const cartPanel = document.getElementById('cartPanel');
-const cartCount = document.getElementById('cartCount');
-const cartCountMobile = document.getElementById('cartCountMobile');
-const cartItemsContainer = document.getElementById('cartItems');
-const emptyCart = document.getElementById('emptyCart');
-const cartSubtotal = document.getElementById('cartSubtotal');
-const cartTax = document.getElementById('cartTax');
-const cartTotal = document.getElementById('cartTotal');
-const checkoutBtn = document.getElementById('checkoutBtn');
-
-// --- MOBILE MENU ---
-const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-const mobileMenu = document.getElementById('mobileMenu');
-const cartBtnMobile = document.getElementById('cartBtnMobile');
-
-// --- TOURS ---
-const toursGrid = document.getElementById('toursGrid');
-
-// --- NEWSLETTER ---
-const newsletterForm = document.getElementById('newsletterForm');
-const newsletterEmail = document.getElementById('newsletterEmail');
-const newsletterBtn = document.getElementById('newsletterBtn');
-const newsletterBtnText = document.getElementById('newsletterBtnText');
-const newsletterSpinner = document.getElementById('newsletterSpinner');
-const newsletterMessage = document.getElementById('newsletterMessage');
-
-// ✅ Toast Notifications
-const Toast = {
-  init() {
-    this.hideTimeout = null;
-    this.el = document.createElement('div');
-    this.el.className = 'toast';
-    document.body.appendChild(this.el);
-  },
-  show(message, type = 'success') {
-    clearTimeout(this.hideTimeout);
-    this.el.textContent = message;
-    const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
-    this.el.className = `toast toast-visible fixed bottom-4 left-1/2 transform -translate-x-1/2 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg`;
-    this.hideTimeout = setTimeout(() => {
-      this.el.classList.remove('toast-visible');
-    }, 3000);
-  }
-};
-
-// ✅ DOM Content Loaded
-document.addEventListener('DOMContentLoaded', () => {
-  Toast.init();
-  updateCart();
-  // Load tours immediately
-  loadTours();
-
-  // Mobile menu event listener
-  mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-  
-  // Cart event listeners
-  cartBtn.addEventListener('click', openCartPanel);
-  cartBtnMobile.addEventListener('click', openCartPanel);
-  closeCart.addEventListener('click', closeCartPanel);
-  overlay.addEventListener('click', closeCartPanel);
-  checkoutBtn.addEventListener('click', proceedToCheckout);
-  
-  newsletterForm.addEventListener('submit', handleNewsletterSubmit);
-});
-
-// ✅ MOBILE MENU FUNCTIONALITY
-function toggleMobileMenu() {
-  mobileMenu.classList.toggle('open');
-  // Change icon based on menu state
-  const icon = mobileMenuBtn.querySelector('i');
-  if (mobileMenu.classList.contains('open')) {
-    icon.classList.remove('fa-bars');
-    icon.classList.add('fa-times');
-    document.body.style.overflow = 'hidden';
-  } else {
-    icon.classList.remove('fa-times');
-    icon.classList.add('fa-bars');
-    document.body.style.overflow = 'auto';
-  }
-}
-
-// Close mobile menu when clicking on a link
-document.querySelectorAll('#mobileMenu a, #mobileMenu button').forEach(element => {
-  if (element.id !== 'cartBtnMobile') {
-    element.addEventListener('click', () => {
-      mobileMenu.classList.remove('open');
-      const icon = mobileMenuBtn.querySelector('i');
-      icon.classList.remove('fa-times');
-      icon.classList.add('fa-bars');
-      document.body.style.overflow = 'auto';
+    // Initialize toast on DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      Toast.init();
+      updateCart();
     });
-  }
-});
 
-// ✅ CART PANEL FUNCTIONS
-function openCartPanel() {
-  cartPanel.classList.add('open');
-  overlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  // Close mobile menu if open
-  mobileMenu.classList.remove('open');
-  const icon = mobileMenuBtn.querySelector('i');
-  icon.classList.remove('fa-times');
-  icon.classList.add('fa-bars');
-}
+    // Open cart panel
+    cartBtn.addEventListener('click', () => {
+      cartPanel.classList.add('open');
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
 
-function closeCartPanel() {
-  cartPanel.classList.remove('open');
-  overlay.classList.remove('open');
-  document.body.style.overflow = 'auto';
-}
+    // Also open from mobile cart button if present
+    const cartBtnMobile = document.getElementById('cartBtnMobile');
+    if (cartBtnMobile) {
+      cartBtnMobile.addEventListener('click', () => {
+        cartPanel.classList.add('open');
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    }
 
-// ✅ LOAD TOURS - FIXED to ensure all tours load
-async function loadTours() {
-  try {
-    // Try to fetch from API first
-    const response = await fetch(API_ENDPOINTS.TOURS);
-    
-    if (response.ok) {
-      const data = await response.json();
-      let tours = [];
+    // Close cart panel
+    closeCart.addEventListener('click', closeCartPanel);
+    overlay.addEventListener('click', closeCartPanel);
+
+    function closeCartPanel() {
+      cartPanel.classList.remove('open');
+      overlay.classList.remove('open');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Add to cart function
+    function addToCart(name, price) {
+      // Check if item already exists in cart
+      const existingItemIndex = cartItems.findIndex(item => item.name === name);
       
-      // Handle different API response formats
-      if (data && data.success && data.data && Array.isArray(data.data.tours)) {
-        tours = data.data.tours;
-      } else if (data && Array.isArray(data)) {
-        tours = data;
-      } else if (data && data.data && Array.isArray(data.data)) {
-        tours = data.data;
-      }
-      
-      if (tours.length > 0) {
-        renderTours(tours);
-        return;
-      }
-    }
-    
-    // If API fails or returns no tours, use fallback
-    throw new Error('API failed or no tours returned');
-    
-  } catch (error) {
-    console.log('Using fallback tours:', error);
-    // Use fallback tours - ALL 13 TOURS
-    const fallbackTours = getFallbackTours();
-    renderTours(fallbackTours);
-  }
-}
-
-// ✅ COMPLETE FALLBACK TOURS DATA - ALL 13 TOURS
-function getFallbackTours() {
-  return [
-    { 
-      _id: '1', 
-      name: 'Alqasar Hotel', 
-      price: 35, 
-      description: 'Experience luxury in the heart of Dubai with stunning Arabian architecture and world-class amenities.', 
-      image: 'Alqasarhotel.jpg' 
-    },
-    { 
-      _id: '2', 
-      name: 'Atlantis The Palm', 
-      price: 75, 
-      description: 'Discover the iconic underwater world, luxury resort experience, and thrilling waterpark adventures.', 
-      image: 'Atlantis.jpg' 
-    },
-    { 
-      _id: '3', 
-      name: 'Burj Khalifa', 
-      price: 55, 
-      description: 'Visit the world\'s tallest building with breathtaking panoramic views of Dubai from the observation deck.', 
-      image: 'BurjKhalifa.jpg' 
-    },
-    { 
-      _id: '4', 
-      name: 'Burj Al Arab', 
-      price: 45, 
-      description: 'Explore the iconic 7-star hotel, symbol of modern Dubai luxury and architectural marvel.', 
-      image: 'BurjAlarab.jpg' 
-    },
-    { 
-      _id: '5', 
-      name: 'Jumeirah Beach', 
-      price: 60, 
-      description: 'Relax on pristine white sands with stunning views of Burj Al Arab and crystal clear waters.', 
-      image: 'jummeirahBeach.jpg' 
-    },
-    { 
-      _id: '6', 
-      name: 'Jumeirah Mosque', 
-      price: 25, 
-      description: 'Discover Dubai\'s most beautiful mosque and learn about Islamic culture and traditions.', 
-      image: 'JummeirahMosque.jpg' 
-    },
-    { 
-      _id: '7', 
-      name: 'La Mer Beach', 
-      price: 20, 
-      description: 'Enjoy this vibrant beachfront destination with dining, shopping, and exciting water sports.', 
-      image: 'LamerBeach.jpg' 
-    },
-    { 
-      _id: '8', 
-      name: 'Marina Walk', 
-      price: 40, 
-      description: 'Stroll along Dubai Marina with stunning skyscrapers, luxury yachts, and waterfront dining.', 
-      image: 'MarinaWalk.jpg' 
-    },
-    { 
-      _id: '9', 
-      name: 'Palm Jumeirah', 
-      price: 65, 
-      description: 'Explore the world\'s largest man-made island with luxury resorts, beaches, and entertainment.', 
-      image: 'palm jumeirah1.jpg' 
-    },
-    { 
-      _id: '10', 
-      name: 'Red Dunes Desert', 
-      price: 30, 
-      description: 'Experience thrilling dune bashing, camel riding, and traditional Bedouin culture in the desert.', 
-      image: 'RedDunesDesert.jpg' 
-    },
-    { 
-      _id: '11', 
-      name: 'Royal Desert AD', 
-      price: 35, 
-      description: 'Luxury desert experience with premium amenities, entertainment, and authentic Arabian hospitality.', 
-      image: 'Royal desert AD+1.jpg' 
-    },
-    { 
-      _id: '12', 
-      name: 'Sheikh Zayed Road', 
-      price: 35, 
-      description: 'Tour Dubai\'s main artery with iconic skyscrapers, landmarks, and modern architectural wonders.', 
-      image: 'SheikhZayedRoad.jpg' 
-    },
-    { 
-      _id: '13', 
-      name: 'Zabeel Palace', 
-      price: 35, 
-      description: 'Discover the official residence of Dubai\'s ruling family and learn about the city\'s rich heritage.', 
-      image: 'zabeelplace.jpg' 
-    }
-  ];
-}
-
-// ✅ RENDER TOURS - FIXED to ensure all tours display
-function renderTours(tours) {
-  console.log('Rendering tours:', tours.length); // Debug log
-  
-  if (!Array.isArray(tours) || tours.length === 0) {
-    console.error('No tours to display');
-    tours = getFallbackTours();
-  }
-  
-  toursGrid.innerHTML = '';
-  
-  tours.forEach(tour => {
-    const imageUrl = tour.image && !tour.image.startsWith('http')
-      ? tour.image
-      : tour.image || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDMyMCAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iMTkyIiBmaWxsPSIjRjBGMEYwIi8+CjxwYXRoIGQ9Ik0xNjAgOTZMMTI4IDY0SDE5MkwxNjAgOTZaIiBmaWxsPSIjQzg5QjUyIi8+CjxjaXJjbGUgY3g9IjE2MCIgY3k9IjExMiIgcj0iOCIgZmlsbD0iI0M4OUI1MiIvPgo8L3N2Zz4K';
-
-    const tourCard = document.createElement('div');
-    tourCard.className = 'tour-card bg-white shadow-lg rounded-xl overflow-hidden';
-    tourCard.innerHTML = `
-      <img src="${imageUrl}" alt="${tour.name}" class="tour-image" onerror="this.classList.add('image-placeholder')">
-      <div class="p-6">
-        <h3 class="text-xl font-semibold mb-2">${tour.name}</h3>
-        <p class="text-gray-600 mb-4 text-sm">${tour.description || 'Explore this amazing destination'}</p>
-        <div class="flex justify-between items-center">
-          <span class="text-[#C89B52] font-bold text-lg">$${tour.price}</span>
-          <button onclick="addToCart('${tour._id}', '${tour.name}', ${tour.price})"
-            class="bg-[#C89B52] text-black px-4 py-2 rounded-lg hover:bg-[#a67c3b] transition">Add to Cart</button>
-        </div>
-      </div>`;
-    toursGrid.appendChild(tourCard);
-  });
-  
-  console.log('Total tours rendered:', toursGrid.children.length); // Debug log
-}
-
-// ✅ ADD TO CART with Backend API
-async function addToCart(tourId, name, price) {
-  try {
-    const existingIndex = cartItems.findIndex(item => item.id === tourId);
-    if (existingIndex !== -1) {
-      cartItems[existingIndex].quantity += 1;
-    } else {
-      cartItems.push({ id: tourId, name, price, quantity: 1 });
-    }
-    
-    // Save to localStorage
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-    
-    // Update cart UI
-    updateCart();
-    
-    // Sync with backend API
-    try {
-      await fetch(API_ENDPOINTS.CART, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          tourId: tourId,
+      if (existingItemIndex !== -1) {
+        // If exists, increase quantity
+        cartItems[existingItemIndex].quantity += 1;
+      } else {
+        // If not exists, add new item
+        cartItems.push({
           name: name,
           price: price,
           quantity: 1
-        })
-      });
-    } catch (apiError) {
-      console.warn('Could not sync cart with backend:', apiError);
-    }
-    
-    Toast.show(`${name} added to cart!`);
-    
-  } catch (error) {
-    console.error('Error adding to cart:', error);
-    Toast.show('Failed to add item to cart.', 'error');
-  }
-}
-
-// ✅ REMOVE FROM CART with Backend API
-async function removeFromCart(index) {
-  const item = cartItems[index];
-  cartItems.splice(index, 1);
-  updateCart();
-
-  try {
-    await fetch(`${API_ENDPOINTS.CART}/${item.id}`, { 
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
+        });
       }
-    });
-  } catch (error) {
-    console.error('Error removing from cart:', error);
-  }
-}
+      
+      updateCart();
+      
+      // Show confirmation message
+      Toast.show(`${name} added to cart!`);
+    }
 
-// ✅ UPDATE CART QUANTITY with Backend API
-async function updateQuantity(index, change) {
-  const item = cartItems[index];
-  cartItems[index].quantity += change;
+    // Remove item from cart
+    function removeFromCart(index) {
+      cartItems.splice(index, 1);
+      updateCart();
+    }
 
-  if (cartItems[index].quantity <= 0) {
-    removeFromCart(index);
-  } else {
-    updateCart();
-    try {
-      await fetch(API_ENDPOINTS.CART, {
-        method: 'PUT',
-        headers: { 
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          tourId: item.id, 
-          quantity: cartItems[index].quantity 
-        })
+    // Update quantity
+    function updateQuantity(index, change) {
+      cartItems[index].quantity += change;
+      
+      if (cartItems[index].quantity <= 0) {
+        removeFromCart(index);
+      } else {
+        updateCart();
+      }
+    }
+
+    // Update cart UI
+    function updateCart() {
+      // Persist to localStorage
+      localStorage.setItem('cart', JSON.stringify(cartItems));
+
+      // Update cart count
+      const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+      if (cartCount) cartCount.textContent = totalItems;
+      if (cartCountMobile) cartCountMobile.textContent = totalItems;
+      
+      // Show empty cart message if no items
+      if (cartItems.length === 0) {
+        emptyCart.style.display = 'block';
+        checkoutBtn.disabled = true;
+      } else {
+        emptyCart.style.display = 'none';
+        checkoutBtn.disabled = false;
+      }
+      
+      // Clear cart items container
+      cartItemsContainer.innerHTML = '';
+      
+      // Add items to cart
+      cartItems.forEach((item, index) => {
+        const cartItemElement = document.createElement('div');
+        cartItemElement.className = 'flex justify-between items-center mb-4 pb-4 border-b';
+        cartItemElement.innerHTML = `
+          <div class="flex-1">
+            <a href="booking.html?item=${encodeURIComponent(item.name)}&price=${encodeURIComponent(item.price)}&qty=${encodeURIComponent(item.quantity)}" class="block hover:underline">
+              <h4 class="font-semibold">${item.name}</h4>
+              <p class="text-gray-600">$${item.price} x ${item.quantity}</p>
+            </a>
+          </div>
+          <div class="flex items-center">
+            <button onclick="updateQuantity(${index}, -1)" class="text-gray-500 hover:text-gray-700 mr-2">
+              <i class="fas fa-minus-circle"></i>
+            </button>
+            <span class="mx-1">${item.quantity}</span>
+            <button onclick="updateQuantity(${index}, 1)" class="text-gray-500 hover:text-gray-700 ml-2">
+              <i class="fas fa-plus-circle"></i>
+            </button>
+            <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 ml-4">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `;
+        cartItemsContainer.appendChild(cartItemElement);
       });
-    } catch (error) {
-      console.error('Error updating quantity:', error);
+      
+      // Calculate totals
+      const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+      const tax = subtotal * 0.05;
+      const total = subtotal + tax;
+      
+      // Update totals
+      cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+      cartTax.textContent = `$${tax.toFixed(2)}`;
+      cartTotal.textContent = `$${total.toFixed(2)}`;
     }
-  }
-}
 
-// ✅ UPDATE CART UI with NOTIFICATION DOTS
-function updateCart() {
-  const totalItems = cartItems.reduce((t, i) => t + i.quantity, 0);
-  
-  // Update cart counts
-  if (cartCount) cartCount.textContent = totalItems;
-  if (cartCountMobile) cartCountMobile.textContent = totalItems;
-  
-  // Show/hide notification dots based on cart items
-  const cartNotification = document.getElementById('cartNotification');
-  const mobileCartNotification = document.getElementById('mobileCartNotification');
-  const mobileNavCartNotification = document.getElementById('mobileNavCartNotification');
-  
-  if (totalItems > 0) {
-    if (cartNotification) cartNotification.classList.remove('hidden');
-    if (mobileCartNotification) mobileCartNotification.classList.remove('hidden');
-    if (mobileNavCartNotification) mobileNavCartNotification.classList.remove('hidden');
-    checkoutBtn.disabled = false;
-  } else {
-    if (cartNotification) cartNotification.classList.add('hidden');
-    if (mobileCartNotification) mobileCartNotification.classList.add('hidden');
-    if (mobileNavCartNotification) mobileNavCartNotification.classList.add('hidden');
-    checkoutBtn.disabled = true;
-  }
-
-  // Update cart items display
-  cartItemsContainer.innerHTML = '';
-  if (cartItems.length === 0) {
-    emptyCart.style.display = 'block';
-  } else {
-    emptyCart.style.display = 'none';
-    cartItems.forEach((item, index) => {
-      const el = document.createElement('div');
-      el.className = 'flex justify-between items-center mb-4 pb-4 border-b';
-      el.innerHTML = `
-        <div class="flex-1">
-          <h4 class="font-semibold">${item.name}</h4>
-          <p class="text-gray-600">$${item.price} x ${item.quantity}</p>
-        </div>
-        <div class="flex items-center">
-          <button onclick="updateQuantity(${index}, -1)" class="text-gray-500 hover:text-gray-700 mr-2">
-            <i class="fas fa-minus-circle"></i>
-          </button>
-          <span class="mx-2">${item.quantity}</span>
-          <button onclick="updateQuantity(${index}, 1)" class="text-gray-500 hover:text-gray-700 ml-2">
-            <i class="fas fa-plus-circle"></i>
-          </button>
-          <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 ml-4">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>`;
-      cartItemsContainer.appendChild(el);
-    });
-  }
-
-  // Update cart totals
-  const subtotal = cartItems.reduce((t, i) => t + (i.price * i.quantity), 0);
-  const tax = subtotal * 0.05;
-  const total = subtotal + tax;
-
-  cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
-  cartTax.textContent = `$${tax.toFixed(2)}`;
-  cartTotal.textContent = `$${total.toFixed(2)}`;
-}
-
-// ✅ PROCEED TO CHECKOUT
-function proceedToCheckout() {
-  if (cartItems.length === 0) {
-    Toast.show('Your cart is empty!', 'error');
-    return;
-  }
-  
-  // Store cart data for cart.html page
-  localStorage.setItem('cart', JSON.stringify(cartItems));
-  
-  // Redirect to cart page
-  window.location.href = 'cart.html';
-}
-
-// ✅ NEWSLETTER with Backend API
-async function handleNewsletterSubmit(e) {
-  e.preventDefault();
-  const email = newsletterEmail.value.trim();
-  
-  if (!email) {
-    showNewsletterMessage('Please enter a valid email address.', 'error');
-    return;
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    showNewsletterMessage('Please enter a valid email address.', 'error');
-    return;
-  }
-
-  newsletterBtn.disabled = true;
-  newsletterBtnText.textContent = 'Subscribing...';
-  newsletterSpinner.classList.remove('hidden');
-
-  try {
-    const response = await fetch(API_ENDPOINTS.NEWSLETTER, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ 
-        email: email,
-        source: 'website',
-        subscribedAt: new Date().toISOString()
-      })
+    // Checkout button
+    checkoutBtn.addEventListener('click', () => {
+      // Redirect to cart page first
+      window.location.href = 'cart.html';
     });
 
-    const data = await response.json();
-
-    if (response.ok && data.success) {
-      showNewsletterMessage('Successfully subscribed to our newsletter!', 'success');
-      newsletterEmail.value = '';
-    } else {
-      throw new Error(data.message || 'Subscription failed');
-    }
-  } catch (error) {
-    console.error('Newsletter error:', error);
-    showNewsletterMessage('Failed to subscribe. Please try again.', 'error');
-  } finally {
-    newsletterBtn.disabled = false;
-    newsletterBtnText.textContent = 'Subscribe';
-    newsletterSpinner.classList.add('hidden');
-  }
-}
-
-function showNewsletterMessage(message, type) {
-  const color = type === 'success' ? 'text-green-400' : 'text-red-400';
-  newsletterMessage.innerHTML = `<p class="${color}">${message}</p>`;
-  setTimeout(() => newsletterMessage.innerHTML = '', 5000);
-}
-</script>
-
+    // Initialize cart from localStorage
+    cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    updateCart();
+  </script>
 </body>
 </html>
