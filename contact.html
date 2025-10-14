@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contact Us - Dubai Drifters</title>
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
     body { font-family: 'Poppins', sans-serif; background-color: #FDF6EC; }
     body.rtl { direction: rtl; text-align: right; }
-    body.rtl .material-icons { transform: scaleX(-1); }
-
-    @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-    .animate-fadeDown { animation: fadeDown 0.6s ease-out; }
-    .animate-fadeUp { animation: fadeUp 0.6s ease-out 0.2s; }
 
     .mobile-menu { transition: all 0.3s ease; max-height: 0; overflow: hidden; }
     .mobile-menu.open { max-height: 500px; }
@@ -26,62 +21,44 @@
     .contact-card { transition: all 0.3s ease; }
     .contact-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
 
-    /* Toast notifications */
-    .toast {
-      position: fixed; top: 20px; right: 20px;
-      padding: 12px 20px; border-radius: 8px;
-      color: white; z-index: 1000;
-      transform: translateX(400px); transition: transform 0.3s ease;
-    }
-    .toast.show { transform: translateX(0); }
-    .toast.success { background-color: #10B981; }
-    .toast.error { background-color: #EF4444; }
-    .toast.info { background-color: #3B82F6; }
-
-    /* Loading spinner */
     .loading-spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #3498db;
-      border-radius: 50%;
-      width: 20px; height: 20px;
-      animation: spin 1s linear infinite;
-      display: inline-block; margin-left: 8px;
+      border: 3px solid #f3f3f3; border-top: 3px solid #C89B52;
+      border-radius: 50%; width: 20px; height: 20px;
+      animation: spin 1s linear infinite; margin-left: 8px;
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
 
 <body class="bg-gray-50">
-
   <!-- Header -->
-  <header class="bg-gradient-to-r from-black via-[#1a1a1a] to-[#0d0d0d] shadow-lg sticky top-0 z-50 transition-all duration-300 ease-in-out">
+  <header class="bg-gradient-to-r from-black via-[#1a1a1a] to-[#0d0d0d] shadow-lg sticky top-0 z-50">
     <div class="container mx-auto px-4">
-      <div class="flex justify-between items-center py-2 animate-fadeDown">
-        <!-- Logo -->
+      <div class="flex justify-between items-center py-3">
         <a href="index.html" class="flex items-center space-x-4">
-          <img src="logo.jpg" alt="Logo" class="h-16 w-16 rounded-full object-cover border-4 border-[#C89B52] shadow-lg hover:scale-110 transition-transform duration-300"/>
+          <img src="logo.jpg" alt="Logo" class="h-14 w-14 rounded-full border-4 border-[#C89B52] shadow-md hover:scale-110 transition-transform duration-300" />
           <span class="text-2xl font-bold tracking-wide text-[#C89B52]">Dubai Drifters</span>
         </a>
 
-        <!-- Desktop Menu -->
-        <div class="hidden md:flex items-center space-x-6 text-sm text-white font-medium">
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex items-center space-x-6 text-sm text-white font-medium">
           <a href="about.html" class="hover:text-[#C89B52]">About Us</a>
           <a href="contact.html" class="text-[#C89B52] underline font-bold">Contact Us</a>
           <a href="blog.html" class="hover:text-[#C89B52]">Blog</a>
-          <a href="signin.html" class="flex items-center hover:text-[#C89B52]"><span class="material-icons mr-1">person</span>Sign In</a>
-        </div>
+          <a href="signin.html" class="flex items-center hover:text-[#C89B52]">
+            <span class="material-icons mr-1">person</span>Sign In
+          </a>
+        </nav>
 
-        <!-- Mobile Menu Button -->
-        <div class="md:hidden">
-          <button id="mobileMenuBtn" class="text-white hover:text-[#C89B52]">
-            <span class="material-icons">menu</span>
-          </button>
-        </div>
+        <!-- Mobile Button -->
+        <button id="mobileMenuBtn" class="md:hidden text-white hover:text-[#C89B52]">
+          <span class="material-icons">menu</span>
+        </button>
       </div>
 
       <!-- Mobile Menu -->
-      <div id="mobileMenu" class="mobile-menu md:hidden bg-[#1a1a1a] rounded-b-lg shadow-lg">
-        <div class="py-4 px-4 space-y-4">
+      <div id="mobileMenu" class="mobile-menu md:hidden bg-[#1a1a1a] rounded-b-lg">
+        <div class="py-4 px-4 space-y-3">
           <a href="index.html" class="block text-white hover:text-[#C89B52]">Home</a>
           <a href="tours.html" class="block text-white hover:text-[#C89B52]">Tours</a>
           <a href="visa.html" class="block text-white hover:text-[#C89B52]">Visa</a>
@@ -94,20 +71,20 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
+  <!-- Hero -->
   <section class="relative bg-cover bg-center h-72" style="background-image: url('JummeirahMosque.jpg');">
     <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div class="text-center text-white">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">Contact Us</h1>
-        <p class="text-lg md:text-xl">We're here to help you plan your perfect Dubai adventure</p>
+        <h1 class="text-4xl md:text-5xl font-bold mb-3">Contact Us</h1>
+        <p class="text-lg md:text-xl">We're here to help you plan your dream Dubai experience</p>
       </div>
     </div>
   </section>
 
-  <!-- Contact Form Section -->
+  <!-- Contact Section -->
   <section class="py-16 container mx-auto px-4">
     <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Info -->
+      <!-- Contact Info -->
       <div class="space-y-6">
         <div class="contact-card bg-white rounded-lg shadow-md p-6">
           <h3 class="font-semibold text-lg mb-2">Our Office</h3>
@@ -115,35 +92,38 @@
         </div>
         <div class="contact-card bg-white rounded-lg shadow-md p-6">
           <h3 class="font-semibold text-lg mb-2">Call Us</h3>
-          <p class="text-gray-600">+971 4 123 4567</p>
+          <p class="text-gray-600">+971 524 408 513</p>
           <p class="text-sm text-gray-500">Mon–Sun, 8 AM–10 PM</p>
         </div>
         <div class="contact-card bg-white rounded-lg shadow-md p-6">
           <h3 class="font-semibold text-lg mb-2">Email Us</h3>
-          <p class="text-gray-600">info@dubaidrifters.com</p>
+          <p class="text-gray-600">dubaidrifterss@gmail.com</p>
         </div>
       </div>
 
-      <!-- Form -->
+      <!-- Contact Form -->
       <div class="lg:col-span-2 bg-white rounded-lg shadow-lg p-8">
         <h3 class="text-2xl font-bold text-gray-800 mb-6">Send us a Message</h3>
+
         <form id="contactForm" class="space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <input type="text" id="name" name="name" placeholder="Your Name" required class="border p-3 rounded-lg w-full focus:ring-2 focus:ring-[#C89B52]">
-            <input type="email" id="email" name="email" placeholder="Your Email" required class="border p-3 rounded-lg w-full focus:ring-2 focus:ring-[#C89B52]">
+            <input type="text" name="name" placeholder="Your Name" required class="border p-3 rounded-lg w-full focus:ring-2 focus:ring-[#C89B52]" />
+            <input type="email" name="email" placeholder="Your Email" required class="border p-3 rounded-lg w-full focus:ring-2 focus:ring-[#C89B52]" />
           </div>
-          <input type="text" id="subject" name="subject" placeholder="Subject" required class="border p-3 rounded-lg w-full focus:ring-2 focus:ring-[#C89B52]">
-          <textarea id="message" name="message" placeholder="Your Message" rows="5" required class="border p-3 rounded-lg w-full focus:ring-2 focus:ring-[#C89B52]"></textarea>
+          <input type="text" name="subject" placeholder="Subject" required class="border p-3 rounded-lg w-full focus:ring-2 focus:ring-[#C89B52]" />
+          <textarea name="message" placeholder="Your Message" rows="5" required class="border p-3 rounded-lg w-full focus:ring-2 focus:ring-[#C89B52]"></textarea>
+
           <button type="submit" id="submitBtn" class="w-full bg-[#C89B52] hover:bg-[#b38642] text-white font-semibold py-3 rounded-lg flex justify-center items-center">
             <span class="material-icons mr-2">send</span> Send Message
             <div id="submitSpinner" class="loading-spinner hidden"></div>
           </button>
         </form>
+
         <p id="formMsg" class="mt-4 text-center text-gray-600 hidden"></p>
       </div>
     </div>
 
-    <!-- Map -->
+    <!-- Google Map -->
     <div class="mt-16 bg-white rounded-lg shadow-lg overflow-hidden">
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3610.452509362816!2d55.27218771500871!3d25.19754798390515!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43348a67e24b%3A0xff45e502e1ceb7e2!2sBurj%20Khalifa!5e0!3m2!1sen!2sae!4v1620000000000!5m2!1sen!2sae" width="100%" height="400" style="border:0;" allowfullscreen loading="lazy"></iframe>
     </div>
@@ -152,14 +132,13 @@
   <!-- Footer -->
   <footer class="bg-gray-800 text-white">
     <div class="container mx-auto px-4 py-8 text-center">
-      <p>© 2025 Dubaidrifters.com. All Rights Reserved.</p>
+      <p>© 2025 Dubai Drifters. All Rights Reserved.</p>
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- JS -->
   <script>
     const API_BASE = "https://api.dubaidrifters.com/api";
-
     const contactForm = document.getElementById("contactForm");
     const submitSpinner = document.getElementById("submitSpinner");
     const formMsg = document.getElementById("formMsg");
@@ -172,30 +151,30 @@
         name: contactForm.name.value.trim(),
         email: contactForm.email.value.trim(),
         subject: contactForm.subject.value.trim(),
-        message: contactForm.message.value.trim()
+        message: contactForm.message.value.trim(),
       };
 
       try {
-        const response = await fetch(`${API_BASE}/contact`, {
+        const res = await fetch(`${API_BASE}/contact`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(formData),
         });
 
-        const result = await response.json();
+        const data = await res.json();
         submitSpinner.classList.add("hidden");
 
-        if (response.ok) {
+        if (res.ok) {
           formMsg.textContent = "✅ Message sent successfully!";
           formMsg.classList.remove("hidden", "text-red-500");
           formMsg.classList.add("text-green-600");
           contactForm.reset();
         } else {
-          formMsg.textContent = "❌ Failed to send message. Try again later.";
+          formMsg.textContent = data.message || "❌ Failed to send. Try again later.";
           formMsg.classList.remove("hidden", "text-green-600");
           formMsg.classList.add("text-red-500");
         }
-      } catch {
+      } catch (err) {
         submitSpinner.classList.add("hidden");
         formMsg.textContent = "⚠️ Network error. Please check your connection.";
         formMsg.classList.remove("hidden", "text-green-600");
@@ -203,11 +182,9 @@
       }
     });
 
-    // Mobile Menu Toggle
-    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
-    const mobileMenu = document.getElementById("mobileMenu");
-    mobileMenuBtn.addEventListener("click", () => {
-      mobileMenu.classList.toggle("open");
+    // Mobile menu toggle
+    document.getElementById("mobileMenuBtn").addEventListener("click", () => {
+      document.getElementById("mobileMenu").classList.toggle("open");
     });
   </script>
 </body>
