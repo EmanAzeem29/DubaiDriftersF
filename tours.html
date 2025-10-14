@@ -1,139 +1,187 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cart - Dubai Drifters</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-    }
-  </style>
-</head>
-<body class="bg-[#FDF6EC]">
-  <!-- Header -->
-  <header class="bg-gradient-to-r from-black via-[#1a1a1a] to-[#0d0d0d] sticky top-0 z-50 shadow-lg">
-    <div class="container mx-auto flex justify-between items-center py-4 px-6">
-      <!-- Logo -->
-      <a href="index.html" class="flex items-center space-x-3">
-        <img src="logo.jpg" alt="Logo" class="h-14 w-14 rounded-full object-cover border-4 border-[#C89B52] shadow-lg">
-        <span class="text-2xl font-bold text-[#C89B52]">Dubai Drifters</span>
-      </a>
-      <nav class="hidden md:flex items-center space-x-6 text-sm text-white font-medium">
-        <a href="tours.html" class="hover:text-[#C89B52]">← Back to Tours</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Cart Content -->
-  <section class="py-16 bg-gray-50 min-h-screen">
-    <div class="container mx-auto px-6">
-      <h1 class="text-4xl font-bold text-center mb-8 text-[#0F172A]">Your Cart</h1>
-      
-      <div id="cartContent">
-        <!-- Cart items will be loaded here -->
-      </div>
-
-      <div class="text-center mt-8">
-        <a href="tours.html" class="bg-[#C89B52] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#a67c3b] transition inline-block">
-          Continue Shopping
-        </a>
-      </div>
-    </div>
-  </section>
-
+  <!-- JavaScript -->
   <script>
-    // Load cart items from localStorage and display them
-    document.addEventListener('DOMContentLoaded', function() {
-      const cartContent = document.getElementById('cartContent');
-      const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    // Cart functionality - No localStorage
+    let cartItems = [];
+    const cartBtn = document.getElementById('cartBtn');
+    const closeCart = document.getElementById('closeCart');
+    const overlay = document.getElementById('overlay');
+    const cartPanel = document.getElementById('cartPanel');
+    const cartCount = document.getElementById('cartCount');
+    const cartCountMobile = document.getElementById('cartCountMobile');
+    const cartItemsContainer = document.getElementById('cartItems');
+    const emptyCart = document.getElementById('emptyCart');
+    const cartSubtotal = document.getElementById('cartSubtotal');
+    const cartTax = document.getElementById('cartTax');
+    const cartTotal = document.getElementById('cartTotal');
+    const checkoutBtn = document.getElementById('checkoutBtn');
 
-      if (cartItems.length === 0) {
-        cartContent.innerHTML = `
-          <div class="text-center py-16">
-            <i class="fas fa-shopping-cart text-6xl text-gray-400 mb-4"></i>
-            <h2 class="text-2xl font-semibold text-gray-600 mb-4">Your cart is empty</h2>
-            <p class="text-gray-500 mb-8">Add some amazing tours to your cart first!</p>
-            <a href="tours.html" class="bg-[#C89B52] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#a67c3b] transition">
-              Browse Tours
-            </a>
-          </div>
-        `;
-      } else {
-        let cartHTML = `
-          <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-            <div class="p-6">
-              <h2 class="text-2xl font-bold mb-6">Selected Tours</h2>
-        `;
-
-        let subtotal = 0;
+    // Initialize toast
+    const Toast = {
+      init() {
+        this.hideTimeout = null;
         
-        cartItems.forEach((item, index) => {
-          const itemTotal = item.price * item.quantity;
-          subtotal += itemTotal;
-          
-          cartHTML += `
-            <div class="flex items-center justify-between py-4 border-b">
-              <div class="flex-1">
-                <h3 class="font-semibold text-lg">${item.name}</h3>
-                <p class="text-gray-600">Price: $${item.price}</p>
-                <p class="text-gray-600">Quantity: ${item.quantity}</p>
-                <p class="text-[#C89B52] font-semibold">Total: $${itemTotal}</p>
-              </div>
-            </div>
-          `;
-        });
-
-        const tax = subtotal * 0.05;
-        const total = subtotal + tax;
-
-        cartHTML += `
-              <div class="border-t mt-6 pt-6">
-                <div class="flex justify-between mb-2">
-                  <span class="font-semibold">Subtotal:</span>
-                  <span>$${subtotal.toFixed(2)}</span>
-                </div>
-                <div class="flex justify-between mb-2">
-                  <span class="font-semibold">Tax (5%):</span>
-                  <span>$${tax.toFixed(2)}</span>
-                </div>
-                <div class="flex justify-between text-xl font-bold mt-4">
-                  <span>Total:</span>
-                  <span class="text-[#C89B52]">$${total.toFixed(2)}</span>
-                </div>
-              </div>
-              
-              <div class="mt-8 space-y-4">
-                <button onclick="proceedToBooking()" class="w-full bg-[#C89B52] text-white py-4 rounded-lg font-semibold hover:bg-[#a67c3b] transition text-lg">
-                  Proceed to Booking
-                </button>
-                <button onclick="clearCart()" class="w-full bg-gray-500 text-white py-3 rounded-lg font-semibold hover:bg-gray-600 transition">
-                  Clear Cart
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-
-        cartContent.innerHTML = cartHTML;
+        this.el = document.createElement('div');
+        this.el.className = 'toast';
+        document.body.appendChild(this.el);
+      },
+      
+      show(message) {
+        clearTimeout(this.hideTimeout);
+        
+        this.el.textContent = message;
+        this.el.className = 'toast toast-visible fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg';
+        
+        this.hideTimeout = setTimeout(() => {
+          this.el.classList.remove('toast-visible');
+        }, 3000);
       }
+    };
+
+    // Initialize toast on DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      Toast.init();
+      updateCart();
     });
 
-    function proceedToBooking() {
-      alert('Proceeding to booking page...');
-      // Here you would redirect to booking page
-      // window.location.href = 'booking.html';
+    // Open cart panel
+    cartBtn.addEventListener('click', () => {
+      cartPanel.classList.add('open');
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+
+    // Also open from mobile cart button if present
+    const cartBtnMobile = document.getElementById('cartBtnMobile');
+    if (cartBtnMobile) {
+      cartBtnMobile.addEventListener('click', () => {
+        cartPanel.classList.add('open');
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
     }
 
-    function clearCart() {
-      if (confirm('Are you sure you want to clear your cart?')) {
-        localStorage.removeItem('cart');
-        location.reload();
+    // Close cart panel
+    closeCart.addEventListener('click', closeCartPanel);
+    overlay.addEventListener('click', closeCartPanel);
+
+    function closeCartPanel() {
+      cartPanel.classList.remove('open');
+      overlay.classList.remove('open');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Add to cart function
+    function addToCart(name, price) {
+      // Check if item already exists in cart
+      const existingItemIndex = cartItems.findIndex(item => item.name === name);
+      
+      if (existingItemIndex !== -1) {
+        // If exists, increase quantity
+        cartItems[existingItemIndex].quantity += 1;
+      } else {
+        // If not exists, add new item
+        cartItems.push({
+          name: name,
+          price: price,
+          quantity: 1
+        });
+      }
+      
+      updateCart();
+      
+      // Show confirmation message
+      Toast.show(`${name} added to cart!`);
+    }
+
+    // Remove item from cart
+    function removeFromCart(index) {
+      cartItems.splice(index, 1);
+      updateCart();
+    }
+
+    // Update quantity
+    function updateQuantity(index, change) {
+      cartItems[index].quantity += change;
+      
+      if (cartItems[index].quantity <= 0) {
+        removeFromCart(index);
+      } else {
+        updateCart();
       }
     }
+
+    // Update cart UI
+    function updateCart() {
+      // Update cart count
+      const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+      if (cartCount) cartCount.textContent = totalItems;
+      if (cartCountMobile) cartCountMobile.textContent = totalItems;
+      
+      // Show empty cart message if no items
+      if (cartItems.length === 0) {
+        emptyCart.style.display = 'block';
+        checkoutBtn.disabled = true;
+      } else {
+        emptyCart.style.display = 'none';
+        checkoutBtn.disabled = false;
+      }
+      
+      // Clear cart items container
+      cartItemsContainer.innerHTML = '';
+      
+      // Add items to cart
+      cartItems.forEach((item, index) => {
+        const cartItemElement = document.createElement('div');
+        cartItemElement.className = 'flex justify-between items-center mb-4 pb-4 border-b';
+        cartItemElement.innerHTML = `
+          <div class="flex-1">
+            <h4 class="font-semibold">${item.name}</h4>
+            <p class="text-gray-600">$${item.price} x ${item.quantity}</p>
+          </div>
+          <div class="flex items-center">
+            <button onclick="updateQuantity(${index}, -1)" class="text-gray-500 hover:text-gray-700 mr-2">
+              <i class="fas fa-minus-circle"></i>
+            </button>
+            <span class="mx-1">${item.quantity}</span>
+            <button onclick="updateQuantity(${index}, 1)" class="text-gray-500 hover:text-gray-700 ml-2">
+              <i class="fas fa-plus-circle"></i>
+            </button>
+            <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 ml-4">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `;
+        cartItemsContainer.appendChild(cartItemElement);
+      });
+      
+      // Calculate totals
+      const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+      const tax = subtotal * 0.05;
+      const total = subtotal + tax;
+      
+      // Update totals
+      cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+      cartTax.textContent = `$${tax.toFixed(2)}`;
+      cartTotal.textContent = `$${total.toFixed(2)}`;
+    }
+
+    // Checkout button - Pass cart items as URL parameters
+    checkoutBtn.addEventListener('click', () => {
+      if (cartItems.length === 0) {
+        Toast.show('Please add items to cart first!');
+        return;
+      }
+      
+      // Convert cart items to URL parameters
+      const cartParams = new URLSearchParams();
+      cartItems.forEach((item, index) => {
+        cartParams.append(`item${index}`, `${item.name}|${item.price}|${item.quantity}`);
+      });
+      
+      // Redirect to cart.html with cart data
+      window.location.href = `cart.html?${cartParams.toString()}`;
+    });
+
+    // Initialize empty cart
+    updateCart();
   </script>
-</body>
-</html>
