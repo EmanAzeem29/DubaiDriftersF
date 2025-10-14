@@ -124,7 +124,7 @@
         <div class="flex justify-between mb-2"><span>Subtotal:</span> <span id="cartSubtotal">$0</span></div>
         <div class="flex justify-between mb-2"><span>Tax (5%):</span> <span id="cartTax">$0</span></div>
         <div class="flex justify-between font-bold text-lg"><span>Total:</span> <span id="cartTotal" class="text-[#C89B52]">$0</span></div>
-        <button id="checkoutBtn" disabled class="mt-4 w-full bg-[#C89B52] text-white py-3 rounded-lg font-semibold hover:bg-[#a67c3b] transition disabled:opacity-50">Checkout</button>
+        <button id="checkoutBtn" disabled class="mt-4 w-full bg-[#C89B52] text-white py-3 rounded-lg font-semibold hover:bg-[#a67c3b] transition disabled:opacity-50">Proceed to Checkout</button>
       </div>
     </div>
   </div>
@@ -696,8 +696,8 @@
     </footer>
   <!-- JavaScript -->
   <script>
-    // Cart functionality - Cart will be empty on browser reload
-    let cartItems = [];
+    // Cart functionality
+    let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
     const cartBtn = document.getElementById('cartBtn');
     const closeCart = document.getElementById('closeCart');
     const overlay = document.getElementById('overlay');
@@ -789,14 +789,16 @@
     closeCart.addEventListener('click', closeCartPanel);
     overlay.addEventListener('click', closeCartPanel);
 
-    // Add to cart function - Now redirects to cart.html with tour details
+    // Add to cart function
     function addToCart(name, price) {
-      // Add item to cart
+      // Check if item already exists in cart
       const existingItemIndex = cartItems.findIndex(item => item.name === name);
       
       if (existingItemIndex !== -1) {
+        // If exists, increase quantity
         cartItems[existingItemIndex].quantity += 1;
       } else {
+        // If not exists, add new item
         cartItems.push({
           name: name,
           price: price,
@@ -808,13 +810,6 @@
       
       // Show confirmation message
       Toast.show(`${name} added to cart!`);
-      
-      // Redirect to cart.html after a short delay
-      setTimeout(() => {
-        // Store cart items in sessionStorage for cart.html to access
-        sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
-        window.location.href = 'cart.html';
-      }, 1000);
     }
 
     // Remove item from cart
@@ -836,6 +831,9 @@
 
     // Update cart UI
     function updateCart() {
+      // Persist to localStorage
+      localStorage.setItem('cart', JSON.stringify(cartItems));
+
       // Update cart count
       const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
       if (cartCount) cartCount.textContent = totalItems;
@@ -889,14 +887,15 @@
       cartTotal.textContent = `$${total.toFixed(2)}`;
     }
 
-    // Checkout button - Redirect to cart.html with current cart items
+    // Checkout button - Redirect to cart.html with all selected tour details
     checkoutBtn.addEventListener('click', () => {
-      // Store cart items in sessionStorage for cart.html to access
-      sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
-      window.location.href = 'cart.html';
+      if (cartItems.length > 0) {
+        // Redirect to cart page with all selected tours
+        window.location.href = 'cart.html';
+      }
     });
 
-    // Initialize cart - Empty on page load
+    // Initialize cart from localStorage
     updateCart();
   </script>
 </body>
