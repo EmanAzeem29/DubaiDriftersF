@@ -47,6 +47,18 @@
       visibility: visible;
       opacity: 1;
     }
+    .loading-spinner {
+      border: 2px solid #f3f3f3;
+      border-top: 2px solid #3498db;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body class="bg-[#FDF6EC]">
@@ -82,13 +94,13 @@
 
     <!-- Mobile Nav -->
     <div id="mobileMenu" class="hidden md:hidden bg-black bg-opacity-95 text-white text-center space-y-4 py-6">
-      <a href="index.html" class="block hover:text-[#C89B52]">Home</a>
-      <a href="about.html" class="block hover:text-[#C89B52]">About</a>
-      <a href="tours.html" class="block text-[#C89B52] font-semibold">Tours</a>
-      <a href="blog.html" class="block hover:text-[#C89B52]">Blog</a>
-      <a href="contact.html" class="block hover:text-[#C89B52]">Contact</a>
+      <a href="index.html" class="block hover:text-[#C89B52] py-2">Home</a>
+      <a href="about.html" class="block hover:text-[#C89B52] py-2">About</a>
+      <a href="tours.html" class="block text-[#C89B52] font-semibold py-2">Tours</a>
+      <a href="blog.html" class="block hover:text-[#C89B52] py-2">Blog</a>
+      <a href="contact.html" class="block hover:text-[#C89B52] py-2">Contact</a>
       <!-- Cart in mobile -->
-      <button id="cartBtnMobile" class="relative hover:text-[#C89B52]">
+      <button id="cartBtnMobile" class="relative hover:text-[#C89B52] py-2">
         <i class="fas fa-shopping-cart text-lg"></i>
         <span id="cartCountMobile" class="bg-[#C89B52] text-black text-xs font-bold rounded-full px-1.5 py-0.5 absolute -top-2 -right-2">0</span>
       </button>
@@ -685,7 +697,7 @@
   <!-- JavaScript -->
   <script>
     // Backend API Configuration
-   const API_BASE = "https://api.dubaidrifters.com/api";
+    const API_BASE_URL = 'https://your-backend-api.com/api';
     
     // Cart functionality
     let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
@@ -701,6 +713,10 @@
     const cartTax = document.getElementById('cartTax');
     const cartTotal = document.getElementById('cartTotal');
     const checkoutBtn = document.getElementById('checkoutBtn');
+
+    // Mobile Menu Elements
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
 
     // Initialize toast
     const Toast = {
@@ -725,212 +741,100 @@
       }
     };
 
-    // API Service Functions
-    const ApiService = {
-      async request(url, options = {}) {
-        try {
-          const response = await fetch(url, {
-            headers: {
-              'Content-Type': 'application/json',
-              ...options.headers
-            },
-            ...options
-          });
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          return await response.json();
-        } catch (error) {
-          console.error('API request failed:', error);
-          throw error;
-        }
-      },
-
-      async addToCart(tourId, name, price, quantity = 1) {
-        return this.request(`${API_BASE_URL}/cart/add`, {
-          method: 'POST',
-          body: JSON.stringify({ tourId, name, price, quantity })
-        });
-      },
-
-      async getCart() {
-        return this.request(`${API_BASE_URL}/cart`);
-      },
-
-      async updateCart(itemId, quantity) {
-        return this.request(`${API_BASE_URL}/cart/update`, {
-          method: 'PUT',
-          body: JSON.stringify({ itemId, quantity })
-        });
-      },
-
-      async removeFromCart(itemId) {
-        return this.request(`${API_BASE_URL}/cart/remove`, {
-          method: 'DELETE',
-          body: JSON.stringify({ itemId })
-        });
-      },
-
-      async subscribeToNewsletter(email) {
-        return this.request(`${API_BASE_URL}/newsletter/subscribe`, {
-          method: 'POST',
-          body: JSON.stringify({ email })
-        });
-      }
-    };
-
-    // Initialize toast on DOM load
+    // Initialize on DOM load
     document.addEventListener('DOMContentLoaded', () => {
       Toast.init();
       updateCart();
-      loadCartFromBackend(); // Load cart from backend on page load
+      setupMobileMenu();
     });
 
-    // Load cart from backend
-    async function loadCartFromBackend() {
-      try {
-        const backendCart = await ApiService.getCart();
-        if (backendCart && backendCart.items) {
-          cartItems = backendCart.items;
-          updateCart();
-        }
-      } catch (error) {
-        console.error('Failed to load cart from backend:', error);
-        // Continue with local cart if backend fails
+    // Mobile Menu Functionality
+    function setupMobileMenu() {
+      // Toggle mobile menu
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+
+      // Close mobile menu when clicking on links
+      const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+      mobileMenuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+        });
+      });
+
+      // Close mobile menu when clicking cart button in mobile
+      const cartBtnMobile = document.getElementById('cartBtnMobile');
+      if (cartBtnMobile) {
+        cartBtnMobile.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+          openCart();
+        });
       }
     }
 
     // Open cart panel
-    cartBtn.addEventListener('click', () => {
+    function openCart() {
       cartPanel.classList.add('open');
       overlay.classList.add('open');
       document.body.style.overflow = 'hidden';
-    });
-
-    // Also open from mobile cart button if present
-    const cartBtnMobile = document.getElementById('cartBtnMobile');
-    if (cartBtnMobile) {
-      cartBtnMobile.addEventListener('click', () => {
-        cartPanel.classList.add('open');
-        overlay.classList.add('open');
-        document.body.style.overflow = 'hidden';
-      });
     }
 
     // Close cart panel
-    closeCart.addEventListener('click', closeCartPanel);
-    overlay.addEventListener('click', closeCartPanel);
-
     function closeCartPanel() {
       cartPanel.classList.remove('open');
       overlay.classList.remove('open');
       document.body.style.overflow = 'auto';
     }
 
-    // Add to cart function - now with backend integration
-    async function addToCart(name, price) {
-      try {
-        // Generate a temporary ID (replace with actual tour ID from your backend)
-        const tourId = name.toLowerCase().replace(/\s+/g, '-');
-        
-        // Add to backend cart
-        await ApiService.addToCart(tourId, name, price, 1);
-        
-        // Update local cart
-        const existingItemIndex = cartItems.findIndex(item => item.name === name);
-        
-        if (existingItemIndex !== -1) {
-          cartItems[existingItemIndex].quantity += 1;
-        } else {
-          cartItems.push({
-            id: tourId,
-            name: name,
-            price: price,
-            quantity: 1
-          });
-        }
-        
-        updateCart();
-        Toast.show(`${name} added to cart!`);
-      } catch (error) {
-        console.error('Failed to add item to backend cart:', error);
-        Toast.show('Failed to add item to cart. Please try again.', 'error');
-        
-        // Fallback to local storage only
-        const existingItemIndex = cartItems.findIndex(item => item.name === name);
-        
-        if (existingItemIndex !== -1) {
-          cartItems[existingItemIndex].quantity += 1;
-        } else {
-          cartItems.push({
-            name: name,
-            price: price,
-            quantity: 1
-          });
-        }
-        
-        updateCart();
-        Toast.show(`${name} added to cart!`);
+    // Cart event listeners
+    cartBtn.addEventListener('click', openCart);
+    closeCart.addEventListener('click', closeCartPanel);
+    overlay.addEventListener('click', closeCartPanel);
+
+    // Add to cart function
+    function addToCart(name, price) {
+      // Check if item already exists in cart
+      const existingItemIndex = cartItems.findIndex(item => item.name === name);
+      
+      if (existingItemIndex !== -1) {
+        // If exists, increase quantity
+        cartItems[existingItemIndex].quantity += 1;
+      } else {
+        // If not exists, add new item
+        cartItems.push({
+          name: name,
+          price: price,
+          quantity: 1
+        });
       }
+      
+      updateCart();
+      
+      // Show confirmation message
+      Toast.show(`${name} added to cart!`);
     }
 
-    // Remove item from cart with backend integration
-    async function removeFromCart(index) {
-      try {
-        const itemId = cartItems[index].id;
-        if (itemId) {
-          await ApiService.removeFromCart(itemId);
-        }
-        
-        cartItems.splice(index, 1);
-        updateCart();
-        Toast.show('Item removed from cart');
-      } catch (error) {
-        console.error('Failed to remove item from backend cart:', error);
-        Toast.show('Failed to remove item from cart. Please try again.', 'error');
-        
-        // Fallback to local storage only
-        cartItems.splice(index, 1);
-        updateCart();
-      }
+    // Remove item from cart
+    function removeFromCart(index) {
+      cartItems.splice(index, 1);
+      updateCart();
     }
 
-    // Update quantity with backend integration
-    async function updateQuantity(index, change) {
-      try {
-        cartItems[index].quantity += change;
-        
-        if (cartItems[index].quantity <= 0) {
-          removeFromCart(index);
-          return;
-        }
-        
-        const itemId = cartItems[index].id;
-        if (itemId) {
-          await ApiService.updateCart(itemId, cartItems[index].quantity);
-        }
-        
+    // Update quantity
+    function updateQuantity(index, change) {
+      cartItems[index].quantity += change;
+      
+      if (cartItems[index].quantity <= 0) {
+        removeFromCart(index);
+      } else {
         updateCart();
-      } catch (error) {
-        console.error('Failed to update quantity in backend cart:', error);
-        Toast.show('Failed to update cart. Please try again.', 'error');
-        
-        // Fallback to local storage only
-        cartItems[index].quantity += change;
-        
-        if (cartItems[index].quantity <= 0) {
-          removeFromCart(index);
-        } else {
-          updateCart();
-        }
       }
     }
 
     // Update cart UI
     function updateCart() {
-      // Persist to localStorage as fallback
+      // Persist to localStorage
       localStorage.setItem('cart', JSON.stringify(cartItems));
 
       // Update cart count
@@ -1000,5 +904,3 @@
   </script>
 </body>
 </html>
-
-
