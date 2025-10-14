@@ -343,10 +343,9 @@
   <div id="toastContainer"></div>
 
   <script>
-    // API Configurationconst API_BASE = "https://dubaidriftersb.onrender.com/api";
-
-    
-    // Global state
+    // API Configuration
+   const API_BASE_URL = "https://api.dubaidrifters.com";
+// Global state
     let currentCurrency = localStorage.getItem('preferredCurrency') || 'USD';
     let currentLanguage = localStorage.getItem('preferredLanguage') || 'English';
     let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
@@ -1078,3 +1077,4 @@
 </body>
 
 </html>
+
