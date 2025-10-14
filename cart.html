@@ -1,82 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dubai Drifters - Cart</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dubai Drifters - Contact Us</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
-    body { 
-      font-family: 'Poppins', sans-serif; 
+    body {
+      font-family: 'Poppins', sans-serif;
       background-color: #FDF6EC;
     }
-    
-    .cart-item {
-      transition: all 0.3s ease;
-    }
-    
-    .cart-item:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-    
-    .empty-cart {
-      animation: fadeIn 0.5s ease;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .quantity-btn {
-      transition: all 0.2s ease;
-    }
-    
-    .quantity-btn:hover {
-      background-color: #C89B52;
-      color: white;
-    }
-    
     .header-gradient {
       background: linear-gradient(to right, #000000, #1a1a1a, #0d0d0d);
     }
-    
-    .progress-bar {
-      height: 6px;
-      background-color: #e5e7eb;
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    
-    .progress-fill {
-      height: 100%;
-      background-color: #C89B52;
-      transition: width 0.5s ease;
-    }
-    
-    .loading-spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #C89B52;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      animation: spin 1s linear infinite;
-      display: inline-block;
-      margin-right: 8px;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .error-message {
-      color: #e53e3e;
-      font-size: 0.875rem;
-      margin-top: 0.25rem;
+    .contact-card:hover {
+      transform: translateY(-3px);
+      transition: all 0.3s ease;
     }
   </style>
 </head>
@@ -86,171 +27,110 @@
   <header class="header-gradient text-white shadow-lg sticky top-0 z-50">
     <div class="container mx-auto px-4">
       <div class="flex justify-between items-center py-2">
-        <!-- Logo + Name -->
         <a href="index.html" class="flex items-center space-x-4">
-          <img src="logo.jpg" alt="Logo" 
-               class="h-16 w-16 rounded-full object-cover border-4 border-[#C89B52] shadow-lg hover:scale-110 transition-transform duration-300"
-               onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9IiNDODlCNTIiLz4KPHN2Zz4K'"/>
+          <img src="logo.jpg" alt="Logo" class="h-16 w-16 rounded-full object-cover border-4 border-[#C89B52] shadow-lg hover:scale-110 transition-transform duration-300" />
           <span class="text-2xl font-bold tracking-wide text-[#C89B52]">Dubai Drifters</span>
         </a>
-        
-        <!-- Desktop Menu -->
-        <div class="hidden md:flex items-center space-x-6 text-sm text-white font-medium">
-          <a class="hover:text-[#C89B52] transition-colors duration-300 hover:scale-105" href="about.html">About Us</a>
-          <a class="hover:text-[#C89B52] transition-colors duration-300 hover:scale-105" href="contact.html">Contact Us</a>
-          <a class="hover:text-[#C89B52] transition-colors duration-300 hover:scale-105" href="blog.html">Blog</a>
 
-          <a class="flex items-center hover:text-[#C89B52] transition duration-300 hover:scale-105" href="#">
-            <span class="material-icons text-lg mr-1">person</span>
-            <span>Sign In</span>
+        <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+          <a href="about.html" class="hover:text-[#C89B52]">About Us</a>
+          <a href="contact.html" class="text-[#C89B52] font-semibold underline">Contact Us</a>
+          <a href="blog.html" class="hover:text-[#C89B52]">Blog</a>
+          <a href="#" class="flex items-center hover:text-[#C89B52]">
+            <span class="material-icons text-lg mr-1">person</span> Sign In
           </a>
         </div>
-        
-        <!-- Mobile Menu Button -->
+
         <div class="md:hidden">
-          <button id="mobileMenuBtn" class="text-white hover:text-[#C89B52] transition duration-300">
+          <button id="mobileMenuBtn" class="text-white hover:text-[#C89B52]">
             <span class="material-icons">menu</span>
           </button>
         </div>
       </div>
 
-      <hr class="opacity-20 border-[#C89B52]"/>
+      <hr class="opacity-20 border-[#C89B52]" />
 
-      <!-- Desktop Nav Links -->
-      <nav class="hidden md:flex justify-center items-center py-3 space-x-8 text-sm font-semibold text-white">
-        <a href="index.html" class="hover:text-[#C89B52] transition duration-300 hover:scale-105">Home</a>
-        <a href="tours.html" class="hover:text-[#C89B52] transition duration-300 hover:scale-105">Tours</a>
-        <a href="visa.html" class="hover:text-[#C89B52] transition duration-300 hover:scale-105">Visa</a>
-        <a href="about.html" class="hover:text-[#C89B52] transition duration-300 hover:scale-105">About Us</a>
-        <a href="blog.html" class="hover:text-[#C89B52] transition duration-300 hover:scale-105">Blog</a>
-        <a href="contact.html" class="hover:text-[#C89B52] transition duration-300 hover:scale-105">Contact</a>
-        <a href="cart.html" class="text-[#C89B52] underline font-bold">Cart</a>
+      <nav class="hidden md:flex justify-center items-center py-3 space-x-8 text-sm font-semibold">
+        <a href="index.html" class="hover:text-[#C89B52]">Home</a>
+        <a href="tours.html" class="hover:text-[#C89B52]">Tours</a>
+        <a href="visa.html" class="hover:text-[#C89B52]">Visa</a>
+        <a href="about.html" class="hover:text-[#C89B52]">About Us</a>
+        <a href="blog.html" class="hover:text-[#C89B52]">Blog</a>
+        <a href="contact.html" class="text-[#C89B52] underline font-bold">Contact</a>
+        <a href="cart.html" class="hover:text-[#C89B52]">Cart</a>
       </nav>
-      
+
       <!-- Mobile Menu -->
-      <div id="mobileMenu" class="mobile-menu md:hidden bg-[#1a1a1a] rounded-b-lg shadow-lg">
+      <div id="mobileMenu" class="hidden bg-[#1a1a1a] rounded-b-lg shadow-lg">
         <div class="py-4 px-4 space-y-4">
-          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="index.html">Home</a>
-          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="tours.html">Tours</a>
-          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="visa.html">Visa</a>
-          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="about.html">About Us</a>
-          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="blog.html">Blog</a>
-          <a class="block text-white hover:text-[#C89B52] transition duration-300" href="contact.html">Contact</a>
-          <a class="block text-[#C89B52] font-semibold" href="cart.html">Cart</a>
+          <a href="index.html" class="block text-white hover:text-[#C89B52]">Home</a>
+          <a href="tours.html" class="block text-white hover:text-[#C89B52]">Tours</a>
+          <a href="visa.html" class="block text-white hover:text-[#C89B52]">Visa</a>
+          <a href="about.html" class="block text-white hover:text-[#C89B52]">About Us</a>
+          <a href="blog.html" class="block text-white hover:text-[#C89B52]">Blog</a>
+          <a href="contact.html" class="block text-[#C89B52] font-semibold">Contact</a>
+          <a href="cart.html" class="block text-white hover:text-[#C89B52]">Cart</a>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Cart Section -->
-  <section class="py-12 container mx-auto px-4">
-    <div class="max-w-6xl mx-auto">
-      <!-- Progress Bar -->
-      <div class="mb-8">
-        <div class="flex justify-between mb-2">
-          <span class="text-sm font-medium text-[#C89B52]">Cart</span>
-          <span class="text-sm font-medium text-gray-500">Booking Details</span>
-          <span class="text-sm font-medium text-gray-500">Confirmation</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" style="width: 33%"></div>
-        </div>
-      </div>
+  <!-- Contact Section -->
+  <section class="container mx-auto px-4 py-16">
+    <h1 class="text-4xl font-bold text-center text-gray-800 mb-12">Get In Touch</h1>
 
-      <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-800">Your Shopping Cart</h1>
-        <div class="flex items-center text-gray-600">
-          <span class="material-icons mr-2">shopping_cart</span>
-          <span id="cartCount">0 items</span>
-        </div>
-      </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <!-- Contact Info -->
+      <div class="space-y-6">
+        <div class="contact-card bg-white p-6 rounded-xl shadow-lg">
+          <h2 class="text-2xl font-semibold text-[#C89B52] mb-4">Contact Information</h2>
+          <p class="text-gray-600 mb-2"><span class="material-icons text-[#C89B52] align-middle mr-2">location_on</span> Dubai, UAE</p>
+          <p class="text-gray-600 mb-2"><span class="material-icons text-[#C89B52] align-middle mr-2">phone</span> +971 52 123 4567</p>
+          <p class="text-gray-600 mb-4"><span class="material-icons text-[#C89B52] align-middle mr-2">email</span> support@dubaidrifters.com</p>
 
-      <!-- Cart Content -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Cart Items -->
-        <div class="lg:col-span-2">
-          <div id="cartItems" class="space-y-6">
-            <!-- Cart items will be populated here -->
-          </div>
-          
-          <!-- Empty Cart Message -->
-          <div id="emptyCart" class="empty-cart text-center py-16 hidden">
-            <div class="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span class="material-icons text-gray-400 text-4xl">shopping_cart</span>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-600 mb-4">Your cart is empty</h3>
-            <p class="text-gray-500 mb-6">Explore our amazing tours and add some to your cart!</p>
-            <a href="tours.html" class="bg-[#C89B52] hover:bg-[#b38642] text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition inline-flex items-center">
-              <span class="material-icons mr-2">explore</span>
-              Browse Tours
+          <div class="flex space-x-4">
+            <a href="https://www.facebook.com/YourPageName" target="_blank" class="text-gray-500 hover:text-[#C89B52]">
+              <i class="fab fa-facebook text-xl"></i>
+            </a>
+            <a href="https://wa.me/923001234567" target="_blank" class="text-gray-500 hover:text-[#C89B52]">
+              <i class="fab fa-whatsapp text-xl"></i>
+            </a>
+            <a href="https://www.instagram.com/YourUsername" target="_blank" class="text-gray-500 hover:text-[#C89B52]">
+              <i class="fab fa-instagram text-xl"></i>
             </a>
           </div>
         </div>
-        
-        <!-- Order Summary -->
-        <div class="lg:col-span-1">
-          <div class="bg-white rounded-lg shadow-lg p-6 sticky top-24">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Order Summary</h3>
-            
-            <div class="space-y-3 mb-6">
-              <div class="flex justify-between">
-                <span class="text-gray-600">Subtotal</span>
-                <span id="subtotal" class="font-medium">$0.00</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600">Taxes & Fees</span>
-                <span id="taxes" class="font-medium">$0.00</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-600">Discount</span>
-                <span id="discount" class="font-medium text-green-600">-$0.00</span>
-              </div>
-              <hr class="my-2">
-              <div class="flex justify-between text-lg font-bold">
-                <span>Total</span>
-                <span id="cartTotal" class="text-[#C89B52]">$0.00</span>
-              </div>
-            </div>
-            
-            <button id="checkoutBtn" class="w-full bg-[#C89B52] hover:bg-[#b38642] text-white font-semibold py-3 rounded-lg shadow-lg transition flex items-center justify-center mb-4">
-              <span class="material-icons mr-2">lock</span>
-              <span id="checkoutBtnText">Proceed to Booking</span>
-              <div id="checkoutSpinner" class="loading-spinner hidden"></div>
-            </button>
-            
-            <p class="text-xs text-gray-500 text-center">By proceeding, you agree to our <a href="#" class="text-[#C89B52] hover:underline">Terms of Service</a></p>
-            
-            <!-- Security Badges -->
-            <div class="mt-6 bg-gray-100 rounded-lg p-4 text-center">
-              <h4 class="text-sm font-semibold text-gray-700 mb-2">Secure Payment</h4>
-              <div class="flex justify-center space-x-4">
-                <select id="paymentMethod" class="text-sm border rounded px-2 py-1">
-                  <option value="EasyPaisa">EasyPaisa</option>
-                  <option value="COD">Cash on Delivery</option>
-                  <option value="CreditCard">Credit Card</option>
-                </select>
-              </div>
 
-              <!-- EasyPaisa Instructions -->
-              <div id="easyInstructions" class="mt-3 text-xs text-gray-800">
-                <p class="font-semibold">EasyPaisa Payment Instructions:</p>
-                <p class="mt-1">
-                  Send payment to: <strong>01234567890</strong><br />
-                  Name: <strong>M Abdullah</strong><br />
-                  <span class="text-orange-600">Upload screenshot on next page</span>
-                </p>
-              </div>
-            </div>
-          </div>
+        <!-- Map -->
+        <div class="contact-card bg-white p-4 rounded-xl shadow-lg">
+          <iframe 
+            class="w-full h-64 rounded-lg"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115839.13084106265!2d55.18876045!3d25.0757598!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f434dbdb52a77%3A0x893bfaac92e1cf7e!2sDubai!5e0!3m2!1sen!2sae!4v1697271527329!5m2!1sen!2sae"
+            allowfullscreen="" loading="lazy"></iframe>
         </div>
       </div>
-      
-      <!-- Continue Shopping -->
-      <div class="mt-12 text-center">
-        <a href="tours.html" class="inline-flex items-center text-[#C89B52] hover:text-[#b38642] font-semibold transition">
-          <span class="material-icons mr-2">arrow_back</span>
-          Continue Shopping
-        </a>
+
+      <!-- Contact Form -->
+      <div class="bg-white p-8 rounded-xl shadow-lg">
+        <h2 class="text-2xl font-semibold text-[#C89B52] mb-6">Send Us a Message</h2>
+        <form id="contactForm" class="space-y-4">
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Full Name</label>
+            <input type="text" id="name" required class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#C89B52]" placeholder="Your Name" />
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Email Address</label>
+            <input type="email" id="email" required class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#C89B52]" placeholder="you@example.com" />
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Message</label>
+            <textarea id="message" rows="5" required class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-[#C89B52]" placeholder="Write your message..."></textarea>
+          </div>
+          <button type="submit" id="submitBtn" class="w-full bg-[#C89B52] hover:bg-[#b38642] text-white font-semibold py-3 rounded-lg shadow-lg transition">
+            Send Message
+          </button>
+          <p id="responseMsg" class="text-center text-sm mt-2"></p>
+        </form>
       </div>
     </div>
   </section>
@@ -266,49 +146,28 @@
         <div>
           <h4 class="font-bold text-lg mb-4">Support</h4>
           <ul class="space-y-2 text-sm">
-            <li><a class="text-gray-400 hover:text-white" href="contact.html">Contact Us</a></li>
-            <li><a class="text-gray-400 hover:text-white" href="#">FAQs</a></li>
-            <li><a class="text-gray-400 hover:text-white" href="termsandconditions.html">Terms & Conditions</a></li>
-            <li><a class="text-gray-400 hover:text-white" href="#">Privacy Policy</a></li>
+            <li><a href="contact.html" class="text-gray-400 hover:text-white">Contact Us</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white">FAQs</a></li>
+            <li><a href="termsandconditions.html" class="text-gray-400 hover:text-white">Terms & Conditions</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
           </ul>
         </div>
         <div>
           <h4 class="font-bold text-lg mb-4">Follow Us</h4>
-          <div class="flex space-x-2">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-            <!-- Facebook -->
-            <a class="text-gray-400 hover:text-white" href="https://www.facebook.com/YourPageName" target="_blank">
-              <i class="fab fa-facebook"></i>
-            </a>
-
-            <!-- WhatsApp -->
-            <a class="text-gray-400 hover:text-white" href="https://wa.me/923001234567" target="_blank">
-              <i class="fab fa-whatsapp"></i>
-            </a>
-
-            <!-- Instagram -->
-            <a class="text-gray-400 hover:text-white" href="https://www.instagram.com/YourUsername" target="_blank">
-              <i class="fab fa-instagram"></i>
-            </a>
+          <div class="flex space-x-3">
+            <a href="https://www.facebook.com/YourPageName" class="text-gray-400 hover:text-white"><i class="fab fa-facebook"></i></a>
+            <a href="https://wa.me/923001234567" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://www.instagram.com/YourUsername" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
           </div>
           <h4 class="font-bold text-lg mt-6 mb-4">Payment Methods</h4>
-          <div class="flex space-x-2">
-            <a href="https://www.easypaisa.com.pk" 
-               target="_blank" 
-               rel="noopener noreferrer"
-               class="text-xs bg-gray-700 px-2 py-1 rounded hover:bg-gray-600 transition">
-               EasyPaisa
-            </a>
-          </div>
+          <a href="https://www.easypaisa.com.pk" target="_blank" class="text-xs bg-gray-700 px-2 py-1 rounded hover:bg-gray-600 transition">EasyPaisa</a>
         </div>
         <div>
           <h4 class="font-bold text-lg mb-4">Newsletter</h4>
-          <p class="text-sm text-gray-400 mb-4">Subscribe to our newsletter for exclusive offers and updates.</p>
+          <p class="text-sm text-gray-400 mb-4">Subscribe for exclusive offers and updates.</p>
           <form id="newsletterForm" class="flex">
             <input id="newsletterEmail" class="w-full rounded-l-md p-2 text-gray-800 focus:outline-none" placeholder="Your email" type="email" required/>
-            <button id="newsletterBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r-md transition-colors flex items-center" type="submit">
-              <span id="newsletterBtnText">Subscribe</span>
-            </button>
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r-md transition">Subscribe</button>
           </form>
         </div>
       </div>
@@ -317,275 +176,52 @@
       </div>
     </div>
   </footer>
-      
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
   <script>
-    // API Configuration - Update these with your actual backend endpoints
-    const API_CONFIG = {
-      BASE_URL: 'http://localhost:5000/api',
-      ENDPOINTS: {
-        VALIDATE_CART: '/cart/validate',
-        CREATE_ORDER: '/orders',
-        UPDATE_CART: '/cart/update'
-      }
-    };
+    // Mobile Menu
+    const btn = document.getElementById("mobileMenuBtn");
+    const menu = document.getElementById("mobileMenu");
+    btn.addEventListener("click", () => {
+      menu.classList.toggle("hidden");
+      btn.querySelector(".material-icons").textContent =
+        menu.classList.contains("hidden") ? "menu" : "close";
+    });
 
-    document.addEventListener("DOMContentLoaded", function() {
-      // Mobile menu toggle
-      const mobileMenuBtn = document.getElementById("mobileMenuBtn");
-      const mobileMenu = document.getElementById("mobileMenu");
+    // Contact form handling
+    const form = document.getElementById("contactForm");
+    const responseMsg = document.getElementById("responseMsg");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      responseMsg.textContent = "Sending...";
+      responseMsg.className = "text-center text-sm text-gray-600 mt-2";
       
-      if(mobileMenuBtn && mobileMenu) {
-        mobileMenuBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          mobileMenu.classList.toggle("open");
-          // Change icon based on state
-          const icon = mobileMenuBtn.querySelector(".material-icons");
-          if(mobileMenu.classList.contains("open")) {
-            icon.textContent = "close";
-          } else {
-            icon.textContent = "menu";
-          }
+      const formData = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        message: document.getElementById("message").value.trim(),
+      };
+
+      try {
+        // Example API — replace with your backend route
+        const res = await fetch("https://api.dubaidrifters.com/api/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
         });
-        
-        // Close mobile menu when clicking outside
-        document.addEventListener("click", (e) => {
-          if(!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-            mobileMenu.classList.remove("open");
-            mobileMenuBtn.querySelector(".material-icons").textContent = "menu";
-          }
-        });
-      }
 
-      // Cart functionality
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
-      let discountApplied = false;
-      let discountAmount = 0;
-
-      // API functions
-      async function validateCartWithBackend(cartItems) {
-        try {
-          const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.VALIDATE_CART}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ items: cartItems })
-          });
-          
-          if (!response.ok) {
-            throw new Error('Cart validation failed');
-          }
-          
-          const data = await response.json();
-          return data; // Should return validated items with current prices, availability, etc.
-        } catch (error) {
-          console.error('Error validating cart:', error);
-          // Return original cart if validation fails
-          return { valid: false, items: cartItems, message: 'Unable to validate cart items' };
-        }
-      }
-
-      async function syncCartWithBackend(cartItems) {
-        try {
-          const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.UPDATE_CART}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ items: cartItems })
-          });
-          
-          if (!response.ok) {
-            throw new Error('Cart sync failed');
-          }
-          
-          const data = await response.json();
-          return data;
-        } catch (error) {
-          console.error('Error syncing cart:', error);
-          // Continue with local cart if sync fails
-          return { success: false, message: 'Cart sync failed' };
-        }
-      }
-
-      async function updateCartDisplay() {
-        const cartItemsContainer = document.getElementById("cartItems");
-        const cartCount = document.getElementById("cartCount");
-        const emptyCart = document.getElementById("emptyCart");
-        const subtotalEl = document.getElementById("subtotal");
-        const taxesEl = document.getElementById("taxes");
-        const discountEl = document.getElementById("discount");
-        const cartTotalEl = document.getElementById("cartTotal");
-        const checkoutBtn = document.getElementById("checkoutBtn");
-
-        cartItemsContainer.innerHTML = "";
-        
-        if (cart.length === 0) {
-          emptyCart.classList.remove("hidden");
-          checkoutBtn.disabled = true;
-          checkoutBtn.classList.add("opacity-50", "cursor-not-allowed");
+        if (res.ok) {
+          responseMsg.textContent = "Message sent successfully!";
+          responseMsg.className = "text-center text-sm text-green-600 mt-2";
+          form.reset();
         } else {
-          emptyCart.classList.add("hidden");
-          checkoutBtn.disabled = false;
-          checkoutBtn.classList.remove("opacity-50", "cursor-not-allowed");
+          throw new Error("Failed to send message");
         }
-
-        let subtotal = 0;
-        
-        cart.forEach((item, index) => {
-          subtotal += item.price * item.quantity;
-          
-          const itemDiv = document.createElement("div");
-          itemDiv.className = "cart-item bg-white rounded-lg shadow-md overflow-hidden";
-          itemDiv.innerHTML = `
-            <div class="p-4 flex flex-col md:flex-row">
-              <div class="md:w-1/4 mb-4 md:mb-0">
-                <img src="${item.image}" alt="${item.name}" class="w-full h-40 object-cover rounded-lg" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE2MCIgdmlld0JveD0iMCAwIDIwMCAxNjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTYwIiBmaWxsPSIjZjBmM2Y1Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzYwN2M4YSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+SW1hZ2UgTm90IEF2YWlsYWJsZTwvdGV4dD4KPC9zdmc+'">
-              </div>
-              <div class="md:w-3/4 md:pl-6 flex flex-col justify-between">
-                <div>
-                  <h3 class="text-xl font-semibold text-gray-800">${item.name}</h3>
-                  <p class="text-gray-600 mt-1">${item.description || 'Experience the best of Dubai with this amazing tour.'}</p>
-                  ${item.availability ? `<p class="text-green-600 text-sm mt-1">Available</p>` : `<p class="text-red-600 text-sm mt-1">Not Available</p>`}
-                </div>
-                <div class="flex justify-between items-center mt-4">
-                  <div class="flex items-center">
-                    <button onclick="updateQuantity(${index}, -1)" class="quantity-btn w-8 h-8 border rounded-l flex items-center justify-center">
-                      <span class="material-icons text-sm">remove</span>
-                    </button>
-                    <span class="w-10 h-8 border-t border-b flex items-center justify-center">${item.quantity}</span>
-                    <button onclick="updateQuantity(${index}, 1)" class="quantity-btn w-8 h-8 border rounded-r flex items-center justify-center">
-                      <span class="material-icons text-sm">add</span>
-                    </button>
-                  </div>
-                  <div class="text-right">
-                    <p class="text-lg font-bold text-[#C89B52]">$${(item.price * item.quantity).toFixed(2)}</p>
-                    <p class="text-sm text-gray-500">$${item.price} each</p>
-                  </div>
-                </div>
-                <button onclick="removeFromCart(${index})" class="mt-4 text-red-500 hover:text-red-700 transition flex items-center self-start">
-                  <span class="material-icons mr-1 text-sm">delete</span>
-                  Remove
-                </button>
-              </div>
-            </div>
-          `;
-          cartItemsContainer.appendChild(itemDiv);
-        });
-
-        // Calculate totals
-        const taxes = subtotal * 0.05; // 5% tax
-        const discount = discountApplied ? discountAmount : 0;
-        const total = subtotal + taxes - discount;
-        
-        // Update display
-        cartCount.textContent = `${cart.length} ${cart.length === 1 ? 'item' : 'items'}`;
-        subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
-        taxesEl.textContent = `$${taxes.toFixed(2)}`;
-        discountEl.textContent = `-$${discount.toFixed(2)}`;
-        cartTotalEl.textContent = `$${total.toFixed(2)}`;
-        
-        // Update localStorage
-        localStorage.setItem("cart", JSON.stringify(cart));
-        
-        // Sync with backend (optional - can be done on checkout only)
-        // syncCartWithBackend(cart);
+      } catch {
+        responseMsg.textContent = "Error sending message. Try again.";
+        responseMsg.className = "text-center text-sm text-red-600 mt-2";
       }
-
-      // Remove item from cart
-      window.removeFromCart = async function(index) {
-        cart.splice(index, 1);
-        await updateCartDisplay();
-      };
-
-      // Update item quantity
-      window.updateQuantity = async function(index, change) {
-        cart[index].quantity += change;
-        
-        if (cart[index].quantity < 1) {
-          cart[index].quantity = 1;
-        }
-        
-        if (cart[index].quantity > 10) {
-          cart[index].quantity = 10;
-          alert("Maximum quantity per tour is 10");
-        }
-        
-        await updateCartDisplay();
-      };
-
-      // Checkout functionality
-      document.getElementById("checkoutBtn").addEventListener("click", async function() {
-        if (cart.length > 0) {
-          // Show loading state
-          const checkoutBtn = document.getElementById("checkoutBtn");
-          const checkoutBtnText = document.getElementById("checkoutBtnText");
-          const checkoutSpinner = document.getElementById("checkoutSpinner");
-          
-          checkoutBtn.disabled = true;
-          checkoutBtnText.textContent = "Validating...";
-          checkoutSpinner.classList.remove("hidden");
-
-          try {
-            // Validate cart with backend
-            const validationResult = await validateCartWithBackend(cart);
-            
-            if (!validationResult.valid) {
-              alert(validationResult.message || "Some items in your cart are no longer available. Please review your cart.");
-              // Update cart with validated items if available
-              if (validationResult.items) {
-                cart = validationResult.items;
-                await updateCartDisplay();
-              }
-              return;
-            }
-
-            // Get selected payment method
-            const paymentMethod = document.getElementById("paymentMethod").value;
-            
-            // Store booking data for the booking page
-            const bookingData = {
-              cart: cart,
-              paymentMethod: paymentMethod,
-              timestamp: new Date().toISOString(),
-              orderId: 'DD-' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0'),
-              subtotal: calculateSubtotal(),
-              taxes: calculateTaxes(),
-              total: calculateTotal()
-            };
-            
-            localStorage.setItem("bookingData", JSON.stringify(bookingData));
-            
-            // Redirect to booking page
-            window.location.href = "booking.html";
-            
-          } catch (error) {
-            console.error("Checkout error:", error);
-            alert("There was an error processing your checkout. Please try again.");
-          } finally {
-            // Reset button state
-            checkoutBtn.disabled = false;
-            checkoutBtnText.textContent = "Proceed to Booking";
-            checkoutSpinner.classList.add("hidden");
-          }
-        }
-      });
-
-      // Helper functions for calculations
-      function calculateSubtotal() {
-        return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-      }
-
-      function calculateTaxes() {
-        return calculateSubtotal() * 0.05;
-      }
-
-      function calculateTotal() {
-        return calculateSubtotal() + calculateTaxes() - (discountApplied ? discountAmount : 0);
-      }
-
-      // Initialize cart display
-      updateCartDisplay();
     });
   </script>
 </body>
