@@ -79,6 +79,21 @@
       0% { background-position: 200% 0; }
       100% { background-position: -200% 0; }
     }
+    /* Fix mobile menu scroll */
+    @media (max-width: 768px) {
+      #mobileMenu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: black;
+        z-index: 40;
+      }
+      #mobileMenu.open {
+        max-height: 100vh;
+        overflow-y: auto;
+      }
+    }
   </style>
 </head>
 <body class="bg-[#FDF6EC]">
@@ -145,7 +160,7 @@
         <div class="flex justify-between mb-2"><span>Subtotal:</span> <span id="cartSubtotal">$0</span></div>
         <div class="flex justify-between mb-2"><span>Tax (5%):</span> <span id="cartTax">$0</span></div>
         <div class="flex justify-between font-bold text-lg"><span>Total:</span> <span id="cartTotal" class="text-[#C89B52]">$0</span></div>
-        <button id="checkoutBtn" disabled class="mt-4 w-full bg-[#C89B52] text-white py-3 rounded-lg font-semibold hover:bg-[#a67c3b] transition disabled:opacity-50">Checkout</button>
+        <button id="checkoutBtn" class="mt-4 w-full bg-[#C89B52] text-white py-3 rounded-lg font-semibold hover:bg-[#a67c3b] transition">Proceed to Booking</button>
       </div>
     </div>
   </div>
@@ -161,8 +176,7 @@
   <section class="py-16 bg-gray-50">
     <div class="container mx-auto px-6">
       <h2 class="text-4xl font-bold text-center mb-4 text-[#0F172A]">Discover Dubai's Wonders</h2>
-      <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Explore the most iconic landmarks and
-        experiences that Dubai has to offer with our expertly curated tours.</p>
+      <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Explore the most iconic landmarks and experiences that Dubai has to offer with our expertly curated tours.</p>
 
       <!-- Loading state for tours -->
       <div id="toursLoading" class="text-center py-8">
@@ -250,7 +264,7 @@
   </footer>
 
  <script>
-// ✅ Fix: Simplified API configuration
+// ✅ Simplified API configuration
 const API_BASE_URL = "https://api.dubaidrifters.com";
 
 // API endpoints
@@ -316,6 +330,7 @@ const Toast = {
 document.addEventListener('DOMContentLoaded', () => {
   Toast.init();
   updateCart();
+  // Load tours immediately without delay
   loadTours();
 
   // Mobile menu event listener
@@ -325,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
   newsletterForm.addEventListener('submit', handleNewsletterSubmit);
 });
 
-// ✅ MOBILE MENU FUNCTIONALITY
+// ✅ MOBILE MENU FUNCTIONALITY - FIXED
 function toggleMobileMenu() {
   mobileMenu.classList.toggle('open');
   // Change icon based on menu state
@@ -333,20 +348,36 @@ function toggleMobileMenu() {
   if (mobileMenu.classList.contains('open')) {
     icon.classList.remove('fa-bars');
     icon.classList.add('fa-times');
+    // Prevent body scroll when menu is open
+    document.body.style.overflow = 'hidden';
   } else {
     icon.classList.remove('fa-times');
     icon.classList.add('fa-bars');
+    // Restore body scroll
+    document.body.style.overflow = 'auto';
   }
 }
 
 // Close mobile menu when clicking on a link
-document.querySelectorAll('#mobileMenu a').forEach(link => {
-  link.addEventListener('click', () => {
+document.querySelectorAll('#mobileMenu a, #mobileMenu button').forEach(element => {
+  element.addEventListener('click', () => {
     mobileMenu.classList.remove('open');
     const icon = mobileMenuBtn.querySelector('i');
     icon.classList.remove('fa-times');
     icon.classList.add('fa-bars');
+    document.body.style.overflow = 'auto';
   });
+});
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', (e) => {
+  if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target) && mobileMenu.classList.contains('open')) {
+    mobileMenu.classList.remove('open');
+    const icon = mobileMenuBtn.querySelector('i');
+    icon.classList.remove('fa-times');
+    icon.classList.add('fa-bars');
+    document.body.style.overflow = 'auto';
+  }
 });
 
 // --- CART PANEL OPEN/CLOSE ---
@@ -359,6 +390,7 @@ if (cartBtnMobile) cartBtnMobile.addEventListener('click', () => {
   const icon = mobileMenuBtn.querySelector('i');
   icon.classList.remove('fa-times');
   icon.classList.add('fa-bars');
+  document.body.style.overflow = 'auto';
 });
 closeCart.addEventListener('click', closeCartPanel);
 overlay.addEventListener('click', closeCartPanel);
@@ -375,35 +407,49 @@ function closeCartPanel() {
   document.body.style.overflow = 'auto';
 }
 
-// ✅ LOAD TOURS FROM BACKEND
+// ✅ LOAD TOURS FROM BACKEND - FIXED for fast loading
 async function loadTours() {
   try {
     toursLoading.classList.remove('hidden');
     toursGrid.classList.add('hidden');
     toursError.classList.add('hidden');
 
-    const response = await fetch(API_ENDPOINTS.TOURS);
-    if (!response.ok) throw new Error(`Failed to fetch tours: ${response.status}`);
-
-    const data = await response.json();
+    // Load fallback tours immediately for fast display
+    const fallbackTours = getFallbackTours();
     
-    // ✅ FIX: Handle different API response formats
-    let tours = [];
-    if (data && data.success && data.data && Array.isArray(data.data.tours)) {
-      tours = data.data.tours;
-    } else if (data && Array.isArray(data)) {
-      tours = data;
-    } else if (data && data.data && Array.isArray(data.data)) {
-      tours = data.data;
-    } else {
-      // Fallback to static tours if API structure is unexpected
-      console.warn('Unexpected API response format, using fallback tours');
-      tours = getFallbackTours();
+    // Try to fetch from API with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+    
+    try {
+      const response = await fetch(API_ENDPOINTS.TOURS, { 
+        signal: controller.signal 
+      });
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) throw new Error(`Failed to fetch tours: ${response.status}`);
+
+      const data = await response.json();
+      
+      // Handle different API response formats
+      let tours = [];
+      if (data && data.success && data.data && Array.isArray(data.data.tours)) {
+        tours = data.data.tours;
+      } else if (data && Array.isArray(data)) {
+        tours = data;
+      } else if (data && data.data && Array.isArray(data.data)) {
+        tours = data.data;
+      } else {
+        tours = fallbackTours;
+      }
+      
+      renderTours(tours);
+    } catch (apiError) {
+      // If API fails, use fallback tours
+      console.warn('API failed, using fallback tours:', apiError);
+      renderTours(fallbackTours);
     }
     
-    toursLoading.classList.add('hidden');
-    toursGrid.classList.remove('hidden');
-    renderTours(tours);
   } catch (error) {
     console.error('Error loading tours:', error);
     toursLoading.classList.add('hidden');
@@ -414,28 +460,109 @@ async function loadTours() {
   }
 }
 
-// ✅ FALLBACK TOURS DATA
+// ✅ COMPLETE FALLBACK TOURS DATA - All 13 tours
 function getFallbackTours() {
   return [
-    { _id: '1', name: 'Alqasar Hotel', price: 35, description: 'Experience luxury in the heart of Dubai with stunning Arabian architecture.', image: 'Alqasarhotel.jpg' },
-    { _id: '2', name: 'Atlantis The Palm', price: 75, description: 'Discover the iconic underwater world and luxury resort experience.', image: 'Atlantis.jpg' },
-    { _id: '3', name: 'Burj Khalifa', price: 55, description: 'Visit the world\'s tallest building with breathtaking views of Dubai.', image: 'BurjKhalifa.jpg' },
-    { _id: '4', name: 'Burj Al Arab', price: 45, description: 'Explore the iconic 7-star hotel, symbol of modern Dubai luxury.', image: 'BurjAlarab.jpg' },
-    { _id: '5', name: 'Jumeirah Beach', price: 60, description: 'Relax on pristine white sands with stunning views of Burj Al Arab.', image: 'jummeirahBeach.jpg' },
-    { _id: '6', name: 'Jumeirah Mosque', price: 25, description: 'Discover Dubai\'s most beautiful mosque and learn about Islamic culture.', image: 'JummeirahMosque.jpg' },
-    { _id: '7', name: 'La Mer Beach', price: 20, description: 'Enjoy this vibrant beachfront destination with dining and water sports.', image: 'LamerBeach.jpg' },
-    { _id: '8', name: 'Marina Walk', price: 40, description: 'Stroll along Dubai Marina with stunning skyscrapers and luxury yachts.', image: 'MarinaWalk.jpg' },
-    { _id: '9', name: 'Palm Jumeirah', price: 65, description: 'Explore the world\'s largest man-made island with luxury resorts.', image: 'palm jumeirah1.jpg' },
-    { _id: '10', name: 'Red Dunes Desert', price: 30, description: 'Experience thrilling dune bashing and traditional Bedouin culture.', image: 'RedDunesDesert.jpg' },
-    { _id: '11', name: 'Royal Desert AD', price: 35, description: 'Luxury desert experience with premium amenities and entertainment.', image: 'Royal desert AD+1.jpg' },
-    { _id: '12', name: 'Sheikh Zayed Road', price: 35, description: 'Tour Dubai\'s main artery with iconic skyscrapers and landmarks.', image: 'SheikhZayedRoad.jpg' },
-    { _id: '13', name: 'Zabeel Palace', price: 35, description: 'Discover the official residence of Dubai\'s ruling family.', image: 'zabeelplace.jpg' }
+    { 
+      _id: '1', 
+      name: 'Alqasar Hotel', 
+      price: 35, 
+      description: 'Experience luxury in the heart of Dubai with stunning Arabian architecture and world-class amenities.', 
+      image: 'Alqasarhotel.jpg' 
+    },
+    { 
+      _id: '2', 
+      name: 'Atlantis The Palm', 
+      price: 75, 
+      description: 'Discover the iconic underwater world, luxury resort experience, and thrilling waterpark adventures.', 
+      image: 'Atlantis.jpg' 
+    },
+    { 
+      _id: '3', 
+      name: 'Burj Khalifa', 
+      price: 55, 
+      description: 'Visit the world\'s tallest building with breathtaking panoramic views of Dubai from the observation deck.', 
+      image: 'BurjKhalifa.jpg' 
+    },
+    { 
+      _id: '4', 
+      name: 'Burj Al Arab', 
+      price: 45, 
+      description: 'Explore the iconic 7-star hotel, symbol of modern Dubai luxury and architectural marvel.', 
+      image: 'BurjAlarab.jpg' 
+    },
+    { 
+      _id: '5', 
+      name: 'Jumeirah Beach', 
+      price: 60, 
+      description: 'Relax on pristine white sands with stunning views of Burj Al Arab and crystal clear waters.', 
+      image: 'jummeirahBeach.jpg' 
+    },
+    { 
+      _id: '6', 
+      name: 'Jumeirah Mosque', 
+      price: 25, 
+      description: 'Discover Dubai\'s most beautiful mosque and learn about Islamic culture and traditions.', 
+      image: 'JummeirahMosque.jpg' 
+    },
+    { 
+      _id: '7', 
+      name: 'La Mer Beach', 
+      price: 20, 
+      description: 'Enjoy this vibrant beachfront destination with dining, shopping, and exciting water sports.', 
+      image: 'LamerBeach.jpg' 
+    },
+    { 
+      _id: '8', 
+      name: 'Marina Walk', 
+      price: 40, 
+      description: 'Stroll along Dubai Marina with stunning skyscrapers, luxury yachts, and waterfront dining.', 
+      image: 'MarinaWalk.jpg' 
+    },
+    { 
+      _id: '9', 
+      name: 'Palm Jumeirah', 
+      price: 65, 
+      description: 'Explore the world\'s largest man-made island with luxury resorts, beaches, and entertainment.', 
+      image: 'palm jumeirah1.jpg' 
+    },
+    { 
+      _id: '10', 
+      name: 'Red Dunes Desert', 
+      price: 30, 
+      description: 'Experience thrilling dune bashing, camel riding, and traditional Bedouin culture in the desert.', 
+      image: 'RedDunesDesert.jpg' 
+    },
+    { 
+      _id: '11', 
+      name: 'Royal Desert AD', 
+      price: 35, 
+      description: 'Luxury desert experience with premium amenities, entertainment, and authentic Arabian hospitality.', 
+      image: 'Royal desert AD+1.jpg' 
+    },
+    { 
+      _id: '12', 
+      name: 'Sheikh Zayed Road', 
+      price: 35, 
+      description: 'Tour Dubai\'s main artery with iconic skyscrapers, landmarks, and modern architectural wonders.', 
+      image: 'SheikhZayedRoad.jpg' 
+    },
+    { 
+      _id: '13', 
+      name: 'Zabeel Palace', 
+      price: 35, 
+      description: 'Discover the official residence of Dubai\'s ruling family and learn about the city\'s rich heritage.', 
+      image: 'zabeelplace.jpg' 
+    }
   ];
 }
 
-// ✅ RENDER TOURS - FIXED forEach issue
+// ✅ RENDER TOURS - FIXED for all 13 tours
 function renderTours(tours) {
-  // ✅ FIX: Check if tours is an array before using forEach
+  toursLoading.classList.add('hidden');
+  toursGrid.classList.remove('hidden');
+  
+  // Check if tours is an array before using forEach
   if (!Array.isArray(tours)) {
     console.error('Tours data is not an array:', tours);
     tours = getFallbackTours();
@@ -453,7 +580,7 @@ function renderTours(tours) {
       <img src="${imageUrl}" alt="${tour.name}" class="tour-image" onerror="this.classList.add('image-placeholder')">
       <div class="p-6">
         <h3 class="text-xl font-semibold mb-2">${tour.name}</h3>
-        <p class="text-gray-600 mb-4">${tour.description || 'Explore this amazing destination'}</p>
+        <p class="text-gray-600 mb-4 text-sm">${tour.description || 'Explore this amazing destination'}</p>
         <div class="flex justify-between items-center">
           <span class="text-[#C89B52] font-bold text-lg">$${tour.price}</span>
           <button onclick="addToCart('${tour._id}', '${tour.name}', ${tour.price})"
@@ -535,7 +662,6 @@ function updateCart() {
   if (cartCountMobile) cartCountMobile.textContent = totalItems;
 
   emptyCart.style.display = cartItems.length === 0 ? 'block' : 'none';
-  checkoutBtn.disabled = cartItems.length === 0;
 
   cartItemsContainer.innerHTML = '';
   cartItems.forEach((item, index) => {
@@ -543,14 +669,12 @@ function updateCart() {
     el.className = 'flex justify-between items-center mb-4 pb-4 border-b';
     el.innerHTML = `
       <div class="flex-1">
-        <a href="booking.html?item=${encodeURIComponent(item.name)}&price=${item.price}&qty=${item.quantity}" class="block hover:underline">
-          <h4 class="font-semibold">${item.name}</h4>
-          <p class="text-gray-600">$${item.price} x ${item.quantity}</p>
-        </a>
+        <h4 class="font-semibold">${item.name}</h4>
+        <p class="text-gray-600">$${item.price} x ${item.quantity}</p>
       </div>
       <div class="flex items-center">
         <button onclick="updateQuantity(${index}, -1)" class="text-gray-500 hover:text-gray-700 mr-2"><i class="fas fa-minus-circle"></i></button>
-        <span>${item.quantity}</span>
+        <span class="mx-2">${item.quantity}</span>
         <button onclick="updateQuantity(${index}, 1)" class="text-gray-500 hover:text-gray-700 ml-2"><i class="fas fa-plus-circle"></i></button>
         <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 ml-4"><i class="fas fa-trash"></i></button>
       </div>`;
@@ -565,6 +689,28 @@ function updateCart() {
   cartTax.textContent = `$${tax.toFixed(2)}`;
   cartTotal.textContent = `$${total.toFixed(2)}`;
 }
+
+// ✅ CHECKOUT - FIXED to redirect to booking page
+checkoutBtn.addEventListener('click', () => {
+  if (cartItems.length === 0) {
+    Toast.show('Your cart is empty!', 'error');
+    return;
+  }
+  
+  // Redirect to booking page with cart data
+  const bookingData = {
+    items: cartItems,
+    subtotal: cartItems.reduce((t, i) => t + (i.price * i.quantity), 0),
+    tax: cartItems.reduce((t, i) => t + (i.price * i.quantity), 0) * 0.05,
+    total: cartItems.reduce((t, i) => t + (i.price * i.quantity), 0) * 1.05
+  };
+  
+  // Store booking data in localStorage for the booking page
+  localStorage.setItem('bookingData', JSON.stringify(bookingData));
+  
+  // Redirect to booking page
+  window.location.href = 'booking.html';
+});
 
 // ✅ NEWSLETTER
 async function handleNewsletterSubmit(e) {
@@ -600,11 +746,6 @@ function showNewsletterMessage(message, type) {
   newsletterMessage.innerHTML = `<p class="${color}">${message}</p>`;
   setTimeout(() => newsletterMessage.innerHTML = '', 5000);
 }
-
-// ✅ CHECKOUT
-checkoutBtn.addEventListener('click', async () => {
-  window.location.href = 'checkout.html';
-});
 </script>
 
 </body>
