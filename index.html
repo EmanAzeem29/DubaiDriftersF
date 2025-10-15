@@ -741,7 +741,6 @@
             if (typeof price === 'object') {
                 return `${symbols[currency]}${price[currency.toLowerCase()]?.toFixed(2) || price.usd.toFixed(2)}`;
             }
-            // Otherwise, a
             const convertedPrice = convertCurrency(price, 'USD', currency);
             return `${symbols[currency]}${convertedPrice.toFixed(2)}`;
         };
