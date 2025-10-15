@@ -267,8 +267,8 @@
         </section>
  <!-- Tours Section -->
 <section class="py-12 bg-white glitter">
-   <div id="toursContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6"></div>
- <h2 class="text-3xl font-bold text-center mb-8">✨ Top-Rated Tours & Must-See Attractions ✨</h2>
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-8">✨ Top-Rated Tours & Must-See Attractions ✨</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             <!-- Tour Card 1 -->
             <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card">
@@ -459,66 +459,6 @@
     </div>
 </section>
 
-<style>
-    .image-placeholder {
-        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-        background-size: 200% 100%;
-        animation: loading 1.5s infinite;
-        min-height: 192px;
-    }
-    @keyframes loading {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
-    }
-    .glitter {
-        position: relative;
-        overflow: hidden;
-    }
-    .glitter::after {
-        content: "";
-        position: absolute;
-        top: -100%;
-        left: -100%;
-        width: 300%;
-        height: 300%;
-        background: linear-gradient(
-            60deg,
-            transparent,
-            rgba(255, 255, 255, 0.4),
-            transparent
-        );
-        transform: rotate(25deg);
-        animation: shine 6s infinite linear;
-        z-index: 1;
-    }
-    @keyframes shine {
-        0% { transform: translateX(-200%) rotate(25deg); }
-        50% { transform: translateX(200%) rotate(25deg); }
-        100% { transform: translateX(-200%) rotate(25deg); }
-    }
-    .tour-card {
-        transition: all 0.4s ease;
-        position: relative;
-        cursor: default;
-    }
-    .tour-card::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: 12px;
-        background: linear-gradient(45deg, rgba(0, 204, 255, 0.5), rgba(255, 0, 204, 0.5));
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        z-index: 0;
-        filter: blur(15px);
-    }
-    .tour-card:hover::before {
-        opacity: 1;
-    }
-    .tour-card:hover img {
-        transform: scale(1.1);
-    }
-</style>
         <!-- Features Section -->
         <section class="py-12 bg-gray-50">
             <div class="container mx-auto px-4">
@@ -875,86 +815,6 @@
             document.getElementById('langText').textContent = language;
         };
 
-        // Tour Functions
-        const loadTours = async () => {
-            try {
-                // Try to fetch tours from backend
-                const data = await api.get('/tours?limit=10&sort=rating');
-                
-                // Check if data structure matches expected format
-                if (data && data.success && data.data && data.data.tours) {
-                    displayTours(data.data.tours);
-                } else if (data && Array.isArray(data)) {
-                    // If the API returns a simple array
-                    displayTours(data.slice(0, 10));
-                } else {
-                    // Fallback to static tours if API structure is different
-                    console.warn('Unexpected API response format, using fallback tours');
-                    displayFallbackTours();
-                }
-            } catch (error) {
-                console.error('Error loading tours from API:', error);
-                // Fallback to static tours if API is unavailable
-                displayFallbackTours();
-            }
-        };
-
-        const displayTours = (tours) => {
-            const container = document.getElementById('toursContainer');
-            
-            if (!tours || tours.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-8">
-                        <span class="material-icons text-4xl text-gray-400 mb-2">beach_access</span>
-                        <p class="text-gray-600">No tours available at the moment.</p>
-                    </div>
-                `;
-                return;
-            }
-            container.innerHTML = tours.map(tour => `
-                <div class="rounded-lg overflow-hidden shadow-lg hover:shadow-2xl tour-card cursor-pointer" onclick="viewTour('${tour._id || tour.id}')">
-                    <img alt="${tour.name}" class="w-full h-48 object-cover transition-transform duration-500" 
-                         src="${tour.images && tour.images[0] ? tour.images[0] : 
-                               tour.image ? tour.image : 
-                               'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDMyMCAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iMTkyIiBmaWxsPSIjRjBGMEYwIi8+CjxwYXRoIGQ9Ik0xNjAgOTZMMTI4IDY0SDE5MkwxNjAgOTZaIiBmaWxsPSIjQzg5QjUyIi8+CjxjaXJjbGUgY3g9IjE2MCIgY3k9IjExMiIgcj0iOCIgZmlsbD0iI0M4OUI1MiIvPgo8L3N2Zz4K'}" 
-                         onerror="this.classList.add('image-placeholder')"/>
-                    <div class="p-4 relative z-10 bg-white">
-                        <h3 class="font-bold text-lg mb-2">${tour.name}</h3>
-                        <p class="text-gray-600 text-sm">${tour.shortDescription || tour.description || 'Explore this amazing destination'}</p>
-                        <p class="text-gray-600 text-sm mt-2">From <span class="font-bold text-black">${formatPrice(tour.price)}</span></p>
-                        ${tour.rating && tour.rating.average > 0 ? `
-                            <div class="flex items-center mt-2">
-                                <span class="material-icons text-yellow-500 text-sm">star</span>
-                                <span class="text-sm text-gray-600 ml-1">${tour.rating.average.toFixed(1)} (${tour.rating.count})</span>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `).join('');
-        };
-
-        // Fallback tours if API is not available
-        const displayFallbackTours = () => {
-            const fallbackTours = [
-                { id: 1, name: "Alqasar Hotel", price: 35, image: "Alqasarhotel.jpg" },
-                { id: 2, name: "Atlantis", price: 75, image: "Atlantis.jpg" },
-                { id: 3, name: "Burj Khalifa", price: 55, image: "BurjKhalifa.jpg" },
-                { id: 4, name: "Burj Al Arab", price: 45, image: "BurjAlarab.jpg" },
-                { id: 5, name: "Jummeria Beach", price: 60, image: "jummeirahBeach.jpg" },
-                { id: 6, name: "Jummeira Mosque", price: 25, image: "JummeirahMosque.jpg" },
-                { id: 7, name: "Lamer Beach", price: 20, image: "LamerBeach.jpg" },
-                { id: 8, name: "Marina Walk", price: 40, image: "MarinaWalk.jpg" },
-                { id: 9, name: "Palm Jummeirah", price: 65, image: "palm jumeirah1.jpg" },
-                { id: 10, name: "Red Dunes Desert", price: 30, image: "RedDunesDesert.jpg" }
-            ];
-            
-            displayTours(fallbackTours);
-        };
-
-        const viewTour = (tourId) => {
-            window.location.href = `tour-details.html?id=${tourId}`;
-        };
-
         // Newsletter Subscription
         const handleNewsletterSubscription = async (email) => {
             const btn = document.getElementById('newsletterBtn');
@@ -995,8 +855,6 @@
             
             // Update language
             updateLanguage(language);           
-            // Reload tours to update prices
-            await loadTours();           
             // Save to backend if user is logged in
             if (currentUser) {
                 try {
@@ -1046,8 +904,6 @@
                 document.getElementById('authStatus').textContent = currentUser.name;
                 document.getElementById('mobileAuthStatus').textContent = currentUser.name;
             }
-            // Load tours
-            loadTours();
             // Initialize language
             updateLanguage(currentLanguage);
             // Mobile menu toggle
